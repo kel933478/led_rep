@@ -1,0 +1,2 @@
+# This file ensures the uploads directory is tracked by git
+# KYC files will be uploaded to uploads/kyc/ subdirectory
