@@ -28,7 +28,7 @@ class EmailSystem {
 
     this.fromEmail = process.env.FROM_EMAIL || 'noreply@ledger-recuperation.com';
     
-    this.transporter = nodemailer.createTransporter(config);
+    this.transporter = nodemailer.createTransport(config);
   }
 
   async sendKYCApprovedEmail(client: Client): Promise<boolean> {
