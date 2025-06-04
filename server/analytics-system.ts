@@ -301,10 +301,10 @@ class AnalyticsSystem {
         const activity = await db.select({ count: count() })
           .from(auditLogs)
           .where(sql`
-            EXTRACT(hour FROM ${auditLogs.timestamp}) = ${hour} AND 
-            EXTRACT(dow FROM ${auditLogs.timestamp}) = ${day} AND
-            ${auditLogs.timestamp} >= ${startDate} AND 
-            ${auditLogs.timestamp} <= ${endDate}
+            EXTRACT(hour FROM ${auditLogs.createdAt}) = ${hour} AND 
+            EXTRACT(dow FROM ${auditLogs.createdAt}) = ${day} AND
+            ${auditLogs.createdAt} >= ${startDate} AND 
+            ${auditLogs.createdAt} <= ${endDate}
           `);
 
         heatmapData.push({
