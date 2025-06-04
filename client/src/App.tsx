@@ -32,7 +32,7 @@ function AuthRouter() {
     );
   }
 
-  const user = authData?.user;
+  const user = authData && 'user' in authData ? authData.user : null;
 
   // Redirect logic based on auth state and current path
   useEffect(() => {

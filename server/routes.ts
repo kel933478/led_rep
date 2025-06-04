@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import bcrypt from "bcrypt";
@@ -7,6 +7,8 @@ import path from "path";
 import fs from "fs";
 import { clientLoginSchema, adminLoginSchema, onboardingSchema } from "@shared/schema";
 import { z } from "zod";
+import session from "express-session";
+import MemoryStore from "memorystore";
 
 // Configure multer for KYC file uploads
 const uploadDir = path.join(process.cwd(), "uploads", "kyc");
@@ -38,16 +40,10 @@ declare module 'express-session' {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session middleware
-  const session = require('express-session');
-  const MemoryStore = require('memorystore')(session);
-
   app.use(session({
     secret: process.env.SESSION_SECRET || 'ledger-recovery-secret-key',
     resave: false,
     saveUninitialized: false,
-    store: new MemoryStore({
-      checkPeriod: 86400000 // prune expired entries every 24h
-    }),
     cookie: {
       secure: false, // Set to true if using HTTPS
       httpOnly: true,
