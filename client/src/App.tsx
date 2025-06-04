@@ -24,15 +24,6 @@ function AuthRouter() {
     retry: false,
   });
 
-  // Show loading while checking auth
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
   const user = authData && typeof authData === 'object' && 'user' in authData ? authData.user as User : null;
 
   // Redirect logic based on auth state and current path
@@ -60,6 +51,15 @@ function AuthRouter() {
       }
     }
   }, [user, location]);
+
+  // Show loading while checking auth
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">

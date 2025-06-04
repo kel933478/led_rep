@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { translations, type Language, type TranslationKey } from '@/lib/translations';
 
 interface LanguageContextType {
@@ -9,7 +9,7 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: ReactNode }): JSX.Element {
+export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     // Try to get language from localStorage first
     const saved = localStorage.getItem('ledger-language') as Language;
@@ -30,10 +30,10 @@ export function LanguageProvider({ children }: { children: ReactNode }): JSX.Ele
     return translations[language][key] || key;
   };
 
-  return React.createElement(
-    LanguageContext.Provider,
-    { value: { language, setLanguage, t } },
-    children
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
   );
 }
 
