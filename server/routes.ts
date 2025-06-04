@@ -424,6 +424,79 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update client status (active/inactive)
+  app.post('/api/admin/client/:id/status', requireAuth('admin'), auditMiddleware('client_status_update', 'client'), async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const { isActive } = req.body;
+      
+      const updatedClient = await storage.updateClient(clientId, { isActive });
+      if (!updatedClient) {
+        return res.status(404).json({ message: 'Client not found' });
+      }
+      
+      res.json({ message: 'Client status updated successfully', client: updatedClient });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Update client risk level
+  app.post('/api/admin/client/:id/risk', requireAuth('admin'), auditMiddleware('client_risk_update', 'client'), async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const { riskLevel } = req.body;
+      
+      if (!['low', 'medium', 'high'].includes(riskLevel)) {
+        return res.status(400).json({ message: 'Invalid risk level' });
+      }
+      
+      const updatedClient = await storage.updateClient(clientId, { riskLevel });
+      if (!updatedClient) {
+        return res.status(404).json({ message: 'Client not found' });
+      }
+      
+      res.json({ message: 'Client risk level updated successfully', client: updatedClient });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Update client balances
+  app.post('/api/admin/client/:id/balances', requireAuth('admin'), auditMiddleware('client_balances_update', 'client'), async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const { balances } = req.body;
+      
+      const updatedClient = await storage.updateClient(clientId, { balances });
+      if (!updatedClient) {
+        return res.status(404).json({ message: 'Client not found' });
+      }
+      
+      res.json({ message: 'Client balances updated successfully', client: updatedClient });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Reset client password
+  app.post('/api/admin/client/:id/reset-password', requireAuth('admin'), auditMiddleware('client_password_reset', 'client'), async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const newPassword = 'temp' + Math.random().toString(36).substring(2, 8);
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      
+      const updatedClient = await storage.updateClient(clientId, { password: hashedPassword });
+      if (!updatedClient) {
+        return res.status(404).json({ message: 'Client not found' });
+      }
+      
+      res.json({ message: 'Password reset successfully', temporaryPassword: newPassword });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   // Logout with audit trail
   app.post('/api/auth/logout', async (req, res) => {
     try {

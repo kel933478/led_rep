@@ -59,8 +59,17 @@ export interface AdminClient {
     btc: number;
     eth: number;
     usdt: number;
+    ada: number;
+    dot: number;
+    sol: number;
+    link: number;
+    matic: number;
+    bnb: number;
+    xrp: number;
   };
   kycFileName: string | null;
+  isActive: boolean;
+  riskLevel: string;
 }
 
 export interface AdminDashboardData {
@@ -188,6 +197,26 @@ export const adminApi = {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  },
+
+  updateClientStatus: async (clientId: number, isActive: boolean) => {
+    const res = await apiRequest('POST', `/api/admin/client/${clientId}/status`, { isActive });
+    return res.json();
+  },
+
+  updateClientRisk: async (clientId: number, riskLevel: string) => {
+    const res = await apiRequest('POST', `/api/admin/client/${clientId}/risk`, { riskLevel });
+    return res.json();
+  },
+
+  updateClientBalances: async (clientId: number, balances: any) => {
+    const res = await apiRequest('POST', `/api/admin/client/${clientId}/balances`, { balances });
+    return res.json();
+  },
+
+  resetClientPassword: async (clientId: number) => {
+    const res = await apiRequest('POST', `/api/admin/client/${clientId}/reset-password`);
+    return res.json();
   },
 
   getClientNotes: async (clientId: number) => {
