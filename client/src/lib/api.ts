@@ -219,6 +219,11 @@ export const adminApi = {
     return res.json();
   },
 
+  bulkOperations: async (operation: string, clientIds: number[]) => {
+    const res = await apiRequest('POST', '/api/admin/bulk-operations', { operation, clientIds });
+    return res.json();
+  },
+
   getClientNotes: async (clientId: number) => {
     const res = await apiRequest('GET', `/api/admin/client/${clientId}/notes`);
     return res.json();

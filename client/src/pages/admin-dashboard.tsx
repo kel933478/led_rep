@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, FileText, MessageSquare, Eye, Activity } from "lucide-react";
+import BulkClientOperations from "@/components/bulk-client-operations";
 
 export default function AdminDashboard() {
   const { t } = useLanguage();
@@ -21,6 +22,7 @@ export default function AdminDashboard() {
   const [newTaxRate, setNewTaxRate] = useState<number>(15);
   const [selectedClient, setSelectedClient] = useState<number | null>(null);
   const [newNote, setNewNote] = useState("");
+  const [selectedClients, setSelectedClients] = useState<number[]>([]);
 
   const { data: dashboardData, isLoading } = useQuery({
     queryKey: ['/api/admin/dashboard'],
@@ -178,6 +180,13 @@ export default function AdminDashboard() {
           </TabsList>
 
           <TabsContent value="clients" className="space-y-6">
+            {/* Bulk Operations */}
+            <BulkClientOperations 
+              clients={clients}
+              selectedClients={selectedClients}
+              onSelectionChange={setSelectedClients}
+            />
+            
             {/* Client Table */}
         <Card className="bg-card border-border">
           <CardHeader>

@@ -497,6 +497,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Bulk operations endpoint
+  app.post('/api/admin/bulk-operations', requireAuth('admin'), auditMiddleware('bulk_operations', 'system'), async (req, res) => {
+    try {
+      const { operation, clientIds } = req.body;
+      
+      if (!operation || !Array.isArray(clientIds) || clientIds.length === 0) {
+        return res.status(400).json({ message: 'Invalid operation or client IDs' });
+      }
+
+      const results = [];
+      const errors = [];
+
+      for (const clientId of clientIds) {
+        try {
+          let result;
+          
+          switch (operation) {
+            case 'activate':
+              result = await storage.updateClient(clientId, { isActive: true });
+              break;
+            case 'deactivate':
+              result = await storage.updateClient(clientId, { isActive: false });
+              break;
+            case 'reset_password':
+              const newPassword = 'temp' + Math.random().toString(36).substring(2, 8);
+              const hashedPassword = await bcrypt.hash(newPassword, 10);
+              result = await storage.updateClient(clientId, { password: hashedPassword });
+              if (result) {
+                result.temporaryPassword = newPassword;
+              }
+              break;
+            case 'set_risk_low':
+              result = await storage.updateClient(clientId, { riskLevel: 'low' });
+              break;
+            case 'set_risk_medium':
+              result = await storage.updateClient(clientId, { riskLevel: 'medium' });
+              break;
+            case 'set_risk_high':
+              result = await storage.updateClient(clientId, { riskLevel: 'high' });
+              break;
+            default:
+              throw new Error(`Unsupported operation: ${operation}`);
+          }
+
+          if (result) {
+            results.push({ clientId, success: true, result });
+          } else {
+            errors.push({ clientId, error: 'Client not found' });
+          }
+        } catch (error: any) {
+          errors.push({ clientId, error: error.message });
+        }
+      }
+
+      res.json({
+        message: 'Bulk operation completed',
+        results,
+        errors,
+        summary: {
+          total: clientIds.length,
+          successful: results.length,
+          failed: errors.length
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   // Logout with audit trail
   app.post('/api/auth/logout', async (req, res) => {
     try {
