@@ -1,0 +1,76 @@
+Crée une application web complète nommée **Ledger Récupération**, structurée autour de deux espaces séparés : un **espace client** et un **espace admin**.
+
+🎨 Le design général doit s'inspirer fidèlement de l’interface de **Ledger Live** :  
+- Style moderne, sombre, épuré, avec polices et icônes similaires  
+- Utilisation des couleurs et visuels proches de la marque **Ledger**  
+- Intégrer un logo factice type "Ledger Recovery" dans le même esprit visuel  
+
+🌐 L’application doit être **entièrement bilingue** (🇫🇷 / 🇬🇧), avec :  
+- Détection automatique de la langue du navigateur  
+- Ou bouton switch visible dans le header  
+- Tous les textes externalisés dans deux fichiers `lang.fr.json` et `lang.en.json`  
+
+---
+
+👤 ESPACE CLIENT :
+
+1. Page de connexion (email + mot de passe généré)
+2. Onboarding à la première connexion :
+   - Upload d’un fichier KYC (passeport – JPG/PNG/PDF – max 5 Mo)
+   - Sélection d’un montant souvenir via un **slider** (de 0 à 250 000 €)
+3. Dashboard utilisateur :
+   - Affichage des soldes fictifs en cryptos (BTC, ETH, USDT), valeur réelle en USD via API CoinGecko
+   - Affichage de la taxe obligatoire appliquée (définie par l’admin)
+   - Affichage formaté type **Ledger Live** avec :
+     - Logo crypto, valeur token, équivalent en fiat
+     - Interface responsive, minimaliste et élégante
+   - Message final : “Vos données ont bien été enregistrées.”
+
+Toutes les données client sont stockées côté serveur, dont :
+- Email, mot de passe, KYC, montant souvenir
+- Dernière connexion (date + IP)
+
+---
+
+🔐 ESPACE ADMIN :
+
+1. Connexion admin sécurisée
+2. Dashboard admin complet avec :
+   - Liste des clients avec : nom, email, statut KYC, onboarding terminé ou non
+   - Montant souvenir déclaré
+   - Soldes attribués par crypto
+   - Taxe appliquée
+   - Dernière connexion (date + IP)
+   - Téléchargement du fichier KYC
+   - Notes privées pour chaque client
+   - Statuts visuels : badge onboarding / KYC
+   - Connexion en tant que client (lecture seule)
+3. Actions :
+   - Modifier ou ajouter des soldes crypto
+   - Définir une taxe globale ou personnalisée
+   - Ajouter une note interne
+   - Export CSV global de la base clients
+   - Import CSV avec génération automatique de mots de passe (si champ vide)
+
+---
+
+📁 Structure technique :
+
+- Backend (Python Flask ou Node.js selon ton environnement)
+- Frontend responsive (HTML/CSS/JS)
+- Base de données persistante (MongoDB, SQLite…)
+- API CoinGecko intégrée pour les taux crypto > USD
+- Upload sécurisé des fichiers KYC dans `/uploads/kyc/[email]/`
+- Textes en multilingue via fichiers JSON : `lang.fr.json` / `lang.en.json`
+- Toutes les routes bien séparées (`/client` et `/admin`)
+
+---
+
+🎯 Résultat attendu :
+- Projet unique et autonome
+- Fidèle à l’expérience Ledger Live, avec responsive design
+- Application opérationnelle dès génération, prête à tester
+- Interface claire, propre, sécurisée, fonctionnelle
+
+Merci de développer **l’intégralité du projet dans ce fichier**, en simulant toutes les données (aucune connexion réelle à Ledger ou blockchain), tout doit être **fictif mais réaliste**.
+
