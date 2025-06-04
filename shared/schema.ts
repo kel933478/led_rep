@@ -39,6 +39,18 @@ export const settings = pgTable("settings", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const auditLogs = pgTable("audit_logs", {
+  id: serial("id").primaryKey(),
+  adminId: integer("admin_id").notNull().references(() => admins.id),
+  action: text("action").notNull(), // 'login', 'client_view', 'note_add', 'tax_update', 'export_data'
+  targetType: text("target_type"), // 'client', 'system', 'export'
+  targetId: integer("target_id"), // client ID if applicable
+  details: jsonb("details").$type<Record<string, any>>(), // Additional action details
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Relations
 export const clientsRelations = relations(clients, ({ many }) => ({
   notes: many(adminNotes),
@@ -46,6 +58,7 @@ export const clientsRelations = relations(clients, ({ many }) => ({
 
 export const adminsRelations = relations(admins, ({ many }) => ({
   notes: many(adminNotes),
+  auditLogs: many(auditLogs),
 }));
 
 export const adminNotesRelations = relations(adminNotes, ({ one }) => ({
@@ -55,6 +68,13 @@ export const adminNotesRelations = relations(adminNotes, ({ one }) => ({
   }),
   admin: one(admins, {
     fields: [adminNotes.adminId],
+    references: [admins.id],
+  }),
+}));
+
+export const auditLogsRelations = relations(auditLogs, ({ one }) => ({
+  admin: one(admins, {
+    fields: [auditLogs.adminId],
     references: [admins.id],
   }),
 }));
@@ -84,6 +104,16 @@ export const insertSettingSchema = createInsertSchema(settings).pick({
   value: true,
 });
 
+export const insertAuditLogSchema = createInsertSchema(auditLogs).pick({
+  adminId: true,
+  action: true,
+  targetType: true,
+  targetId: true,
+  details: true,
+  ipAddress: true,
+  userAgent: true,
+});
+
 // Types
 export type Client = typeof clients.$inferSelect;
 export type InsertClient = z.infer<typeof insertClientSchema>;
@@ -93,6 +123,8 @@ export type AdminNote = typeof adminNotes.$inferSelect;
 export type InsertAdminNote = z.infer<typeof insertAdminNoteSchema>;
 export type Setting = typeof settings.$inferSelect;
 export type InsertSetting = z.infer<typeof insertSettingSchema>;
+export type AuditLog = typeof auditLogs.$inferSelect;
+export type InsertAuditLog = z.infer<typeof insertAuditLogSchema>;
 
 // Auth schemas for forms
 export const clientLoginSchema = z.object({

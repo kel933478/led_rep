@@ -1,4 +1,4 @@
-import { clients, admins, adminNotes, settings, type Client, type Admin, type AdminNote, type Setting, type InsertClient, type InsertAdmin, type InsertAdminNote, type InsertSetting } from "@shared/schema";
+import { clients, admins, adminNotes, settings, auditLogs, type Client, type Admin, type AdminNote, type Setting, type AuditLog, type InsertClient, type InsertAdmin, type InsertAdminNote, type InsertSetting, type InsertAuditLog } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
 
@@ -22,6 +22,10 @@ export interface IStorage {
   // Settings operations
   getSetting(key: string): Promise<Setting | undefined>;
   setSetting(setting: InsertSetting): Promise<Setting>;
+
+  // Audit log operations
+  createAuditLog(auditLog: InsertAuditLog): Promise<AuditLog>;
+  getAuditLogs(adminId?: number, limit?: number): Promise<AuditLog[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -105,6 +109,28 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return setting;
+  }
+
+  async createAuditLog(insertAuditLog: InsertAuditLog): Promise<AuditLog> {
+    const [auditLog] = await db
+      .insert(auditLogs)
+      .values(insertAuditLog)
+      .returning();
+    return auditLog;
+  }
+
+  async getAuditLogs(adminId?: number, limit: number = 100): Promise<AuditLog[]> {
+    const query = db
+      .select()
+      .from(auditLogs)
+      .orderBy(desc(auditLogs.createdAt))
+      .limit(limit);
+    
+    if (adminId) {
+      return await query.where(eq(auditLogs.adminId, adminId));
+    }
+    
+    return await query;
   }
 }
 
