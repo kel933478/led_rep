@@ -32,8 +32,13 @@ function AuthRouter() {
 
   useEffect(() => {
     if (!isLoading) {
+      // Permettre l'accès à l'interface Ledger sans authentification
+      if (location === '/' || location === '/ledger') {
+        return;
+      }
+      
       if (!user) {
-        if (!['/client', '/admin'].includes(location)) {
+        if (!['/client', '/admin', '/', '/ledger'].includes(location)) {
           setLocation('/client');
         }
       } else if (user && user.type === 'client') {
@@ -50,13 +55,17 @@ function AuthRouter() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      {/* Afficher uniquement le header pour les pages d'authentification */}
+      {(location.includes('/client') || location.includes('/admin')) && <Header />}
+      
       {isLoading ? (
         <div className="flex items-center justify-center min-h-[80vh]">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : (
         <Switch>
+          <Route path="/" component={LedgerManager} />
+          <Route path="/ledger" component={LedgerManager} />
           <Route path="/client" component={ClientLogin} />
           <Route path="/admin" component={AdminLogin} />
           {user?.type === 'client' && (
