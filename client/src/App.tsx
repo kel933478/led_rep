@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import type { User } from "@/lib/api";
 
 import Header from "@/components/header";
 import ClientLogin from "@/pages/client-login";
@@ -32,7 +33,7 @@ function AuthRouter() {
     );
   }
 
-  const user = authData && 'user' in authData ? authData.user : null;
+  const user = authData && typeof authData === 'object' && 'user' in authData ? authData.user as User : null;
 
   // Redirect logic based on auth state and current path
   useEffect(() => {
