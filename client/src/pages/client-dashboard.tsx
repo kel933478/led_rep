@@ -41,7 +41,7 @@ export default function ClientDashboard() {
         </div>
 
         {/* Crypto Portfolio */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
           <CryptoCard
             name={t('bitcoin')}
             symbol="BTC"
@@ -65,6 +65,62 @@ export default function ClientDashboard() {
             price={cryptoPrices.tether}
             icon="₮"
             iconBg="bg-green-500"
+          />
+          <CryptoCard
+            name="Cardano"
+            symbol="ADA"
+            balance={client.balances.ada}
+            price={cryptoPrices.cardano}
+            icon="₳"
+            iconBg="bg-blue-500"
+          />
+          <CryptoCard
+            name="Polkadot"
+            symbol="DOT"
+            balance={client.balances.dot}
+            price={cryptoPrices.polkadot}
+            icon="●"
+            iconBg="bg-pink-500"
+          />
+          <CryptoCard
+            name="Solana"
+            symbol="SOL"
+            balance={client.balances.sol}
+            price={cryptoPrices.solana}
+            icon="◎"
+            iconBg="bg-gradient-to-r from-purple-400 to-pink-400"
+          />
+          <CryptoCard
+            name="Chainlink"
+            symbol="LINK"
+            balance={client.balances.link}
+            price={cryptoPrices.chainlink}
+            icon="⧫"
+            iconBg="bg-blue-600"
+          />
+          <CryptoCard
+            name="Polygon"
+            symbol="MATIC"
+            balance={client.balances.matic}
+            price={cryptoPrices.polygon}
+            icon="⬢"
+            iconBg="bg-purple-600"
+          />
+          <CryptoCard
+            name="Binance Coin"
+            symbol="BNB"
+            balance={client.balances.bnb}
+            price={cryptoPrices.binancecoin}
+            icon="◆"
+            iconBg="bg-yellow-500"
+          />
+          <CryptoCard
+            name="XRP"
+            symbol="XRP"
+            balance={client.balances.xrp}
+            price={cryptoPrices.ripple}
+            icon="◉"
+            iconBg="bg-blue-400"
           />
         </div>
 

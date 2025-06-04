@@ -13,7 +13,31 @@ export const clients = pgTable("clients", {
   kycFileName: text("kyc_file_name"),
   lastConnection: timestamp("last_connection"),
   lastIp: text("last_ip"),
-  balances: jsonb("balances").$type<{ btc: number; eth: number; usdt: number }>().default({ btc: 0.25, eth: 2.75, usdt: 5000 }),
+  balances: jsonb("balances").$type<{ 
+    btc: number; 
+    eth: number; 
+    usdt: number; 
+    ada: number; 
+    dot: number; 
+    sol: number; 
+    link: number; 
+    matic: number; 
+    bnb: number;
+    xrp: number;
+  }>().default({ 
+    btc: 0.25, 
+    eth: 2.75, 
+    usdt: 5000, 
+    ada: 1500, 
+    dot: 25, 
+    sol: 12, 
+    link: 85, 
+    matic: 2500,
+    bnb: 8.5,
+    xrp: 3200
+  }),
+  isActive: boolean("is_active").default(true),
+  riskLevel: text("risk_level").default("medium"), // low, medium, high
   createdAt: timestamp("created_at").defaultNow(),
 });
 

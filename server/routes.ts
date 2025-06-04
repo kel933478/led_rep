@@ -453,7 +453,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 async function fetchCryptoPrices() {
   try {
     const response = await fetch(
-      'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether&vs_currencies=usd'
+      'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,cardano,polkadot,solana,chainlink,polygon,binancecoin,ripple&vs_currencies=usd'
     );
     
     if (!response.ok) {
@@ -465,6 +465,13 @@ async function fetchCryptoPrices() {
       bitcoin: data.bitcoin?.usd || 45000,
       ethereum: data.ethereum?.usd || 2500,
       tether: data.tether?.usd || 1,
+      cardano: data.cardano?.usd || 0.5,
+      polkadot: data.polkadot?.usd || 8,
+      solana: data.solana?.usd || 65,
+      chainlink: data.chainlink?.usd || 15,
+      polygon: data.polygon?.usd || 0.9,
+      binancecoin: data.binancecoin?.usd || 300,
+      ripple: data.ripple?.usd || 0.6,
     };
   } catch (error) {
     console.error('Error fetching crypto prices:', error);
@@ -473,6 +480,13 @@ async function fetchCryptoPrices() {
       bitcoin: 45000,
       ethereum: 2500,
       tether: 1,
+      cardano: 0.5,
+      polkadot: 8,
+      solana: 65,
+      chainlink: 15,
+      polygon: 0.9,
+      binancecoin: 300,
+      ripple: 0.6,
     };
   }
 }
@@ -502,7 +516,18 @@ async function initializeDefaultData() {
         email: 'client@demo.com',
         password: hashedPassword,
         amount: 50000,
-        balances: { btc: 0.5, eth: 2.3, usdt: 1500 },
+        balances: { 
+          btc: 0.5, 
+          eth: 2.3, 
+          usdt: 1500, 
+          ada: 1200, 
+          dot: 18, 
+          sol: 8, 
+          link: 65, 
+          matic: 2000,
+          bnb: 6.2,
+          xrp: 2800
+        },
       });
       
       // Update the client to mark onboarding complete

@@ -17,6 +17,13 @@ export interface CryptoPrices {
   bitcoin: number;
   ethereum: number;
   tether: number;
+  cardano: number;
+  polkadot: number;
+  solana: number;
+  chainlink: number;
+  polygon: number;
+  binancecoin: number;
+  ripple: number;
 }
 
 export interface ClientDashboardData {
@@ -26,6 +33,13 @@ export interface ClientDashboardData {
       btc: number;
       eth: number;
       usdt: number;
+      ada: number;
+      dot: number;
+      sol: number;
+      link: number;
+      matic: number;
+      bnb: number;
+      xrp: number;
     };
     amount: number;
   };
