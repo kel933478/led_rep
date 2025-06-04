@@ -13,6 +13,7 @@ import ClientOnboarding from "@/pages/client-onboarding";
 import ClientDashboard from "@/pages/client-dashboard";
 import AdminLogin from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
+import LedgerManager from "@/pages/ledger-manager";
 import NotFound from "@/pages/not-found";
 import { LanguageProvider } from "@/hooks/use-language";
 
