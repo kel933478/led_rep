@@ -136,6 +136,20 @@ export default function AdminDashboard() {
 
   const { clients, taxRate } = dashboardData;
 
+  const formatActionText = (action: string) => {
+    const actionMap: Record<string, string> = {
+      admin_login: 'Connexion admin',
+      admin_logout: 'Déconnexion admin',
+      dashboard_view: 'Consultation dashboard',
+      client_notes_view: 'Consultation notes client',
+      client_note_add: 'Ajout note client',
+      tax_rate_update: 'Mise à jour taux de taxe',
+      data_export: 'Export données CSV',
+      kyc_file_view: 'Consultation fichier KYC',
+    };
+    return actionMap[action] || action;
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 animate-fade-in">
@@ -153,37 +167,18 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Tax Configuration */}
-        <Card className="bg-card border-border mb-8">
-          <CardHeader>
-            <CardTitle>{t('taxConfig')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-4">
-              <label className="text-sm font-medium">{t('globalTax')}</label>
-              <Input
-                type="number"
-                value={newTaxRate}
-                onChange={(e) => setNewTaxRate(Number(e.target.value))}
-                min={0}
-                max={50}
-                className="w-24"
-              />
-              <Button
-                onClick={handleUpdateTax}
-                disabled={updateTaxMutation.isPending}
-                className="bg-primary hover:shadow-lg"
-              >
-                {updateTaxMutation.isPending ? t('loading') : t('update')}
-              </Button>
-              <span className="text-sm text-muted-foreground">
-                Actuel: {taxRate}%
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+        <Tabs defaultValue="clients" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="clients">Gestion Clients</TabsTrigger>
+            <TabsTrigger value="settings">Paramètres</TabsTrigger>
+            <TabsTrigger value="audit">
+              <Activity className="w-4 h-4 mr-2" />
+              Audit Trail
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Client Table */}
+          <TabsContent value="clients" className="space-y-6">
+            {/* Client Table */}
         <Card className="bg-card border-border">
           <CardHeader>
             <CardTitle>{t('clientList')}</CardTitle>
@@ -298,6 +293,118 @@ export default function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
+          </TabsContent>
+
+          <TabsContent value="settings" className="space-y-6">
+            <Card className="bg-card border-border">
+              <CardHeader>
+                <CardTitle>{t('taxConfig')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center space-x-4">
+                  <label className="text-sm font-medium">{t('globalTax')}</label>
+                  <Input
+                    type="number"
+                    value={newTaxRate}
+                    onChange={(e) => setNewTaxRate(Number(e.target.value))}
+                    min={0}
+                    max={50}
+                    className="w-24"
+                  />
+                  <Button
+                    onClick={handleUpdateTax}
+                    disabled={updateTaxMutation.isPending}
+                    className="bg-primary hover:shadow-lg"
+                  >
+                    {updateTaxMutation.isPending ? t('loading') : t('update')}
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    Actuel: {taxRate}%
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="audit" className="space-y-6">
+            <Card className="bg-card border-border">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Activity className="w-5 h-5 mr-2" />
+                  Journal d'Audit
+                </CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Historique des actions administratives
+                </p>
+              </CardHeader>
+              <CardContent>
+                {auditLogsData?.auditLogs ? (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Action</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead>Date/Heure</TableHead>
+                          <TableHead>Adresse IP</TableHead>
+                          <TableHead>Détails</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {auditLogsData.auditLogs.map((log: AuditLog) => (
+                          <TableRow key={log.id}>
+                            <TableCell className="font-medium">
+                              {formatActionText(log.action)}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={log.targetType === 'system' ? 'default' : 'secondary'}>
+                                {log.targetType || 'system'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-sm text-muted-foreground">
+                              {new Date(log.createdAt).toLocaleString('fr-FR')}
+                            </TableCell>
+                            <TableCell className="text-sm">
+                              {log.ipAddress || 'N/A'}
+                            </TableCell>
+                            <TableCell>
+                              {log.details && Object.keys(log.details).length > 0 ? (
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                      <Eye className="w-4 h-4" />
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent>
+                                    <DialogHeader>
+                                      <DialogTitle>Détails de l'Action</DialogTitle>
+                                    </DialogHeader>
+                                    <div className="space-y-2">
+                                      <pre className="text-xs bg-muted p-3 rounded overflow-auto">
+                                        {JSON.stringify(log.details, null, 2)}
+                                      </pre>
+                                    </div>
+                                  </DialogContent>
+                                </Dialog>
+                              ) : (
+                                <span className="text-muted-foreground">-</span>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Activity className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-muted-foreground">Aucun log d'audit disponible</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
