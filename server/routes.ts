@@ -269,7 +269,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Update tax rate
-  app.post('/api/admin/tax', requireAuth('admin'), async (req, res) => {
+  app.post('/api/admin/tax', requireAuth('admin'), auditMiddleware('tax_rate_update', 'system'), async (req, res) => {
     try {
       const { taxRate } = req.body;
       
@@ -289,7 +289,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Client notes
-  app.get('/api/admin/client/:clientId/notes', requireAuth('admin'), async (req, res) => {
+  app.get('/api/admin/client/:clientId/notes', requireAuth('admin'), auditMiddleware('client_notes_view', 'client'), async (req, res) => {
     try {
       const clientId = parseInt(req.params.clientId);
       const notes = await storage.getNotesForClient(clientId);
@@ -299,7 +299,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/admin/client/:clientId/notes', requireAuth('admin'), async (req, res) => {
+  app.post('/api/admin/client/:clientId/notes', requireAuth('admin'), auditMiddleware('client_note_add', 'client'), async (req, res) => {
     try {
       const clientId = parseInt(req.params.clientId);
       const adminId = req.session.userId!;
@@ -322,7 +322,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Download KYC file
-  app.get('/api/admin/client/:clientId/kyc', requireAuth('admin'), async (req, res) => {
+  app.get('/api/admin/client/:clientId/kyc', requireAuth('admin'), auditMiddleware('kyc_file_view', 'client'), async (req, res) => {
     try {
       const clientId = parseInt(req.params.clientId);
       const client = await storage.getClient(clientId);
@@ -343,7 +343,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Export clients CSV
-  app.get('/api/admin/export', requireAuth('admin'), async (req, res) => {
+  app.get('/api/admin/export', requireAuth('admin'), auditMiddleware('data_export', 'system'), async (req, res) => {
     try {
       const clients = await storage.getAllClients();
       
