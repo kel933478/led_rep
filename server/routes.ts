@@ -1,6 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { auditMiddleware, logAdminLogin, logAdminLogout } from "./audit";
 import bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
@@ -223,10 +224,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       req.session.userId = admin.id;
       req.session.userType = 'admin';
 
+      // Log admin login
+      await logAdminLogin(admin.id, req);
+
       res.json({ 
         user: { 
           id: admin.id, 
           email: admin.email,
+          type: 'admin'
         } 
       });
     } catch (error) {
@@ -238,7 +243,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Admin dashboard data
-  app.get('/api/admin/dashboard', requireAuth('admin'), async (req, res) => {
+  app.get('/api/admin/dashboard', requireAuth('admin'), auditMiddleware('dashboard_view', 'system'), async (req, res) => {
     try {
       const clients = await storage.getAllClients();
       const taxSetting = await storage.getSetting('globalTax');
