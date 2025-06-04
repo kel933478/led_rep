@@ -20,6 +20,7 @@ interface AssetAllocationTableProps {
 
 export default function AssetAllocationTable({ assets, totalValue }: AssetAllocationTableProps) {
   const formatCurrency = (value: number) => {
+    if (typeof value !== 'number' || isNaN(value)) return '$0.00';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -75,7 +76,7 @@ export default function AssetAllocationTable({ assets, totalValue }: AssetAlloca
                 </td>
                 <td className="py-4 text-right">
                   <div className="space-y-2">
-                    <div className="text-white font-medium">{asset.allocation.toFixed(1)}%</div>
+                    <div className="text-white font-medium">{(asset.allocation || 0).toFixed(1)}%</div>
                     <Progress 
                       value={asset.allocation} 
                       className="w-16 h-1" 
@@ -87,8 +88,8 @@ export default function AssetAllocationTable({ assets, totalValue }: AssetAlloca
                 </td>
                 <td className="py-4 text-right">
                   <div className="text-white">
-                    {asset.amount.toLocaleString(undefined, {
-                      maximumFractionDigits: asset.amount < 1 ? 6 : 2
+                    {(asset.amount || 0).toLocaleString(undefined, {
+                      maximumFractionDigits: (asset.amount || 0) < 1 ? 6 : 2
                     })} {asset.symbol}
                   </div>
                 </td>
