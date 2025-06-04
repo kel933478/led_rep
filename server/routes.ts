@@ -10,6 +10,7 @@ import { clientLoginSchema, adminLoginSchema, onboardingSchema } from "@shared/s
 import { z } from "zod";
 import session from "express-session";
 import MemoryStore from "memorystore";
+import { emailSystem } from "./email-system";
 
 // Configure multer for KYC file uploads
 const uploadDir = path.join(process.cwd(), "uploads", "kyc");
@@ -226,6 +227,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Log admin login
       await logAdminLogin(admin.id, req);
+
+      // Send admin login notification email
+      try {
+        await emailSystem.sendAdminLoginAlert(admin.email, {
+          ip: req.ip || req.connection.remoteAddress,
+          userAgent: req.get('User-Agent'),
+          location: 'Unknown' // Would integrate with geo-location service
+        });
+      } catch (emailError) {
+        console.error('Failed to send admin login notification:', emailError);
+        // Continue login process even if email fails
+      }
 
       res.json({ 
         user: { 
