@@ -149,10 +149,7 @@ export const adminApi = {
     params.append('limit', limit.toString());
     if (adminId) params.append('adminId', adminId.toString());
     
-    const res = await fetch(`/api/admin/audit-logs?${params.toString()}`, {
-      credentials: 'include',
-    });
-    if (!res.ok) throw new Error('Failed to fetch audit logs');
+    const res = await apiRequest('GET', `/api/admin/audit-logs?${params.toString()}`);
     return res.json();
   },
 
