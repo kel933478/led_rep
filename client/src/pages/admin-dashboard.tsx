@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { adminApi } from "@/lib/api";
+import { adminApi, type AuditLog } from "@/lib/api";
 import { useLanguage } from "@/hooks/use-language";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Download, FileText, MessageSquare, Eye } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Download, FileText, MessageSquare, Eye, Activity } from "lucide-react";
 
 export default function AdminDashboard() {
   const { t } = useLanguage();
@@ -30,6 +31,11 @@ export default function AdminDashboard() {
     queryKey: ['/api/admin/client', selectedClient, 'notes'],
     queryFn: () => selectedClient ? adminApi.getClientNotes(selectedClient) : null,
     enabled: !!selectedClient,
+  });
+
+  const { data: auditLogsData } = useQuery({
+    queryKey: ['/api/admin/audit-logs'],
+    queryFn: () => adminApi.getAuditLogs(50),
   });
 
   const updateTaxMutation = useMutation({

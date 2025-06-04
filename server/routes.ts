@@ -410,14 +410,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Logout
-  app.post('/api/auth/logout', (req, res) => {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).json({ message: 'Could not log out' });
+  // Audit trail endpoint
+  app.get('/api/admin/audit-logs', requireAuth('admin'), async (req, res) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
+      const adminId = req.query.adminId ? parseInt(req.query.adminId as string) : undefined;
+      
+      const auditLogs = await storage.getAuditLogs(adminId, limit);
+      
+      res.json({ auditLogs });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Logout with audit trail
+  app.post('/api/auth/logout', async (req, res) => {
+    try {
+      if (req.session.userId && req.session.userType === 'admin') {
+        await logAdminLogout(req.session.userId, req);
       }
-      res.json({ message: 'Logged out successfully' });
-    });
+      
+      req.session.destroy((err) => {
+        if (err) {
+          return res.status(500).json({ message: 'Could not log out' });
+        }
+        res.json({ message: 'Logged out successfully' });
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
   });
 
   // Initialize default admin if none exists

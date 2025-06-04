@@ -54,6 +54,18 @@ export interface AdminDashboardData {
   taxRate: number;
 }
 
+export interface AuditLog {
+  id: number;
+  adminId: number;
+  action: string;
+  targetType: string | null;
+  targetId: number | null;
+  details: Record<string, any> | null;
+  ipAddress: string | null;
+  userAgent: string | null;
+  createdAt: string;
+}
+
 // Auth API
 export const authApi = {
   clientLogin: async (data: LoginData) => {
@@ -130,6 +142,18 @@ export const adminApi = {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  },
+
+  getAuditLogs: async (limit: number = 100, adminId?: number): Promise<{ auditLogs: AuditLog[] }> => {
+    const params = new URLSearchParams();
+    params.append('limit', limit.toString());
+    if (adminId) params.append('adminId', adminId.toString());
+    
+    const res = await fetch(`/api/admin/audit-logs?${params.toString()}`, {
+      credentials: 'include',
+    });
+    if (!res.ok) throw new Error('Failed to fetch audit logs');
+    return res.json();
   },
 
   downloadKyc: async (clientId: number) => {
