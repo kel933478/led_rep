@@ -56,7 +56,7 @@ export default function ClientDashboard() {
     return total + (balance * price);
   }, 0);
 
-  const portfolioChange = totalValue * 0.863;
+  const portfolioChange = totalValue * 0.863; // 86.3% as shown in the image
   const portfolioChangePercent = 86.3;
 
   // Prepare assets for allocation table
