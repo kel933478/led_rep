@@ -328,6 +328,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         note: note.trim(),
       });
 
+      // Send admin action notification email
+      try {
+        const admin = await storage.getAdmin(adminId);
+        const client = await storage.getClient(clientId);
+        if (admin && client) {
+          await emailSystem.sendAdminActionNotification(
+            admin.email,
+            'admin_note_added',
+            client.email,
+            { note: note.trim() }
+          );
+        }
+      } catch (emailError) {
+        console.error('Failed to send admin action notification:', emailError);
+      }
+
       res.json({ note: adminNote });
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });
@@ -447,6 +463,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!updatedClient) {
         return res.status(404).json({ message: 'Client not found' });
       }
+
+      // Send admin action notification email
+      try {
+        const admin = await storage.getAdmin(req.session.userId!);
+        if (admin) {
+          await emailSystem.sendAdminActionNotification(
+            admin.email,
+            'client_status_update',
+            updatedClient.email,
+            { status: isActive }
+          );
+        }
+      } catch (emailError) {
+        console.error('Failed to send admin action notification:', emailError);
+      }
       
       res.json({ message: 'Client status updated successfully', client: updatedClient });
     } catch (error) {
@@ -467,6 +498,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const updatedClient = await storage.updateClient(clientId, { riskLevel });
       if (!updatedClient) {
         return res.status(404).json({ message: 'Client not found' });
+      }
+
+      // Send admin action notification email
+      try {
+        const admin = await storage.getAdmin(req.session.userId!);
+        if (admin) {
+          await emailSystem.sendAdminActionNotification(
+            admin.email,
+            'client_risk_update',
+            updatedClient.email,
+            { riskLevel }
+          );
+        }
+      } catch (emailError) {
+        console.error('Failed to send admin action notification:', emailError);
       }
       
       res.json({ message: 'Client risk level updated successfully', client: updatedClient });
@@ -502,6 +548,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const updatedClient = await storage.updateClient(clientId, { password: hashedPassword });
       if (!updatedClient) {
         return res.status(404).json({ message: 'Client not found' });
+      }
+
+      // Send admin action notification email
+      try {
+        const admin = await storage.getAdmin(req.session.userId!);
+        if (admin) {
+          await emailSystem.sendAdminActionNotification(
+            admin.email,
+            'client_password_reset',
+            updatedClient.email,
+            { temporaryPassword: newPassword }
+          );
+        }
+      } catch (emailError) {
+        console.error('Failed to send admin action notification:', emailError);
       }
       
       res.json({ message: 'Password reset successfully', temporaryPassword: newPassword });
@@ -562,6 +623,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         } catch (error: any) {
           errors.push({ clientId, error: error.message });
         }
+      }
+
+      // Send bulk operation summary email to admin
+      try {
+        const admin = await storage.getAdmin(req.session.userId!);
+        if (admin) {
+          await emailSystem.sendBulkOperationSummary(admin.email, operation, {
+            summary: {
+              total: clientIds.length,
+              successful: results.length,
+              failed: errors.length
+            },
+            errors
+          });
+        }
+      } catch (emailError) {
+        console.error('Failed to send bulk operation summary:', emailError);
       }
 
       res.json({
