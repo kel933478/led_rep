@@ -471,15 +471,17 @@ async function initializeDefaultData() {
     const existingClient = await storage.getClientByEmail('client@demo.com');
     if (!existingClient) {
       const hashedPassword = await bcrypt.hash('demo123', 10);
-      await storage.createClient({
+      const client = await storage.createClient({
         email: 'client@demo.com',
         password: hashedPassword,
+        amount: 50000,
+        balances: { btc: 0.5, eth: 2.3, usdt: 1500 },
+      });
+      
+      // Update the client to mark onboarding complete
+      await storage.updateClient(client.id, {
         onboardingCompleted: true,
         kycCompleted: true,
-        amount: 50000,
-        balanceBtc: 0.5,
-        balanceEth: 2.3,
-        balanceUsdt: 1500,
       });
       console.log('Demo client created: client@demo.com / demo123');
     }

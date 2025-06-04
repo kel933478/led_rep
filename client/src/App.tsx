@@ -35,13 +35,13 @@ function AuthRouter() {
         if (!['/client', '/admin'].includes(location)) {
           setLocation('/client');
         }
-      } else if (user.type === 'client') {
+      } else if (user && user.type === 'client') {
         if (!user.onboardingCompleted && location !== '/client/onboarding') {
           setLocation('/client/onboarding');
         } else if (user.onboardingCompleted && !['/client/dashboard'].includes(location)) {
           setLocation('/client/dashboard');
         }
-      } else if (user.type === 'admin' && location !== '/admin/dashboard') {
+      } else if (user && user.type === 'admin' && location !== '/admin/dashboard') {
         setLocation('/admin/dashboard');
       }
     }
