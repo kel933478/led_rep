@@ -453,6 +453,9 @@ async function fetchCryptoPrices() {
 // Initialize default admin and settings
 async function initializeDefaultData() {
   try {
+    // Add delay for database connection stability
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    
     // Create default admin if none exists
     const existingAdmin = await storage.getAdminByEmail('admin@ledger.com');
     if (!existingAdmin) {
@@ -471,6 +474,12 @@ async function initializeDefaultData() {
       await storage.createClient({
         email: 'client@demo.com',
         password: hashedPassword,
+        onboardingCompleted: true,
+        kycCompleted: true,
+        amount: 50000,
+        balanceBtc: 0.5,
+        balanceEth: 2.3,
+        balanceUsdt: 1500,
       });
       console.log('Demo client created: client@demo.com / demo123');
     }
