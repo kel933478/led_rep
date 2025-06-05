@@ -68,10 +68,10 @@ export default function ClientLogin() {
         <div className="space-y-6">
           <div className="text-center space-y-2">
             <h1 className="text-2xl font-semibold text-white">
-              Ledger Recover login
+              {t('ledgerRecoverLogin')}
             </h1>
             <p className="text-gray-400 text-sm">
-              Login to recover access to your wallet and to manage your subscription.
+              {t('loginToRecover')}
             </p>
           </div>
 
@@ -86,7 +86,7 @@ export default function ClientLogin() {
                       <Input
                         {...field}
                         type="email"
-                        placeholder="Email"
+                        placeholder={t('email')}
                         className="h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 rounded-lg focus:border-gray-600 focus:ring-0"
                       />
                     </FormControl>
@@ -105,7 +105,7 @@ export default function ClientLogin() {
                         <Input
                           {...field}
                           type={showPassword ? "text" : "password"}
-                          placeholder="Password"
+                          placeholder={t('password')}
                           className="h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 rounded-lg focus:border-gray-600 focus:ring-0 pr-10"
                         />
                         <button
@@ -132,7 +132,7 @@ export default function ClientLogin() {
                     type="button"
                     className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
                   >
-                    Forgot your password?
+                    {t('forgotPassword')}
                   </button>
                 </Link>
               </div>
@@ -142,17 +142,17 @@ export default function ClientLogin() {
                 disabled={loginMutation.isPending}
                 className="w-full h-12 bg-white text-black hover:bg-gray-100 font-medium rounded-lg transition-colors"
               >
-                {loginMutation.isPending ? t('loading') : 'Login'}
+                {loginMutation.isPending ? t('loading') : t('login')}
               </Button>
             </form>
           </Form>
 
           <div className="text-center pt-4">
             <p className="text-sm text-gray-500">
-              Accès administrateur? {' '}
+              {t('adminAccess')}? {' '}
               <Link href="/admin-login">
                 <span className="text-blue-400 hover:text-blue-300 cursor-pointer transition-colors">
-                  Se connecter ici
+                  {t('connectHere')}
                 </span>
               </Link>
             </p>

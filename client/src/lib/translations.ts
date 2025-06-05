@@ -22,6 +22,15 @@ export const translations = {
     adminSpace: "Espace Admin",
     
     // Login
+    ledgerRecoverLogin: "Ledger Recover login",
+    loginToRecover: "Connectez-vous pour récupérer l'accès à votre portefeuille et gérer votre abonnement.",
+    forgotPassword: "Mot de passe oublié ?",
+    adminAccess: "Accès administrateur",
+    secureAdminLogin: "Connexion sécurisée à l'interface d'administration Ledger Recovery",
+    emailAdmin: "Email administrateur",
+    clientAccess: "Accès client ?",
+    connectHere: "Se connecter ici",
+    secureAccess: "🔒 Accès sécurisé réservé aux administrateurs autorisés",
     welcomeTitle: "Bienvenue sur Ledger Recovery",
     welcomeSubtitle: "Accédez à votre espace sécurisé",
     demoCredentials: "Identifiants de démonstration :",
@@ -225,6 +234,15 @@ export const translations = {
     adminSpace: "Admin Space",
     
     // Login
+    ledgerRecoverLogin: "Ledger Recover login",
+    loginToRecover: "Login to recover access to your wallet and to manage your subscription.",
+    forgotPassword: "Forgot your password?",
+    adminAccess: "Admin Access",
+    secureAdminLogin: "Secure login to Ledger Recovery administration interface",
+    emailAdmin: "Administrator email",
+    clientAccess: "Client access?",
+    connectHere: "Login here",
+    secureAccess: "🔒 Secure access reserved for authorized administrators",
     welcomeTitle: "Welcome to Ledger Recovery",
     welcomeSubtitle: "Access your secure space",
     demoCredentials: "Demo credentials:",
