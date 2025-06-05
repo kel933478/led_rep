@@ -14,6 +14,7 @@ import ClientDashboard from "@/pages/client-dashboard";
 import AdminLogin from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
 import LedgerManager from "@/pages/ledger-manager";
+import LedgerAccess from "@/pages/ledger-access";
 import NotFound from "@/pages/not-found";
 import { LanguageProvider } from "@/hooks/use-language";
 
@@ -32,13 +33,19 @@ function AuthRouter() {
 
   useEffect(() => {
     if (!isLoading) {
-      // Permettre l'accès à l'interface Ledger sans authentification
-      if (location === '/' || location === '/ledger') {
+      // Redirection par défaut vers la page d'accès
+      if (location === '/') {
+        setLocation('/access');
+        return;
+      }
+      
+      // Permettre l'accès direct aux interfaces
+      if (['/ledger', '/access'].includes(location)) {
         return;
       }
       
       if (!user) {
-        if (!['/client', '/admin', '/', '/ledger'].includes(location)) {
+        if (!['/client', '/admin', '/ledger', '/access'].includes(location)) {
           setLocation('/client');
         }
       } else if (user && user.type === 'client') {
@@ -64,7 +71,7 @@ function AuthRouter() {
         </div>
       ) : (
         <Switch>
-          <Route path="/" component={LedgerManager} />
+          <Route path="/access" component={LedgerAccess} />
           <Route path="/ledger" component={LedgerManager} />
           <Route path="/client" component={ClientLogin} />
           <Route path="/admin" component={AdminLogin} />
