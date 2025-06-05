@@ -143,43 +143,54 @@ export class DatabaseStorage implements IStorage {
 
   // Tax management implementations
   async setClientTax(clientId: number, taxConfig: any): Promise<void> {
-    const taxKey = `client_tax_${clientId}`;
-    await this.setSetting({
-      key: taxKey,
-      value: JSON.stringify({
-        ...taxConfig,
-        clientId,
-        status: 'unpaid'
+    await db.update(clients)
+      .set({
+        taxPercentage: taxConfig.percentage.toString(),
+        taxCurrency: taxConfig.currency,
+        taxStatus: 'unpaid',
+        taxWalletAddress: taxConfig.walletAddress,
+        taxSetBy: taxConfig.adminId,
+        taxSetAt: new Date(),
+        updatedAt: new Date()
       })
-    });
+      .where(eq(clients.id, clientId));
   }
 
   async exemptClientTax(clientId: number, reason: string): Promise<void> {
-    const taxKey = `client_tax_${clientId}`;
-    await this.setSetting({
-      key: taxKey,
-      value: JSON.stringify({
-        clientId,
-        status: 'exempt',
-        reason,
-        exemptedAt: new Date()
+    await db.update(clients)
+      .set({
+        taxStatus: 'exempted',
+        updatedAt: new Date()
       })
-    });
+      .where(eq(clients.id, clientId));
   }
 
   async getClientTaxStatus(clientId: number): Promise<any> {
-    const taxKey = `client_tax_${clientId}`;
-    const setting = await this.getSetting(taxKey);
+    const [client] = await db.select().from(clients).where(eq(clients.id, clientId));
     
-    if (!setting) {
+    if (!client) {
+      return { status: 'none', message: 'Client non trouvé' };
+    }
+    
+    if (!client.taxPercentage || parseFloat(client.taxPercentage) === 0) {
       return { status: 'none', message: 'Aucune taxe configurée' };
     }
     
-    try {
-      return JSON.parse(setting.value);
-    } catch (error) {
-      return { status: 'error', message: 'Erreur de configuration' };
-    }
+    // Calculate tax amount based on percentage and portfolio value
+    const portfolioValue = client.amount || 0;
+    const taxPercentage = parseFloat(client.taxPercentage);
+    const calculatedAmount = (portfolioValue * taxPercentage) / 100;
+    
+    return {
+      status: client.taxStatus,
+      taxPercentage: taxPercentage,
+      taxAmount: calculatedAmount.toFixed(2),
+      currency: client.taxCurrency,
+      walletAddress: client.taxWalletAddress,
+      portfolioValue: portfolioValue,
+      setAt: client.taxSetAt,
+      setBy: client.taxSetBy
+    };
   }
 
   async submitTaxPaymentProof(clientId: number, proofData: any): Promise<void> {
