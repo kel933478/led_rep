@@ -23,7 +23,7 @@ export default function PortfolioChart({ totalValue, change, changePercent }: Po
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'EUR',
       minimumFractionDigits: 2,
     }).format(value);
   };

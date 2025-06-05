@@ -38,6 +38,14 @@ export default function ClientTaxManagement({ client }: ClientTaxManagementProps
     currency: 'USDT',
     reason: 'Frais de récupération obligatoires'
   });
+
+  const formatEuroAmount = (amount: number) => {
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 2,
+    }).format(amount);
+  };
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
 
@@ -221,7 +229,7 @@ export default function ClientTaxManagement({ client }: ClientTaxManagementProps
                 <Label className="text-gray-400">Montant</Label>
                 <div className="flex items-center gap-2 text-white">
                   {getCurrencyIcon(taxStatus.currency)}
-                  <span className="font-mono">{taxStatus.amount} {taxStatus.currency}</span>
+                  <span className="font-mono">{formatEuroAmount(taxStatus.amount)} (via {taxStatus.currency})</span>
                 </div>
               </div>
               

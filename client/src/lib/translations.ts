@@ -83,7 +83,7 @@ export const translations = {
     taxPayment: "Paiement de Taxe",
     taxRequired: "Taxe Requise",
     taxStatus: "Statut de Taxe",
-    taxAmount: "Montant de la Taxe",
+    taxAmount: "Montant de la Taxe (€)",
     taxCurrency: "Devise de Taxe",
     taxWallet: "Wallet de Paiement",
     taxReason: "Motif de la Taxe",
@@ -96,6 +96,8 @@ export const translations = {
     submitPayment: "Soumettre le Paiement",
     configureTax: "Configurer Taxe",
     exemptTax: "Exempter de la Taxe",
+    balanceEuro: "Solde (€)",
+    euroSymbol: "€",
     
     // Wallet Management
     walletConfig: "Configuration Wallets",
@@ -275,7 +277,7 @@ export const translations = {
     taxPayment: "Tax Payment",
     taxRequired: "Tax Required",
     taxStatus: "Tax Status",
-    taxAmount: "Tax Amount",
+    taxAmount: "Tax Amount (€)",
     taxCurrency: "Tax Currency",
     taxWallet: "Payment Wallet",
     taxReason: "Tax Reason",
@@ -288,6 +290,8 @@ export const translations = {
     submitPayment: "Submit Payment",
     configureTax: "Configure Tax",
     exemptTax: "Exempt from Tax",
+    balanceEuro: "Balance (€)",
+    euroSymbol: "€",
     
     // Wallet Management
     walletConfig: "Wallet Configuration",

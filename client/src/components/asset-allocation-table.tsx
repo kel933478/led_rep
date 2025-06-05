@@ -25,10 +25,10 @@ export default function AssetAllocationTable({ assets, totalValue }: AssetAlloca
   const [_, setLocation] = useLocation();
   
   const formatCurrency = (value: number) => {
-    if (typeof value !== 'number' || isNaN(value)) return '$0.00';
-    return new Intl.NumberFormat('en-US', {
+    if (typeof value !== 'number' || isNaN(value)) return '0,00 €';
+    return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'EUR',
       minimumFractionDigits: 2,
     }).format(value);
   };
