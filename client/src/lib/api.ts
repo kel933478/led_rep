@@ -246,6 +246,21 @@ export const adminApi = {
     });
     return res.json();
   },
+
+  setClientTax: async (clientId: number, taxData: any) => {
+    const res = await apiRequest('POST', `/api/admin/client/${clientId}/set-tax`, taxData);
+    return res.json();
+  },
+
+  exemptClientTax: async (clientId: number) => {
+    const res = await apiRequest('POST', `/api/admin/client/${clientId}/exempt-tax`);
+    return res.json();
+  },
+
+  verifyTaxPayment: async (clientId: number, verified: boolean) => {
+    const res = await apiRequest('POST', `/api/admin/client/${clientId}/verify-tax`, { verified });
+    return res.json();
+  },
 };
 
 export const client = {

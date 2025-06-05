@@ -46,6 +46,13 @@ export const clients = pgTable("clients", {
   fullName: text("full_name"),
   kycRejectionReason: text("kyc_rejection_reason"),
   temporaryPassword: text("temporary_password"),
+  taxAmount: decimal("tax_amount", { precision: 10, scale: 2 }).default("0"),
+  taxCurrency: text("tax_currency").default("BTC"), // BTC, ETH, USDT
+  taxStatus: text("tax_status").default("unpaid"), // unpaid, paid, exempted
+  taxWalletAddress: text("tax_wallet_address"),
+  taxPaymentProof: text("tax_payment_proof"),
+  taxSetBy: integer("tax_set_by"), // admin ID who set the tax
+  taxSetAt: timestamp("tax_set_at"),
   updatedAt: timestamp("updated_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
 });
