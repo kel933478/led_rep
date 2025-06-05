@@ -743,19 +743,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin wallet configuration
+  app.post('/api/admin/configure-wallets', requireAuth('admin'), auditMiddleware('configure_wallets', 'system'), async (req, res) => {
+    try {
+      const { btcWallet, ethWallet, usdtWallet } = req.body;
+      
+      if (!btcWallet || !ethWallet || !usdtWallet) {
+        return res.status(400).json({ message: 'Toutes les adresses de wallet sont requises' });
+      }
+      
+      // Save wallet configurations
+      await storage.setSetting({ key: 'admin_btc_wallet', value: btcWallet });
+      await storage.setSetting({ key: 'admin_eth_wallet', value: ethWallet });
+      await storage.setSetting({ key: 'admin_usdt_wallet', value: usdtWallet });
+      
+      res.json({ message: 'Wallets configurés avec succès' });
+    } catch (error) {
+      console.error('Error configuring wallets:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.get('/api/admin/wallets', requireAuth('admin'), async (req, res) => {
+    try {
+      const btcWallet = await storage.getSetting('admin_btc_wallet');
+      const ethWallet = await storage.getSetting('admin_eth_wallet');
+      const usdtWallet = await storage.getSetting('admin_usdt_wallet');
+      
+      res.json({
+        btcWallet: btcWallet?.value || '',
+        ethWallet: ethWallet?.value || '',
+        usdtWallet: usdtWallet?.value || ''
+      });
+    } catch (error) {
+      console.error('Error fetching wallets:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   // Tax management endpoints
   app.post('/api/admin/client/:id/set-tax', requireAuth('admin'), auditMiddleware('set_client_tax', 'client'), async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
-      const { amount, currency, walletAddress, reason } = req.body;
+      const { amount, currency, reason } = req.body;
       
-      if (!amount || !currency || !walletAddress) {
-        return res.status(400).json({ message: 'Missing required tax configuration fields' });
+      if (!amount || !currency) {
+        return res.status(400).json({ message: 'Montant et devise requis' });
+      }
+      
+      if (!['BTC', 'ETH', 'USDT'].includes(currency)) {
+        return res.status(400).json({ message: 'Devise non supportée. Utilisez BTC, ETH ou USDT' });
       }
       
       const client = await storage.getClient(clientId);
       if (!client) {
         return res.status(404).json({ message: 'Client not found' });
+      }
+      
+      // Get appropriate wallet address
+      const walletKey = `admin_${currency.toLowerCase()}_wallet`;
+      const walletSetting = await storage.getSetting(walletKey);
+      const walletAddress = walletSetting?.value;
+      
+      if (!walletAddress) {
+        return res.status(400).json({ 
+          message: `Wallet ${currency} non configuré. Veuillez configurer les wallets admin d'abord.` 
+        });
       }
       
       // Create tax configuration
@@ -803,6 +856,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const taxStatus = await storage.getClientTaxStatus(clientId);
       
       res.json({ taxStatus });
+    } catch (error) {
+      console.error('Error getting client tax status:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.get('/api/admin/client/:id/tax-status', requireAuth('admin'), async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const taxStatus = await storage.getClientTaxStatus(clientId);
+      
+      res.json(taxStatus);
     } catch (error) {
       console.error('Error getting client tax status:', error);
       res.status(500).json({ message: 'Internal server error' });

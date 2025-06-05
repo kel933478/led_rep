@@ -15,6 +15,8 @@ import { Download, FileText, MessageSquare, Eye, Activity, UserPlus } from "luci
 import BulkClientOperations from "@/components/bulk-client-operations";
 import KYCVerificationSystem from "@/components/kyc-verification-system";
 import CreateClientForm from "@/components/create-client-form";
+import AdminWalletConfig from "@/components/admin-wallet-config";
+import ClientTaxManagement from "@/components/client-tax-management";
 
 export default function AdminDashboard() {
   const { t } = useLanguage();
@@ -172,8 +174,10 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="clients" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="clients">Gestion Clients</TabsTrigger>
+            <TabsTrigger value="wallets">Wallets Admin</TabsTrigger>
+            <TabsTrigger value="taxes">Taxes Clients</TabsTrigger>
             <TabsTrigger value="kyc">Vérification KYC</TabsTrigger>
             <TabsTrigger value="settings">Paramètres</TabsTrigger>
             <TabsTrigger value="audit">
@@ -305,6 +309,28 @@ export default function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
+          </TabsContent>
+
+          <TabsContent value="wallets" className="space-y-6">
+            <AdminWalletConfig />
+          </TabsContent>
+
+          <TabsContent value="taxes" className="space-y-6">
+            <Card className="bg-card border-border">
+              <CardHeader>
+                <CardTitle>Gestion des Taxes par Client</CardTitle>
+                <CardDescription>
+                  Configurez les taxes de récupération individuelles pour chaque client
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {clients.map((client: any) => (
+                    <ClientTaxManagement key={client.id} client={client} />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="kyc" className="space-y-6">
