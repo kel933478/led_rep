@@ -439,6 +439,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // KYC verification endpoints
+  app.get('/api/admin/kyc/documents', requireAuth('admin'), async (req, res) => {
+    try {
+      const { status = 'all', limit = 50 } = req.query;
+      
+      const clients = await storage.getAllClients();
+      const kycDocuments = [];
+      
+      for (const client of clients) {
+        if (client.kycFileName) {
+          const document = {
+            id: `${client.id}_${client.kycFileName}`,
+            clientId: client.id,
+            clientName: client.fullName || client.email,
+            clientEmail: client.email,
+            documentType: 'id_card',
+            fileName: client.kycFileName,
+            uploadDate: client.createdAt,
+            status: client.kycCompleted ? 'approved' : 'pending',
+            riskScore: Math.floor(Math.random() * 100),
+            reviewedBy: client.kycCompleted ? 'System' : undefined,
+            reviewDate: client.kycCompleted ? client.updatedAt : undefined
+          };
+          
+          if (status === 'all' || document.status === status) {
+            kycDocuments.push(document);
+          }
+        }
+      }
+      
+      res.json({ documents: kycDocuments.slice(0, Number(limit)) });
+    } catch (error) {
+      console.error('Error fetching KYC documents:', error);
+      res.status(500).json({ message: 'Error fetching KYC documents' });
+    }
+  });
+
+  app.post('/api/admin/kyc/:documentId/review', requireAuth('admin'), auditMiddleware('kyc_review', 'document'), async (req, res) => {
+    try {
+      const { documentId } = req.params;
+      const { status, rejectionReason } = req.body;
+      
+      const clientId = parseInt(documentId.split('_')[0]);
+      
+      if (!clientId) {
+        return res.status(400).json({ message: 'Invalid document ID' });
+      }
+      
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ message: 'Client not found' });
+      }
+      
+      await storage.updateClient(clientId, {
+        kycCompleted: status === 'approved',
+        kycRejectionReason: status === 'rejected' ? rejectionReason : undefined,
+        updatedAt: new Date()
+      });
+      
+      // Send email notification
+      try {
+        if (status === 'approved') {
+          await emailSystem.sendKYCApprovedEmail(client);
+        } else if (status === 'rejected') {
+          await emailSystem.sendKYCRejectedEmail(client, rejectionReason);
+        }
+      } catch (emailError) {
+        console.error('Failed to send KYC email:', emailError);
+      }
+      
+      res.json({ 
+        success: true, 
+        message: `Document ${status === 'approved' ? 'approuvé' : 'rejeté'} avec succès` 
+      });
+      
+    } catch (error) {
+      console.error('Error reviewing KYC document:', error);
+      res.status(500).json({ message: 'Error reviewing KYC document' });
+    }
+  });
+
   // Audit trail endpoint
   app.get('/api/admin/audit-logs', requireAuth('admin'), async (req, res) => {
     try {

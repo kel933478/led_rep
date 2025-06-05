@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, FileText, MessageSquare, Eye, Activity } from "lucide-react";
 import BulkClientOperations from "@/components/bulk-client-operations";
+import KYCVerificationSystem from "@/components/kyc-verification-system";
 
 export default function AdminDashboard() {
   const { t } = useLanguage();
@@ -170,8 +171,9 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="clients" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="clients">Gestion Clients</TabsTrigger>
+            <TabsTrigger value="kyc">Vérification KYC</TabsTrigger>
             <TabsTrigger value="settings">Paramètres</TabsTrigger>
             <TabsTrigger value="audit">
               <Activity className="w-4 h-4 mr-2" />
@@ -302,6 +304,10 @@ export default function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
+          </TabsContent>
+
+          <TabsContent value="kyc" className="space-y-6">
+            <KYCVerificationSystem />
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-6">
