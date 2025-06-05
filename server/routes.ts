@@ -1762,5 +1762,282 @@ async function initializeDefaultData() {
     console.error('Error initializing default data:', error);
   }
 
+  // ============ SELLER ROUTES ============
+
+  // Seller authentication
+  app.post('/api/seller/login', async (req: Request, res: Response) => {
+    try {
+      const { email, password } = sellerLoginSchema.parse(req.body);
+      
+      const seller = await storage.getSellerByEmail(email);
+      if (!seller || !seller.isActive) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+      
+      const isValid = await bcrypt.compare(password, seller.password);
+      if (!isValid) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+      
+      await storage.updateSeller(seller.id, { 
+        lastConnection: new Date(),
+        lastIp: req.ip 
+      });
+      
+      req.session.userId = seller.id;
+      req.session.userType = 'seller' as any;
+      
+      res.json({ user: { id: seller.id, email: seller.email, type: 'seller', fullName: seller.fullName } });
+    } catch (error) {
+      res.status(401).json({ message: 'Invalid credentials' });
+    }
+  });
+
+  // Seller dashboard
+  app.get('/api/seller/dashboard', requireAuth('seller'), async (req: Request, res: Response) => {
+    try {
+      const sellerId = req.session.userId!;
+      const clients = await storage.getSellerClients(sellerId);
+      
+      const clientsWithMessages = await Promise.all(
+        clients.map(async (client) => {
+          const paymentMessage = await storage.getClientPaymentMessage(client.id);
+          return {
+            ...client,
+            paymentMessage: paymentMessage?.message || null
+          };
+        })
+      );
+      
+      res.json({ clients: clientsWithMessages });
+    } catch (error) {
+      console.error('Error fetching seller dashboard:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Update client wallet amount
+  app.patch('/api/seller/client/:id/amount', requireAuth('seller'), async (req: Request, res: Response) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const sellerId = req.session.userId!;
+      const { amount } = req.body;
+      
+      const sellerClients = await storage.getSellerClients(sellerId);
+      const hasAccess = sellerClients.some(client => client.id === clientId);
+      
+      if (!hasAccess) {
+        return res.status(403).json({ message: 'Access denied to this client' });
+      }
+      
+      if (typeof amount !== 'number' || amount < 0) {
+        return res.status(400).json({ message: 'Invalid amount' });
+      }
+      
+      const updatedClient = await storage.updateClient(clientId, { amount });
+      res.json({ client: updatedClient });
+    } catch (error) {
+      console.error('Error updating client amount:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Update client details
+  app.patch('/api/seller/client/:id/details', requireAuth('seller'), async (req: Request, res: Response) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const sellerId = req.session.userId!;
+      const { fullName, phone, address, country } = req.body;
+      
+      const sellerClients = await storage.getSellerClients(sellerId);
+      const hasAccess = sellerClients.some(client => client.id === clientId);
+      
+      if (!hasAccess) {
+        return res.status(403).json({ message: 'Access denied to this client' });
+      }
+      
+      const updates: any = {};
+      if (fullName !== undefined) updates.fullName = fullName;
+      if (phone !== undefined) updates.phone = phone;
+      if (address !== undefined) updates.address = address;
+      if (country !== undefined) updates.country = country;
+      
+      const updatedClient = await storage.updateClient(clientId, updates);
+      res.json({ client: updatedClient });
+    } catch (error) {
+      console.error('Error updating client details:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Update client tax
+  app.patch('/api/seller/client/:id/tax', requireAuth('seller'), async (req: Request, res: Response) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const sellerId = req.session.userId!;
+      const { taxPercentage, taxCurrency, taxWalletAddress } = req.body;
+      
+      const sellerClients = await storage.getSellerClients(sellerId);
+      const hasAccess = sellerClients.some(client => client.id === clientId);
+      
+      if (!hasAccess) {
+        return res.status(403).json({ message: 'Access denied to this client' });
+      }
+      
+      if (typeof taxPercentage !== 'number' || taxPercentage < 0 || taxPercentage > 50) {
+        return res.status(400).json({ message: 'Invalid tax percentage (0-50%)' });
+      }
+      
+      if (!['BTC', 'ETH', 'USDT'].includes(taxCurrency)) {
+        return res.status(400).json({ message: 'Invalid currency' });
+      }
+      
+      const updatedClient = await storage.updateClient(clientId, {
+        taxPercentage: taxPercentage.toString(),
+        taxCurrency,
+        taxWalletAddress,
+        taxSetBy: sellerId,
+        taxSetAt: new Date()
+      });
+      
+      res.json({ client: updatedClient });
+    } catch (error) {
+      console.error('Error updating client tax:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Update client status
+  app.patch('/api/seller/client/:id/status', requireAuth('seller'), async (req: Request, res: Response) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const sellerId = req.session.userId!;
+      const { isActive, kycCompleted, taxStatus } = req.body;
+      
+      const sellerClients = await storage.getSellerClients(sellerId);
+      const hasAccess = sellerClients.some(client => client.id === clientId);
+      
+      if (!hasAccess) {
+        return res.status(403).json({ message: 'Access denied to this client' });
+      }
+      
+      const updates: any = {};
+      if (typeof isActive === 'boolean') updates.isActive = isActive;
+      if (typeof kycCompleted === 'boolean') updates.kycCompleted = kycCompleted;
+      if (taxStatus && ['unpaid', 'paid', 'exempted'].includes(taxStatus)) {
+        updates.taxStatus = taxStatus;
+      }
+      
+      const updatedClient = await storage.updateClient(clientId, updates);
+      res.json({ client: updatedClient });
+    } catch (error) {
+      console.error('Error updating client status:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Set payment page message
+  app.post('/api/seller/client/:id/payment-message', requireAuth('seller'), async (req: Request, res: Response) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const sellerId = req.session.userId!;
+      const { message } = req.body;
+      
+      const sellerClients = await storage.getSellerClients(sellerId);
+      const hasAccess = sellerClients.some(client => client.id === clientId);
+      
+      if (!hasAccess) {
+        return res.status(403).json({ message: 'Access denied to this client' });
+      }
+      
+      if (!message || message.trim().length === 0) {
+        return res.status(400).json({ message: 'Message cannot be empty' });
+      }
+      
+      const paymentMessage = await storage.setClientPaymentMessage(
+        clientId, 
+        message.trim(), 
+        sellerId, 
+        'seller'
+      );
+      
+      res.json({ paymentMessage });
+    } catch (error) {
+      console.error('Error setting payment message:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // ============ ADMIN SELLER MANAGEMENT ============
+
+  // Create new seller
+  app.post('/api/admin/sellers', requireAuth('admin'), async (req: Request, res: Response) => {
+    try {
+      const { email, password, fullName } = req.body;
+      
+      if (!email || !password || !fullName) {
+        return res.status(400).json({ message: 'Email, password, and full name are required' });
+      }
+      
+      const existingSeller = await storage.getSellerByEmail(email);
+      if (existingSeller) {
+        return res.status(400).json({ message: 'Seller with this email already exists' });
+      }
+      
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const seller = await storage.createSeller({
+        email,
+        password: hashedPassword,
+        fullName,
+        isActive: true
+      });
+      
+      res.json({ seller: { ...seller, password: undefined } });
+    } catch (error) {
+      console.error('Error creating seller:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Get all sellers
+  app.get('/api/admin/sellers', requireAuth('admin'), async (req: Request, res: Response) => {
+    try {
+      const sellers = await storage.getAllSellers();
+      res.json({ sellers: sellers.map(s => ({ ...s, password: undefined })) });
+    } catch (error) {
+      console.error('Error fetching sellers:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Assign client to seller
+  app.post('/api/admin/assign-client', requireAuth('admin'), async (req: Request, res: Response) => {
+    try {
+      const { clientId, sellerId } = req.body;
+      const adminId = req.session.userId!;
+      
+      if (!clientId || !sellerId) {
+        return res.status(400).json({ message: 'Client ID and Seller ID are required' });
+      }
+      
+      const client = await storage.getClient(clientId);
+      const seller = await storage.getSeller(sellerId);
+      
+      if (!client) {
+        return res.status(404).json({ message: 'Client not found' });
+      }
+      
+      if (!seller || !seller.isActive) {
+        return res.status(404).json({ message: 'Seller not found or inactive' });
+      }
+      
+      const assignment = await storage.assignClientToSeller(clientId, sellerId, adminId);
+      res.json({ assignment });
+    } catch (error) {
+      console.error('Error assigning client to seller:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   return server;
 }
