@@ -97,9 +97,9 @@ export function LedgerSidebar() {
             
             return (
               <Link key={item.href} href={item.href}>
-                <a
+                <div
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer",
                     isActive
                       ? "bg-[hsl(var(--ledger-hover))] text-[hsl(var(--ledger-text-primary))]"
                       : "text-[hsl(var(--ledger-text-secondary))] hover:bg-[hsl(var(--ledger-bg-tertiary))] hover:text-[hsl(var(--ledger-text-primary))]"
@@ -115,7 +115,7 @@ export function LedgerSidebar() {
                     )}
                   />
                   <span>{item.label}</span>
-                </a>
+                </div>
               </Link>
             );
           })}
