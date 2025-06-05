@@ -44,6 +44,9 @@ export const clients = pgTable("clients", {
   passwordResetToken: text("password_reset_token"),
   passwordResetExpires: timestamp("password_reset_expires"),
   fullName: text("full_name"),
+  phone: text("phone"),
+  address: text("address"),
+  country: text("country").default("France"),
   kycRejectionReason: text("kyc_rejection_reason"),
   temporaryPassword: text("temporary_password"),
   taxAmount: decimal("tax_amount", { precision: 10, scale: 2 }).default("0"),
@@ -123,9 +126,19 @@ export const auditLogsRelations = relations(auditLogs, ({ one }) => ({
 export const insertClientSchema = createInsertSchema(clients).pick({
   email: true,
   password: true,
+  fullName: true,
+  phone: true,
+  address: true,
+  country: true,
   amount: true,
   kycFileName: true,
   balances: true,
+  onboardingCompleted: true,
+  kycCompleted: true,
+  riskLevel: true,
+  isActive: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 export const insertAdminSchema = createInsertSchema(admins).pick({

