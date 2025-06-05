@@ -38,6 +38,11 @@ export const clients = pgTable("clients", {
   }),
   isActive: boolean("is_active").default(true),
   riskLevel: text("risk_level").default("medium"), // low, medium, high
+  twoFactorEnabled: boolean("two_factor_enabled").default(false),
+  twoFactorSecret: text("two_factor_secret"),
+  twoFactorBackupCodes: jsonb("two_factor_backup_codes").$type<string[]>(),
+  passwordResetToken: text("password_reset_token"),
+  passwordResetExpires: timestamp("password_reset_expires"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
