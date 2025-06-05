@@ -1,53 +1,29 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { queryClient } from '@/lib/queryClient';
-import { 
-  DollarSign, 
-  Settings, 
-  Bitcoin, 
-  Coins,
-  AlertTriangle,
-  CheckCircle,
-  Copy,
-  Shield
-} from 'lucide-react';
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { Percent, DollarSign, Bitcoin, Coins, Shield } from "lucide-react";
+import type { Client } from "@shared/schema";
 
-interface Client {
-  id: number;
-  email: string;
-  fullName?: string;
-  amount?: number;
-}
-
-interface ClientTaxManagementProps {
+interface ClientTaxPercentageProps {
   client: Client;
 }
 
-export default function ClientTaxManagement({ client }: ClientTaxManagementProps) {
+export default function ClientTaxPercentage({ client }: ClientTaxPercentageProps) {
   const [taxForm, setTaxForm] = useState({
-    percentage: 5.0, // Pourcentage de taxe sur le portfolio total
+    percentage: 5.0,
     currency: 'USDT',
     reason: 'Frais de récupération obligatoires'
   });
-
-  const formatEuroAmount = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 2,
-    }).format(amount);
-  };
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   // Get admin wallets configuration
   const { data: walletsData } = useQuery({
@@ -146,34 +122,24 @@ export default function ClientTaxManagement({ client }: ClientTaxManagementProps
       return;
     }
 
-    // Check if wallet is configured for selected currency
     const walletKey = `${taxForm.currency.toLowerCase()}Wallet`;
     const walletAddress = walletsData?.[walletKey];
     
     if (!walletAddress) {
       toast({
         title: "Erreur",
-        description: `Wallet ${taxForm.currency} non configuré. Configurez d'abord les wallets admin.`,
+        description: `Wallet ${taxForm.currency} non configuré`,
         variant: "destructive",
       });
       return;
     }
 
-    setTaxMutation.mutate(taxForm);
-  };
-
-  const copyWalletAddress = (address: string) => {
-    navigator.clipboard.writeText(address);
-    toast({
-      title: "Copié",
-      description: "Adresse wallet copiée dans le presse-papiers",
+    setTaxMutation.mutate({
+      percentage: taxForm.percentage,
+      currency: taxForm.currency,
+      walletAddress,
+      reason: taxForm.reason
     });
-  };
-
-  const getWalletForCurrency = (currency: string) => {
-    if (!walletsData) return null;
-    const walletKey = `${currency.toLowerCase()}Wallet`;
-    return walletsData[walletKey];
   };
 
   const getCurrencyIcon = (currency: string) => {
@@ -189,14 +155,14 @@ export default function ClientTaxManagement({ client }: ClientTaxManagementProps
     switch (status) {
       case 'unpaid':
         return <Badge variant="destructive">Impayé</Badge>;
-      case 'verification':
-        return <Badge className="bg-yellow-600">En vérification</Badge>;
       case 'paid':
-        return <Badge className="bg-green-600">Payé</Badge>;
-      case 'exempt':
-        return <Badge variant="outline">Exempté</Badge>;
+        return <Badge variant="default" className="bg-green-600">Payé</Badge>;
+      case 'pending':
+        return <Badge variant="secondary" className="bg-orange-500">En vérification</Badge>;
+      case 'exempted':
+        return <Badge variant="outline" className="border-blue-500 text-blue-500">Exempté</Badge>;
       default:
-        return <Badge variant="secondary">Non configuré</Badge>;
+        return <Badge variant="outline">Aucune</Badge>;
     }
   };
 
@@ -205,13 +171,13 @@ export default function ClientTaxManagement({ client }: ClientTaxManagementProps
       <CardHeader>
         <CardTitle className="text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5" />
+            <Percent className="h-5 w-5" />
             Gestion des Taxes - {client.fullName || client.email}
           </div>
           {taxStatus && getStatusBadge(taxStatus.status)}
         </CardTitle>
         <CardDescription className="text-gray-300">
-          Configurer ou modifier la taxe de récupération pour ce client
+          Configurer le pourcentage de taxe de récupération pour ce client
         </CardDescription>
       </CardHeader>
       
@@ -226,78 +192,78 @@ export default function ClientTaxManagement({ client }: ClientTaxManagementProps
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label className="text-gray-400">Montant</Label>
+                <Label className="text-gray-400">Pourcentage</Label>
                 <div className="flex items-center gap-2 text-white">
-                  {getCurrencyIcon(taxStatus.currency)}
-                  <span className="font-mono">{formatEuroAmount(taxStatus.amount)} (via {taxStatus.currency})</span>
+                  <Percent className="h-4 w-4" />
+                  <span className="font-mono">{taxStatus.taxPercentage}%</span>
                 </div>
               </div>
               
               <div>
-                <Label className="text-gray-400">Statut</Label>
-                <div>{getStatusBadge(taxStatus.status)}</div>
+                <Label className="text-gray-400">Devise de paiement</Label>
+                <div className="flex items-center gap-2 text-white">
+                  {getCurrencyIcon(taxStatus.currency)}
+                  <span>{taxStatus.currency}</span>
+                </div>
               </div>
-              
-              {taxStatus.walletAddress && (
-                <div className="md:col-span-2">
-                  <Label className="text-gray-400">Adresse de Paiement</Label>
-                  <div className="flex items-center gap-2 bg-gray-700 p-2 rounded">
-                    <code className="text-green-400 font-mono text-sm flex-1">
-                      {taxStatus.walletAddress}
-                    </code>
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
-                      onClick={() => copyWalletAddress(taxStatus.walletAddress)}
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
+
+              {taxStatus.taxAmount && (
+                <div>
+                  <Label className="text-gray-400">Montant calculé</Label>
+                  <div className="text-white font-mono">
+                    {parseFloat(taxStatus.taxAmount).toFixed(2)} €
                   </div>
                 </div>
               )}
-              
-              {taxStatus.reason && (
-                <div className="md:col-span-2">
-                  <Label className="text-gray-400">Motif</Label>
-                  <p className="text-gray-300 text-sm">{taxStatus.reason}</p>
+
+              {taxStatus.portfolioValue && (
+                <div>
+                  <Label className="text-gray-400">Valeur portfolio</Label>
+                  <div className="text-white font-mono">
+                    {parseFloat(taxStatus.portfolioValue).toFixed(2)} €
+                  </div>
                 </div>
               )}
             </div>
           </div>
         )}
 
-        {/* Action Buttons */}
+        {/* Actions */}
         <div className="flex gap-3">
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button className="bg-blue-600 hover:bg-blue-700">
-                <Settings className="h-4 w-4 mr-2" />
+                <Percent className="h-4 w-4 mr-2" />
                 {taxStatus?.status === 'none' ? 'Configurer Taxe' : 'Modifier Taxe'}
               </Button>
             </DialogTrigger>
-            
-            <DialogContent className="bg-gray-800 border-gray-700 max-w-2xl">
+            <DialogContent className="bg-gray-800 border-gray-700 text-white">
               <DialogHeader>
-                <DialogTitle className="text-white">
-                  Configuration de la Taxe de Récupération
-                </DialogTitle>
+                <DialogTitle>Configuration Taxe - {client.email}</DialogTitle>
+                <DialogDescription className="text-gray-300">
+                  Définir le pourcentage de taxe appliqué sur le portfolio total du client
+                </DialogDescription>
               </DialogHeader>
               
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="amount" className="text-gray-300">Montant de la taxe</Label>
+                    <Label htmlFor="percentage" className="text-gray-300">Pourcentage de taxe (%)</Label>
                     <Input
-                      id="amount"
+                      id="percentage"
                       type="number"
-                      step="0.001"
-                      min="0.001"
-                      value={taxForm.amount}
-                      onChange={(e) => setTaxForm({ ...taxForm, amount: parseFloat(e.target.value) || 0 })}
+                      step="0.1"
+                      min="0.1"
+                      max="50"
+                      value={taxForm.percentage}
+                      onChange={(e) => setTaxForm({ ...taxForm, percentage: parseFloat(e.target.value) || 0 })}
                       className="bg-gray-700 border-gray-600 text-white"
-                      placeholder="500"
+                      placeholder="5.0"
                       required
                     />
+                    <p className="text-xs text-gray-400 mt-1">
+                      Appliqué sur la valeur totale du portfolio
+                    </p>
                   </div>
                   
                   <div>
@@ -332,74 +298,40 @@ export default function ClientTaxManagement({ client }: ClientTaxManagementProps
                     </Select>
                   </div>
                 </div>
-
-                {/* Wallet Address Preview */}
-                {getWalletForCurrency(taxForm.currency) && (
-                  <div className="bg-gray-900 rounded-lg p-4">
-                    <Label className="text-gray-400">Adresse de réception configurée</Label>
-                    <div className="flex items-center gap-2 mt-2">
-                      <code className="bg-gray-700 p-2 rounded flex-1 text-green-400 font-mono text-sm">
-                        {getWalletForCurrency(taxForm.currency)}
-                      </code>
-                      <Button 
-                        type="button"
-                        size="sm" 
-                        variant="ghost" 
-                        onClick={() => copyWalletAddress(getWalletForCurrency(taxForm.currency)!)}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
+                
                 <div>
-                  <Label htmlFor="reason" className="text-gray-300">Motif de la taxe</Label>
-                  <Textarea
+                  <Label htmlFor="reason" className="text-gray-300">Motif</Label>
+                  <Input
                     id="reason"
                     value={taxForm.reason}
                     onChange={(e) => setTaxForm({ ...taxForm, reason: e.target.value })}
                     className="bg-gray-700 border-gray-600 text-white"
                     placeholder="Frais de récupération obligatoires"
-                    rows={3}
+                    required
                   />
                 </div>
 
-                <div className="bg-yellow-900/20 border border-yellow-500 rounded-lg p-4">
-                  <div className="flex items-center gap-2 text-yellow-400 mb-2">
-                    <AlertTriangle className="h-4 w-4" />
-                    <span className="font-medium">Information</span>
-                  </div>
-                  <p className="text-yellow-200 text-sm">
-                    Le client devra payer cette taxe avant de pouvoir accéder à ses fonds récupérés. 
-                    La devise sélectionnée détermine automatiquement l'adresse de réception.
-                  </p>
-                </div>
-
-                <div className="flex justify-end space-x-3">
+                <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Annuler
                   </Button>
-                  <Button 
-                    type="submit" 
-                    disabled={setTaxMutation.isPending || !getWalletForCurrency(taxForm.currency)}
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    {setTaxMutation.isPending ? 'Configuration...' : 'Configurer la Taxe'}
+                  <Button type="submit" disabled={setTaxMutation.isPending}>
+                    {setTaxMutation.isPending ? 'Configuration...' : 'Configurer'}
                   </Button>
-                </div>
+                </DialogFooter>
               </form>
             </DialogContent>
           </Dialog>
 
-          {taxStatus && taxStatus.status !== 'exempt' && taxStatus.status !== 'none' && (
+          {taxStatus?.status !== 'exempted' && taxStatus?.status !== 'none' && (
             <Button 
               variant="outline" 
+              className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
               onClick={() => exemptTaxMutation.mutate()}
               disabled={exemptTaxMutation.isPending}
-              className="border-gray-600 text-gray-300 hover:bg-gray-700"
             >
-              {exemptTaxMutation.isPending ? 'Exemption...' : 'Exempter de la Taxe'}
+              <Shield className="h-4 w-4 mr-2" />
+              {exemptTaxMutation.isPending ? 'Exemption...' : 'Exempter'}
             </Button>
           )}
         </div>

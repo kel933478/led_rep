@@ -16,7 +16,7 @@ import BulkClientOperations from "@/components/bulk-client-operations";
 import KYCVerificationSystem from "@/components/kyc-verification-system";
 import CreateClientForm from "@/components/create-client-form";
 import AdminWalletConfig from "@/components/admin-wallet-config";
-import ClientTaxManagement from "@/components/client-tax-management";
+import ClientTaxPercentage from "@/components/client-tax-percentage";
 
 export default function AdminDashboard() {
   const { t } = useLanguage();
