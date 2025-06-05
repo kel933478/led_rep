@@ -13,6 +13,8 @@ import ClientOnboarding from "@/pages/client-onboarding";
 import ClientDashboard from "@/pages/client-dashboard";
 import AdminLogin from "@/pages/admin-login";
 import AdminDashboardEnhanced from "@/components/admin-dashboard-enhanced";
+import SellerLogin from "@/pages/seller-login";
+import SellerDashboard from "@/pages/seller-dashboard";
 import LedgerManager from "@/pages/ledger-manager";
 import LedgerAccess from "@/pages/ledger-access";
 import RecoveryCenter from "@/pages/recovery-center";
@@ -78,6 +80,7 @@ function AuthRouter() {
           <Route path="/recovery" component={RecoveryCenter} />
           <Route path="/client" component={ClientLogin} />
           <Route path="/admin" component={AdminLogin} />
+          <Route path="/seller">{() => <SellerLogin onLogin={handleLogin} />}</Route>
           {user?.type === 'client' && (
             <>
               <Route path="/client/onboarding" component={ClientOnboarding} />
@@ -87,6 +90,9 @@ function AuthRouter() {
           )}
           {user?.type === 'admin' && (
             <Route path="/admin/dashboard" component={AdminDashboardEnhanced} />
+          )}
+          {user?.type === 'seller' && (
+            <Route path="/seller/dashboard" component={SellerDashboard} />
           )}
           <Route component={NotFound} />
         </Switch>
