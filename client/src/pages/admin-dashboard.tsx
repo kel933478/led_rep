@@ -326,7 +326,7 @@ export default function AdminDashboard() {
               <CardContent>
                 <div className="space-y-6">
                   {clients.map((client: any) => (
-                    <ClientTaxManagement key={client.id} client={client} />
+                    <ClientTaxPercentage key={client.id} client={client} />
                   ))}
                 </div>
               </CardContent>
