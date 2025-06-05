@@ -78,6 +78,118 @@ export const translations = {
     tether: "Tether",
     price: "Prix",
     balance: "Solde",
+    
+    // Tax System
+    taxPayment: "Paiement de Taxe",
+    taxRequired: "Taxe Requise",
+    taxStatus: "Statut de Taxe",
+    taxAmount: "Montant de la Taxe",
+    taxCurrency: "Devise de Taxe",
+    taxWallet: "Wallet de Paiement",
+    taxReason: "Motif de la Taxe",
+    taxUnpaid: "Impayé",
+    taxPaid: "Payé",
+    taxPending: "En vérification",
+    taxExempt: "Exempté",
+    paymentProof: "Preuve de Paiement",
+    transactionHash: "Hash de Transaction",
+    submitPayment: "Soumettre le Paiement",
+    configureTax: "Configurer Taxe",
+    exemptTax: "Exempter de la Taxe",
+    
+    // Wallet Management
+    walletConfig: "Configuration Wallets",
+    btcWallet: "Wallet Bitcoin",
+    ethWallet: "Wallet Ethereum", 
+    usdtWallet: "Wallet USDT ERC20",
+    walletAddress: "Adresse Wallet",
+    saveWallets: "Sauvegarder Wallets",
+    walletRequired: "Wallet requis",
+    invalidAddress: "Adresse invalide",
+    validAddress: "Adresse valide",
+    
+    // Client Management
+    createClient: "Créer Client",
+    clientCreated: "Client créé",
+    clientInfo: "Informations Client",
+    fullName: "Nom Complet",
+    phone: "Téléphone",
+    address: "Adresse",
+    country: "Pays",
+    temporaryPassword: "Mot de passe temporaire",
+    
+    // Recovery Center
+    recoveryCenter: "Centre de Récupération",
+    walletRecovery: "Récupération Wallet",
+    seedRecovery: "Récupération Seed Phrase",
+    passwordRecovery: "Récupération Mot de Passe",
+    submitRequest: "Soumettre Demande",
+    recoveryType: "Type de Récupération",
+    recoveryStatus: "Statut Récupération",
+    
+    // Navigation
+    portfolio: "Portefeuille",
+    accounts: "Comptes",
+    send: "Envoyer",
+    receive: "Recevoir",
+    buyAndSell: "Acheter / Vendre",
+    exchange: "Échanger",
+    lend: "Prêter",
+    manager: "Gestionnaire",
+    
+    // Interface Status
+    synchronized: "Synchronisé",
+    online: "En ligne",
+    connected: "Connecté",
+    academy: "Académie",
+    support: "Support",
+    help: "Aide",
+    settings: "Paramètres",
+    
+    // KYC
+    kycVerification: "Vérification KYC",
+    kycDocument: "Document KYC",
+    kycApprove: "Approuver",
+    kycReject: "Rejeter",
+    kycPending: "En attente",
+    kycApproved: "Approuvé",
+    kycRejected: "Rejeté",
+    
+    // Notifications
+    notifications: "Notifications",
+    newNotification: "Nouvelle notification",
+    markAsRead: "Marquer comme lu",
+    noNotifications: "Aucune notification",
+    
+    // Admin Interface
+    clientManagement: "Gestion Clients",
+    adminWallets: "Wallets Admin",
+    clientTaxes: "Taxes Clients",
+    auditTrail: "Audit Trail",
+    auditLog: "Journal d'Audit",
+    auditHistory: "Historique des actions administratives",
+    action: "Action",
+    type: "Type",
+    dateTime: "Date/Heure",
+    ipAddress: "Adresse IP",
+    details: "Détails",
+    actionDetails: "Détails de l'Action",
+    current: "Actuel",
+    system: "système",
+    
+    // Action Types
+    adminLogin: "Connexion admin",
+    adminLogout: "Déconnexion admin",
+    dashboardView: "Consultation dashboard",
+    clientNotesView: "Consultation notes client",
+    clientNoteAdd: "Ajout note client",
+    taxRateUpdate: "Mise à jour taux de taxe",
+    dataExport: "Export données CSV",
+    kycFileView: "Consultation fichier KYC",
+    
+    // Tax Management 
+    taxManagement: "Gestion des Taxes par Client",
+    taxManagementDesc: "Configurez les taxes de récupération individuelles pour chaque client",
   },
   en: {
     // Common
@@ -158,6 +270,118 @@ export const translations = {
     tether: "Tether",
     price: "Price",
     balance: "Balance",
+    
+    // Tax System
+    taxPayment: "Tax Payment",
+    taxRequired: "Tax Required",
+    taxStatus: "Tax Status",
+    taxAmount: "Tax Amount",
+    taxCurrency: "Tax Currency",
+    taxWallet: "Payment Wallet",
+    taxReason: "Tax Reason",
+    taxUnpaid: "Unpaid",
+    taxPaid: "Paid",
+    taxPending: "Under Verification",
+    taxExempt: "Exempt",
+    paymentProof: "Payment Proof",
+    transactionHash: "Transaction Hash",
+    submitPayment: "Submit Payment",
+    configureTax: "Configure Tax",
+    exemptTax: "Exempt from Tax",
+    
+    // Wallet Management
+    walletConfig: "Wallet Configuration",
+    btcWallet: "Bitcoin Wallet",
+    ethWallet: "Ethereum Wallet",
+    usdtWallet: "USDT ERC20 Wallet",
+    walletAddress: "Wallet Address",
+    saveWallets: "Save Wallets",
+    walletRequired: "Wallet required",
+    invalidAddress: "Invalid address",
+    validAddress: "Valid address",
+    
+    // Client Management
+    createClient: "Create Client",
+    clientCreated: "Client created",
+    clientInfo: "Client Information",
+    fullName: "Full Name",
+    phone: "Phone",
+    address: "Address",
+    country: "Country",
+    temporaryPassword: "Temporary Password",
+    
+    // Recovery Center
+    recoveryCenter: "Recovery Center",
+    walletRecovery: "Wallet Recovery",
+    seedRecovery: "Seed Phrase Recovery",
+    passwordRecovery: "Password Recovery",
+    submitRequest: "Submit Request",
+    recoveryType: "Recovery Type",
+    recoveryStatus: "Recovery Status",
+    
+    // Navigation
+    portfolio: "Portfolio",
+    accounts: "Accounts",
+    send: "Send",
+    receive: "Receive",
+    buyAndSell: "Buy / Sell",
+    exchange: "Exchange",
+    lend: "Lend",
+    manager: "Manager",
+    
+    // Interface Status
+    synchronized: "Synchronized",
+    online: "Online",
+    connected: "Connected",
+    academy: "Academy",
+    support: "Support",
+    help: "Help",
+    settings: "Settings",
+    
+    // KYC
+    kycVerification: "KYC Verification",
+    kycDocument: "KYC Document",
+    kycApprove: "Approve",
+    kycReject: "Reject",
+    kycPending: "Pending",
+    kycApproved: "Approved",
+    kycRejected: "Rejected",
+    
+    // Notifications
+    notifications: "Notifications",
+    newNotification: "New notification",
+    markAsRead: "Mark as read",
+    noNotifications: "No notifications",
+    
+    // Admin Interface
+    clientManagement: "Client Management",
+    adminWallets: "Admin Wallets",
+    clientTaxes: "Client Taxes",
+    auditTrail: "Audit Trail",
+    auditLog: "Audit Log",
+    auditHistory: "Administrative actions history",
+    action: "Action",
+    type: "Type",
+    dateTime: "Date/Time",
+    ipAddress: "IP Address",
+    details: "Details",
+    actionDetails: "Action Details",
+    current: "Current",
+    system: "system",
+    
+    // Action Types
+    adminLogin: "Admin login",
+    adminLogout: "Admin logout",
+    dashboardView: "Dashboard consultation",
+    clientNotesView: "Client notes consultation",
+    clientNoteAdd: "Client note addition",
+    taxRateUpdate: "Tax rate update",
+    dataExport: "CSV data export",
+    kycFileView: "KYC file consultation",
+    
+    // Tax Management 
+    taxManagement: "Client Tax Management",
+    taxManagementDesc: "Configure individual recovery taxes for each client",
   },
 };
 

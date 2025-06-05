@@ -175,14 +175,14 @@ export default function AdminDashboard() {
 
         <Tabs defaultValue="clients" className="w-full">
           <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="clients">Gestion Clients</TabsTrigger>
-            <TabsTrigger value="wallets">Wallets Admin</TabsTrigger>
-            <TabsTrigger value="taxes">Taxes Clients</TabsTrigger>
-            <TabsTrigger value="kyc">Vérification KYC</TabsTrigger>
-            <TabsTrigger value="settings">Paramètres</TabsTrigger>
+            <TabsTrigger value="clients">{t('clientManagement')}</TabsTrigger>
+            <TabsTrigger value="wallets">{t('adminWallets')}</TabsTrigger>
+            <TabsTrigger value="taxes">{t('clientTaxes')}</TabsTrigger>
+            <TabsTrigger value="kyc">{t('kycVerification')}</TabsTrigger>
+            <TabsTrigger value="settings">{t('settings')}</TabsTrigger>
             <TabsTrigger value="audit">
               <Activity className="w-4 h-4 mr-2" />
-              Audit Trail
+              {t('auditTrail')}
             </TabsTrigger>
           </TabsList>
 
@@ -318,10 +318,10 @@ export default function AdminDashboard() {
           <TabsContent value="taxes" className="space-y-6">
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle>Gestion des Taxes par Client</CardTitle>
-                <CardDescription>
-                  Configurez les taxes de récupération individuelles pour chaque client
-                </CardDescription>
+                <CardTitle>{t('taxManagement')}</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  {t('taxManagementDesc')}
+                </p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
@@ -373,10 +373,10 @@ export default function AdminDashboard() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Activity className="w-5 h-5 mr-2" />
-                  Journal d'Audit
+                  {t('auditLog')}
                 </CardTitle>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Historique des actions administratives
+                  {t('auditHistory')}
                 </p>
               </CardHeader>
               <CardContent>
