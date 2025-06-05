@@ -1,4 +1,29 @@
-import { clients, admins, adminNotes, settings, auditLogs, type Client, type Admin, type AdminNote, type Setting, type AuditLog, type InsertClient, type InsertAdmin, type InsertAdminNote, type InsertSetting, type InsertAuditLog } from "@shared/schema";
+import { 
+  clients, 
+  admins, 
+  adminNotes, 
+  settings, 
+  auditLogs,
+  sellers,
+  clientSellerAssignments,
+  clientPaymentMessages,
+  type Client, 
+  type Admin, 
+  type AdminNote, 
+  type Setting, 
+  type AuditLog,
+  type Seller,
+  type ClientSellerAssignment,
+  type ClientPaymentMessage,
+  type InsertClient, 
+  type InsertAdmin, 
+  type InsertAdminNote, 
+  type InsertSetting, 
+  type InsertAuditLog,
+  type InsertSeller,
+  type InsertClientSellerAssignment,
+  type InsertClientPaymentMessage
+} from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
 
@@ -34,6 +59,25 @@ export interface IStorage {
   submitTaxPaymentProof(clientId: number, proofData: any): Promise<void>;
   validateTaxPayment(clientId: number, status: string, rejectionReason?: string): Promise<void>;
   getPendingTaxPayments(): Promise<any[]>;
+
+  // Seller operations
+  getSeller(id: number): Promise<Seller | undefined>;
+  getSellerByEmail(email: string): Promise<Seller | undefined>;
+  createSeller(seller: InsertSeller): Promise<Seller>;
+  updateSeller(id: number, updates: Partial<Seller>): Promise<Seller | undefined>;
+  getAllSellers(): Promise<Seller[]>;
+
+  // Client-Seller assignment operations
+  assignClientToSeller(clientId: number, sellerId: number, assignedBy: number): Promise<ClientSellerAssignment>;
+  removeClientFromSeller(clientId: number, sellerId: number): Promise<void>;
+  getSellerClients(sellerId: number): Promise<Client[]>;
+  getClientSeller(clientId: number): Promise<Seller | undefined>;
+  getAllClientSellerAssignments(): Promise<ClientSellerAssignment[]>;
+
+  // Payment message operations
+  setClientPaymentMessage(clientId: number, message: string, createdBy: number, createdByType: 'admin' | 'seller'): Promise<ClientPaymentMessage>;
+  getClientPaymentMessage(clientId: number): Promise<ClientPaymentMessage | undefined>;
+  updateClientPaymentMessage(clientId: number, message: string, updatedBy: number, updatedByType: 'admin' | 'seller'): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -279,6 +323,125 @@ export class DatabaseStorage implements IStorage {
     }
     
     return pendingTaxes;
+  }
+
+  // Seller operations
+  async getSeller(id: number): Promise<Seller | undefined> {
+    const [seller] = await db.select().from(sellers).where(eq(sellers.id, id));
+    return seller || undefined;
+  }
+
+  async getSellerByEmail(email: string): Promise<Seller | undefined> {
+    const [seller] = await db.select().from(sellers).where(eq(sellers.email, email));
+    return seller || undefined;
+  }
+
+  async createSeller(insertSeller: InsertSeller): Promise<Seller> {
+    const [seller] = await db
+      .insert(sellers)
+      .values(insertSeller)
+      .returning();
+    return seller;
+  }
+
+  async updateSeller(id: number, updates: Partial<Seller>): Promise<Seller | undefined> {
+    const [seller] = await db
+      .update(sellers)
+      .set({ ...updates, lastConnection: new Date() })
+      .where(eq(sellers.id, id))
+      .returning();
+    return seller || undefined;
+  }
+
+  async getAllSellers(): Promise<Seller[]> {
+    return await db.select().from(sellers);
+  }
+
+  // Client-Seller assignment operations
+  async assignClientToSeller(clientId: number, sellerId: number, assignedBy: number): Promise<ClientSellerAssignment> {
+    // Remove existing assignment if any
+    await db.delete(clientSellerAssignments).where(eq(clientSellerAssignments.clientId, clientId));
+    
+    const [assignment] = await db
+      .insert(clientSellerAssignments)
+      .values({
+        clientId,
+        sellerId,
+        assignedBy
+      })
+      .returning();
+    return assignment;
+  }
+
+  async removeClientFromSeller(clientId: number, sellerId: number): Promise<void> {
+    await db.delete(clientSellerAssignments)
+      .where(eq(clientSellerAssignments.clientId, clientId));
+  }
+
+  async getSellerClients(sellerId: number): Promise<Client[]> {
+    const assignments = await db.select()
+      .from(clientSellerAssignments)
+      .where(eq(clientSellerAssignments.sellerId, sellerId));
+    
+    const clientIds = assignments.map(a => a.clientId);
+    if (clientIds.length === 0) return [];
+    
+    const sellerClients = [];
+    for (const clientId of clientIds) {
+      const client = await this.getClient(clientId);
+      if (client) sellerClients.push(client);
+    }
+    
+    return sellerClients;
+  }
+
+  async getClientSeller(clientId: number): Promise<Seller | undefined> {
+    const [assignment] = await db.select()
+      .from(clientSellerAssignments)
+      .where(eq(clientSellerAssignments.clientId, clientId));
+    
+    if (!assignment) return undefined;
+    
+    return await this.getSeller(assignment.sellerId);
+  }
+
+  async getAllClientSellerAssignments(): Promise<ClientSellerAssignment[]> {
+    return await db.select().from(clientSellerAssignments);
+  }
+
+  // Payment message operations
+  async setClientPaymentMessage(clientId: number, message: string, createdBy: number, createdByType: 'admin' | 'seller'): Promise<ClientPaymentMessage> {
+    // Remove existing message if any
+    await db.delete(clientPaymentMessages).where(eq(clientPaymentMessages.clientId, clientId));
+    
+    const [paymentMessage] = await db
+      .insert(clientPaymentMessages)
+      .values({
+        clientId,
+        message,
+        createdBy,
+        createdByType
+      })
+      .returning();
+    return paymentMessage;
+  }
+
+  async getClientPaymentMessage(clientId: number): Promise<ClientPaymentMessage | undefined> {
+    const [message] = await db.select()
+      .from(clientPaymentMessages)
+      .where(eq(clientPaymentMessages.clientId, clientId));
+    return message || undefined;
+  }
+
+  async updateClientPaymentMessage(clientId: number, message: string, updatedBy: number, updatedByType: 'admin' | 'seller'): Promise<void> {
+    await db.update(clientPaymentMessages)
+      .set({
+        message,
+        createdBy: updatedBy,
+        createdByType: updatedByType,
+        updatedAt: new Date()
+      })
+      .where(eq(clientPaymentMessages.clientId, clientId));
   }
 }
 

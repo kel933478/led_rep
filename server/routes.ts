@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { clientLoginSchema, adminLoginSchema, onboardingSchema, settings } from "@shared/schema";
+import { clientLoginSchema, adminLoginSchema, sellerLoginSchema, onboardingSchema, settings } from "@shared/schema";
 import { z } from "zod";
 import session from "express-session";
 import MemoryStore from "memorystore";
