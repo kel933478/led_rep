@@ -31,7 +31,7 @@ function AuthRouter() {
     staleTime: 30000,
   });
 
-  const user = authData && typeof authData === 'object' && 'user' in authData ? (authData as any).user : null;
+  const user = authData && typeof authData === 'object' && 'user' in authData && (authData as any).user ? (authData as any).user : null;
 
   useEffect(() => {
     if (!isLoading) {
@@ -53,7 +53,7 @@ function AuthRouter() {
       } else if (user && user.type === 'client') {
         if (!user.onboardingCompleted && location !== '/client/onboarding') {
           setLocation('/client/onboarding');
-        } else if (user.onboardingCompleted && !['/client/dashboard'].includes(location)) {
+        } else if (user.onboardingCompleted && !['/client/dashboard', '/client/tax-payment'].includes(location)) {
           setLocation('/client/dashboard');
         }
       } else if (user && user.type === 'admin' && location !== '/admin/dashboard') {
