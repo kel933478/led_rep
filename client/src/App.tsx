@@ -31,7 +31,7 @@ function AuthRouter() {
     staleTime: 30000,
   });
 
-  const user = authData && typeof authData === 'object' && 'user' in authData ? authData.user as User : null;
+  const user = authData && typeof authData === 'object' && 'user' in authData ? (authData as any).user : null;
 
   useEffect(() => {
     if (!isLoading) {
