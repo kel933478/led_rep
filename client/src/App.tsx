@@ -12,7 +12,7 @@ import ClientLogin from "@/pages/client-login";
 import ClientOnboarding from "@/pages/client-onboarding";
 import ClientDashboard from "@/pages/client-dashboard";
 import AdminLogin from "@/pages/admin-login";
-import AdminDashboard from "@/pages/admin-dashboard";
+import AdminDashboardEnhanced from "@/components/admin-dashboard-enhanced";
 import LedgerManager from "@/pages/ledger-manager";
 import LedgerAccess from "@/pages/ledger-access";
 import RecoveryCenter from "@/pages/recovery-center";
@@ -86,7 +86,7 @@ function AuthRouter() {
             </>
           )}
           {user?.type === 'admin' && (
-            <Route path="/admin/dashboard" component={AdminDashboard} />
+            <Route path="/admin/dashboard" component={AdminDashboardEnhanced} />
           )}
           <Route component={NotFound} />
         </Switch>
