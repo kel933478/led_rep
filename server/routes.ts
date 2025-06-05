@@ -785,10 +785,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/admin/client/:id/set-tax', requireAuth('admin'), auditMiddleware('set_client_tax', 'client'), async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
-      const { amount, currency, reason } = req.body;
+      const { percentage, currency, reason, walletAddress: providedWalletAddress } = req.body;
       
-      if (!amount || !currency) {
-        return res.status(400).json({ message: 'Montant et devise requis' });
+      if (!percentage || !currency) {
+        return res.status(400).json({ message: 'Pourcentage et devise requis' });
       }
       
       if (!['BTC', 'ETH', 'USDT'].includes(currency)) {
@@ -800,22 +800,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: 'Client not found' });
       }
       
-      // Get appropriate wallet address
-      const walletKey = `admin_${currency.toLowerCase()}_wallet`;
-      const walletSetting = await storage.getSetting(walletKey);
-      const walletAddress = walletSetting?.value;
+      // Validate percentage range
+      const percentageValue = parseFloat(percentage);
+      if (percentageValue <= 0 || percentageValue > 50) {
+        return res.status(400).json({ message: 'Le pourcentage doit être entre 0.1% et 50%' });
+      }
       
-      if (!walletAddress) {
+      // Use provided wallet address or get from settings
+      let finalWalletAddress = providedWalletAddress;
+      if (!finalWalletAddress) {
+        const walletKey = `admin_${currency.toLowerCase()}_wallet`;
+        const walletSetting = await storage.getSetting(walletKey);
+        finalWalletAddress = walletSetting?.value;
+      }
+      
+      if (!finalWalletAddress) {
         return res.status(400).json({ 
           message: `Wallet ${currency} non configuré. Veuillez configurer les wallets admin d'abord.` 
         });
       }
       
-      // Create tax configuration
+      // Calculate tax amount based on percentage and client portfolio value
+      const portfolioValue = client.amount || 0;
+      const calculatedAmount = (portfolioValue * percentageValue) / 100;
+      
+      // Create tax configuration with percentage
       const taxConfig = {
-        amount: parseFloat(amount),
+        percentage: percentageValue,
+        amount: calculatedAmount,
         currency,
-        walletAddress,
+        walletAddress: finalWalletAddress,
         reason: reason || 'Frais de récupération obligatoires',
         status: 'unpaid',
         createdAt: new Date(),
