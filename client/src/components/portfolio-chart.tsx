@@ -2,6 +2,7 @@ import { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { Button } from "@/components/ui/button";
 import { TrendingUp } from "lucide-react";
+import { useLanguage } from "@/hooks/use-language";
 
 interface PortfolioChartProps {
   totalValue: number;

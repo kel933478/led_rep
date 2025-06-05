@@ -130,13 +130,13 @@ export default function ClientDashboard() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Badge className="bg-green-600 text-white">
-                ✓ Synchronisé
+                ✓ {t('synchronized')}
               </Badge>
               <Badge variant="outline" className="border-yellow-500 text-yellow-500">
-                ⚠ Taxe requise
+                ⚠ {t('taxRequired')}
               </Badge>
               <Badge variant="outline" className="border-gray-600 text-gray-400">
-                ⚡ En ligne
+                ⚡ {t('online')}
               </Badge>
             </div>
             
@@ -162,9 +162,9 @@ export default function ClientDashboard() {
           {/* Ledger Academy Banner */}
           <div className="bg-gradient-to-r from-blue-900 to-purple-900 rounded-lg p-4 flex items-center justify-between">
             <div>
-              <h3 className="text-white font-semibold mb-1">ACADÉMIE LEDGER</h3>
+              <h3 className="text-white font-semibold mb-1">{t('academy').toUpperCase()}</h3>
               <p className="text-gray-300 text-sm">
-                Tout ce que vous devez savoir sur la blockchain, la sécurité, les cryptomonnaies et votre dispositif Ledger
+                {t('academyDescription')}
               </p>
             </div>
             <div className="flex items-center space-x-2">

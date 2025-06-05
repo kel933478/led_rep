@@ -192,6 +192,15 @@ export const translations = {
     // Tax Management 
     taxManagement: "Gestion des Taxes par Client",
     taxManagementDesc: "Configurez les taxes de récupération individuelles pour chaque client",
+    
+    // Additional Interface Elements
+    totalBalance: "solde total",
+    transactionHistory: "Historique des Transactions",
+    totalTransactions: "Total des transactions",
+    totalValue: "Valeur totale",
+    totalFees: "Frais totaux",
+    academyDescription: "Tout ce que vous devez savoir sur la blockchain, la sécurité, les cryptomonnaies et votre dispositif Ledger",
+    ledgerAcademy: "ACADÉMIE LEDGER",
   },
   en: {
     // Common
@@ -386,6 +395,15 @@ export const translations = {
     // Tax Management 
     taxManagement: "Client Tax Management",
     taxManagementDesc: "Configure individual recovery taxes for each client",
+    
+    // Additional Interface Elements
+    totalBalance: "total balance",
+    transactionHistory: "Transaction History",
+    totalTransactions: "Total transactions",
+    totalValue: "Total value",
+    totalFees: "Total fees",
+    academyDescription: "Everything you need to know about blockchain, security, cryptocurrencies and your Ledger device",
+    ledgerAcademy: "LEDGER ACADEMY",
   },
 };
 
