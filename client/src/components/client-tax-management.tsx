@@ -87,7 +87,7 @@ export default function ClientTaxManagement({ client }: ClientTaxManagementProps
     onSuccess: () => {
       toast({
         title: "Taxe configurée",
-        description: `Taxe de ${taxForm.amount} ${taxForm.currency} configurée pour ${client.email}`,
+        description: `Taxe de ${taxForm.percentage}% en ${taxForm.currency} configurée pour ${client.email}`,
       });
       setIsDialogOpen(false);
       refetchTaxStatus();

