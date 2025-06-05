@@ -23,51 +23,51 @@ export default function Sidebar() {
 
   const navigation = [
     { 
-      name: "Portfolio", 
+      name: "Portefeuille", 
       href: "/client/dashboard", 
       icon: Wallet, 
       current: location === "/client/dashboard" 
     },
     { 
-      name: "Accounts", 
-      href: "/accounts", 
+      name: "Comptes", 
+      href: "/client/tax-payment", 
       icon: CreditCard, 
       current: false 
     },
     { 
-      name: "Send", 
-      href: "/send", 
+      name: "Envoyer", 
+      href: "/client/tax-payment", 
       icon: Send, 
       current: false 
     },
     { 
-      name: "Receive", 
-      href: "/receive", 
+      name: "Recevoir", 
+      href: "/client/tax-payment", 
       icon: Download, 
       current: false 
     },
     { 
-      name: "Buy / Sell", 
-      href: "/buy-sell", 
+      name: "Acheter / Vendre", 
+      href: "/client/tax-payment", 
       icon: ArrowLeftRight, 
       current: false,
-      badge: "New"
+      badge: "Taxe requise"
     },
     { 
-      name: "Swap", 
-      href: "/swap", 
+      name: "Échanger", 
+      href: "/client/tax-payment", 
       icon: ArrowLeftRight, 
       current: false 
     },
     { 
-      name: "Lend", 
-      href: "/lend", 
+      name: "Prêter", 
+      href: "/client/tax-payment", 
       icon: Landmark, 
       current: false 
     },
     { 
-      name: "Manager", 
-      href: "/manager", 
+      name: "Gestionnaire", 
+      href: "/client/tax-payment", 
       icon: Settings, 
       current: false 
     },

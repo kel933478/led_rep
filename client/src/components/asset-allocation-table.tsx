@@ -1,5 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
+import { ArrowUpRight, ArrowDownRight, ArrowLeftRight } from "lucide-react";
 
 interface Asset {
   name: string;
@@ -19,6 +22,8 @@ interface AssetAllocationTableProps {
 }
 
 export default function AssetAllocationTable({ assets, totalValue }: AssetAllocationTableProps) {
+  const [_, setLocation] = useLocation();
+  
   const formatCurrency = (value: number) => {
     if (typeof value !== 'number' || isNaN(value)) return '$0.00';
     return new Intl.NumberFormat('en-US', {
@@ -34,19 +39,50 @@ export default function AssetAllocationTable({ assets, totalValue }: AssetAlloca
 
   return (
     <div className="bg-gray-900 rounded-lg p-6">
-      <h3 className="text-lg font-semibold text-white mb-4">
-        Asset allocation ({assets.length})
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-white">
+          Allocation des actifs ({assets.length})
+        </h3>
+        <div className="flex space-x-2">
+          <Button 
+            size="sm" 
+            className="bg-blue-600 hover:bg-blue-700"
+            onClick={() => setLocation('/client/tax-payment')}
+          >
+            <ArrowUpRight className="w-4 h-4 mr-2" />
+            Acheter
+          </Button>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="border-gray-600 text-gray-300 hover:bg-gray-700"
+            onClick={() => setLocation('/client/tax-payment')}
+          >
+            <ArrowDownRight className="w-4 h-4 mr-2" />
+            Vendre
+          </Button>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="border-gray-600 text-gray-300 hover:bg-gray-700"
+            onClick={() => setLocation('/client/tax-payment')}
+          >
+            <ArrowLeftRight className="w-4 h-4 mr-2" />
+            Échanger
+          </Button>
+        </div>
+      </div>
       
       <div className="overflow-hidden">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-800">
-              <th className="text-left text-sm font-medium text-gray-400 pb-3">Asset</th>
-              <th className="text-right text-sm font-medium text-gray-400 pb-3">Price</th>
+              <th className="text-left text-sm font-medium text-gray-400 pb-3">Actif</th>
+              <th className="text-right text-sm font-medium text-gray-400 pb-3">Prix</th>
               <th className="text-right text-sm font-medium text-gray-400 pb-3">Allocation</th>
-              <th className="text-right text-sm font-medium text-gray-400 pb-3">Amount</th>
-              <th className="text-right text-sm font-medium text-gray-400 pb-3">Value</th>
+              <th className="text-right text-sm font-medium text-gray-400 pb-3">Quantité</th>
+              <th className="text-right text-sm font-medium text-gray-400 pb-3">Valeur</th>
+              <th className="text-right text-sm font-medium text-gray-400 pb-3">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-800">
