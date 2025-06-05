@@ -1761,4 +1761,6 @@ async function initializeDefaultData() {
   } catch (error) {
     console.error('Error initializing default data:', error);
   }
+
+  return server;
 }
