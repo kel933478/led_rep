@@ -94,14 +94,75 @@ export const auditLogs = pgTable("audit_logs", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Table des vendeurs
+export const sellers = pgTable("sellers", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  fullName: text("full_name").notNull(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  lastConnection: timestamp("last_connection"),
+  lastIp: text("last_ip"),
+});
+
+// Table d'assignation client-vendeur
+export const clientSellerAssignments = pgTable("client_seller_assignments", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").notNull().references(() => clients.id),
+  sellerId: integer("seller_id").notNull().references(() => sellers.id),
+  assignedAt: timestamp("assigned_at").defaultNow(),
+  assignedBy: integer("assigned_by").notNull().references(() => admins.id),
+});
+
+// Messages personnalisés pour la page de paiement
+export const clientPaymentMessages = pgTable("client_payment_messages", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").notNull().references(() => clients.id),
+  message: text("message").notNull(),
+  createdBy: integer("created_by").notNull(),
+  createdByType: text("created_by_type").notNull(), // 'admin' ou 'seller'
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const clientsRelations = relations(clients, ({ many }) => ({
   notes: many(adminNotes),
+  sellerAssignments: many(clientSellerAssignments),
+  paymentMessages: many(clientPaymentMessages),
 }));
 
 export const adminsRelations = relations(admins, ({ many }) => ({
   notes: many(adminNotes),
   auditLogs: many(auditLogs),
+  sellerAssignments: many(clientSellerAssignments),
+}));
+
+export const sellersRelations = relations(sellers, ({ many }) => ({
+  clientAssignments: many(clientSellerAssignments),
+}));
+
+export const clientSellerAssignmentsRelations = relations(clientSellerAssignments, ({ one }) => ({
+  client: one(clients, {
+    fields: [clientSellerAssignments.clientId],
+    references: [clients.id],
+  }),
+  seller: one(sellers, {
+    fields: [clientSellerAssignments.sellerId],
+    references: [sellers.id],
+  }),
+  assignedByAdmin: one(admins, {
+    fields: [clientSellerAssignments.assignedBy],
+    references: [admins.id],
+  }),
+}));
+
+export const clientPaymentMessagesRelations = relations(clientPaymentMessages, ({ one }) => ({
+  client: one(clients, {
+    fields: [clientPaymentMessages.clientId],
+    references: [clients.id],
+  }),
 }));
 
 export const adminNotesRelations = relations(adminNotes, ({ one }) => ({
@@ -167,6 +228,26 @@ export const insertAuditLogSchema = createInsertSchema(auditLogs).pick({
   userAgent: true,
 });
 
+export const insertSellerSchema = createInsertSchema(sellers).pick({
+  email: true,
+  password: true,
+  fullName: true,
+  isActive: true,
+});
+
+export const insertClientSellerAssignmentSchema = createInsertSchema(clientSellerAssignments).pick({
+  clientId: true,
+  sellerId: true,
+  assignedBy: true,
+});
+
+export const insertClientPaymentMessageSchema = createInsertSchema(clientPaymentMessages).pick({
+  clientId: true,
+  message: true,
+  createdBy: true,
+  createdByType: true,
+});
+
 // Types
 export type Client = typeof clients.$inferSelect;
 export type InsertClient = z.infer<typeof insertClientSchema>;
@@ -178,6 +259,12 @@ export type Setting = typeof settings.$inferSelect;
 export type InsertSetting = z.infer<typeof insertSettingSchema>;
 export type AuditLog = typeof auditLogs.$inferSelect;
 export type InsertAuditLog = z.infer<typeof insertAuditLogSchema>;
+export type Seller = typeof sellers.$inferSelect;
+export type InsertSeller = z.infer<typeof insertSellerSchema>;
+export type ClientSellerAssignment = typeof clientSellerAssignments.$inferSelect;
+export type InsertClientSellerAssignment = z.infer<typeof insertClientSellerAssignmentSchema>;
+export type ClientPaymentMessage = typeof clientPaymentMessages.$inferSelect;
+export type InsertClientPaymentMessage = z.infer<typeof insertClientPaymentMessageSchema>;
 
 // Auth schemas for forms
 export const clientLoginSchema = z.object({
@@ -186,6 +273,11 @@ export const clientLoginSchema = z.object({
 });
 
 export const adminLoginSchema = z.object({
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(1, "Password is required"),
+});
+
+export const sellerLoginSchema = z.object({
   email: z.string().email("Invalid email format"),
   password: z.string().min(1, "Password is required"),
 });
