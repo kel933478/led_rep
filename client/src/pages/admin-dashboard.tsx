@@ -144,14 +144,14 @@ export default function AdminDashboard() {
 
   const formatActionText = (action: string) => {
     const actionMap: Record<string, string> = {
-      admin_login: 'Connexion admin',
-      admin_logout: 'Déconnexion admin',
-      dashboard_view: 'Consultation dashboard',
-      client_notes_view: 'Consultation notes client',
-      client_note_add: 'Ajout note client',
-      tax_rate_update: 'Mise à jour taux de taxe',
-      data_export: 'Export données CSV',
-      kyc_file_view: 'Consultation fichier KYC',
+      admin_login: t('adminLogin'),
+      admin_logout: t('adminLogout'),
+      dashboard_view: t('dashboardView'),
+      client_notes_view: t('clientNotesView'),
+      client_note_add: t('clientNoteAdd'),
+      tax_rate_update: t('taxRateUpdate'),
+      data_export: t('dataExport'),
+      kyc_file_view: t('kycFileView'),
     };
     return actionMap[action] || action;
   };
@@ -361,7 +361,7 @@ export default function AdminDashboard() {
                     {updateTaxMutation.isPending ? t('loading') : t('update')}
                   </Button>
                   <span className="text-sm text-muted-foreground">
-                    Actuel: {taxRate}%
+                    {t('current')}: {taxRate}%
                   </span>
                 </div>
               </CardContent>
@@ -385,11 +385,11 @@ export default function AdminDashboard() {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Action</TableHead>
-                          <TableHead>Type</TableHead>
-                          <TableHead>Date/Heure</TableHead>
-                          <TableHead>Adresse IP</TableHead>
-                          <TableHead>Détails</TableHead>
+                          <TableHead>{t('action')}</TableHead>
+                          <TableHead>{t('type')}</TableHead>
+                          <TableHead>{t('dateTime')}</TableHead>
+                          <TableHead>{t('ipAddress')}</TableHead>
+                          <TableHead>{t('details')}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -419,7 +419,7 @@ export default function AdminDashboard() {
                                   </DialogTrigger>
                                   <DialogContent>
                                     <DialogHeader>
-                                      <DialogTitle>Détails de l'Action</DialogTitle>
+                                      <DialogTitle>{t('actionDetails')}</DialogTitle>
                                     </DialogHeader>
                                     <div className="space-y-2">
                                       <pre className="text-xs bg-muted p-3 rounded overflow-auto">
