@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '@/lib/queryClient';
-import { admin } from '@/lib/api';
+import * as api from '@/lib/api';
 import { 
   Receipt, 
   DollarSign, 

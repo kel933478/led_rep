@@ -790,7 +790,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/client/recovery-requests', requireAuth, async (req: Request, res: Response) => {
     try {
-      
       // Simulation de récupération des demandes pour le client
       const mockRequests = [
         {
@@ -817,6 +816,172 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Get recovery requests error:', error);
       res.status(500).json({ error: 'Erreur lors de la récupération des demandes' });
+    }
+  });
+
+  // API pour la gestion des taxes admin
+  app.post('/api/admin/client/:clientId/set-tax', requireAuth, async (req: Request, res: Response) => {
+    try {
+      const { clientId } = req.params;
+      const { amount, currency, walletAddress, reason } = req.body;
+
+      if (!amount || !currency || !walletAddress || !reason) {
+        return res.status(400).json({ error: 'Champs obligatoires manquants' });
+      }
+
+      const client = await storage.getClient(parseInt(clientId));
+      if (!client) {
+        return res.status(404).json({ error: 'Client non trouvé' });
+      }
+
+      const updatedClient = await storage.updateClient(parseInt(clientId), {
+        taxAmount: amount.toString(),
+        taxCurrency: currency,
+        taxWalletAddress: walletAddress,
+        taxStatus: 'unpaid',
+        taxSetBy: req.session.userId,
+        taxSetAt: new Date()
+      });
+
+      console.log('Tax set for client:', {
+        clientId,
+        amount,
+        currency,
+        adminId: req.session.userId,
+        timestamp: new Date()
+      });
+
+      res.json({ 
+        success: true, 
+        message: 'Taxe configurée avec succès',
+        client: updatedClient
+      });
+    } catch (error) {
+      console.error('Set tax error:', error);
+      res.status(500).json({ error: 'Erreur lors de la configuration de la taxe' });
+    }
+  });
+
+  app.post('/api/admin/client/:clientId/exempt-tax', requireAuth, async (req: Request, res: Response) => {
+    try {
+      const { clientId } = req.params;
+
+      const client = await storage.getClient(parseInt(clientId));
+      if (!client) {
+        return res.status(404).json({ error: 'Client non trouvé' });
+      }
+
+      const updatedClient = await storage.updateClient(parseInt(clientId), {
+        taxStatus: 'exempted',
+        taxSetBy: req.session.userId,
+        taxSetAt: new Date()
+      });
+
+      console.log('Tax exempted for client:', {
+        clientId,
+        adminId: req.session.userId,
+        timestamp: new Date()
+      });
+
+      res.json({ 
+        success: true, 
+        message: 'Client exempté de la taxe',
+        client: updatedClient
+      });
+    } catch (error) {
+      console.error('Exempt tax error:', error);
+      res.status(500).json({ error: 'Erreur lors de l\'exemption de la taxe' });
+    }
+  });
+
+  app.post('/api/admin/client/:clientId/verify-tax', requireAuth, async (req: Request, res: Response) => {
+    try {
+      const { clientId } = req.params;
+      const { verified } = req.body;
+
+      const client = await storage.getClient(parseInt(clientId));
+      if (!client) {
+        return res.status(404).json({ error: 'Client non trouvé' });
+      }
+
+      const updatedClient = await storage.updateClient(parseInt(clientId), {
+        taxStatus: verified ? 'paid' : 'unpaid'
+      });
+
+      console.log('Tax verification for client:', {
+        clientId,
+        verified,
+        adminId: req.session.userId,
+        timestamp: new Date()
+      });
+
+      res.json({ 
+        success: true, 
+        message: verified ? 'Paiement vérifié' : 'Paiement rejeté',
+        client: updatedClient
+      });
+    } catch (error) {
+      console.error('Verify tax error:', error);
+      res.status(500).json({ error: 'Erreur lors de la vérification' });
+    }
+  });
+
+  // API pour les taxes côté client
+  app.get('/api/client/tax-info', requireAuth, async (req: Request, res: Response) => {
+    try {
+      const client = await storage.getClient(req.session.userId!);
+      if (!client) {
+        return res.status(404).json({ error: 'Client non trouvé' });
+      }
+
+      res.json({
+        taxAmount: client.taxAmount || '0',
+        taxCurrency: client.taxCurrency || 'BTC',
+        taxStatus: client.taxStatus || 'unpaid',
+        taxWalletAddress: client.taxWalletAddress,
+        taxReason: 'Frais de récupération et traitement administratif',
+        transactionHash: client.taxPaymentProof
+      });
+    } catch (error) {
+      console.error('Get tax info error:', error);
+      res.status(500).json({ error: 'Erreur lors de la récupération des informations' });
+    }
+  });
+
+  app.post('/api/client/tax-payment-proof', requireAuth, upload.single('paymentProof'), async (req: Request, res: Response) => {
+    try {
+      const { transactionHash } = req.body;
+      const paymentProofFile = req.file;
+
+      if (!transactionHash && !paymentProofFile) {
+        return res.status(400).json({ error: 'Hash de transaction ou preuve de paiement requis' });
+      }
+
+      const client = await storage.getClient(req.session.userId!);
+      if (!client) {
+        return res.status(404).json({ error: 'Client non trouvé' });
+      }
+
+      const updatedClient = await storage.updateClient(req.session.userId!, {
+        taxPaymentProof: transactionHash || paymentProofFile?.filename,
+        taxStatus: 'pending_verification'
+      });
+
+      console.log('Tax payment proof submitted:', {
+        clientId: req.session.userId,
+        transactionHash,
+        file: paymentProofFile?.filename,
+        timestamp: new Date()
+      });
+
+      res.json({ 
+        success: true, 
+        message: 'Preuve de paiement soumise pour vérification',
+        client: updatedClient
+      });
+    } catch (error) {
+      console.error('Submit tax proof error:', error);
+      res.status(500).json({ error: 'Erreur lors de l\'envoi de la preuve' });
     }
   });
 

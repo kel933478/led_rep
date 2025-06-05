@@ -289,4 +289,22 @@ export const client = {
     
     return res.json();
   },
+
+  getTaxInfo: async () => {
+    const res = await apiRequest('GET', '/api/client/tax-info');
+    return res.json();
+  },
+
+  submitTaxPaymentProof: async (formData: FormData) => {
+    const res = await fetch('/api/client/tax-payment-proof', {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!res.ok) {
+      throw new Error('Upload failed');
+    }
+    
+    return res.json();
+  },
 };
