@@ -9,6 +9,7 @@
 - ✅ Navigation française cohérente
 - ✅ Sidebar avec icônes et menus traduits
 - ✅ Thème sombre professionnel
+- ✅ Suppression complète des références hardware Ledger
 
 ### Authentification & Sécurité
 - ✅ Système de connexion client/admin
@@ -17,13 +18,15 @@
 - ✅ Protection des routes avec middleware
 - ✅ Validation des données avec Zod
 - ✅ Gestion des erreurs d'authentification
+- ✅ Système de récupération de mot de passe complet
 
 ### Base de Données
-- ✅ Schéma Drizzle complet (clients, admins, notes)
+- ✅ Schéma Drizzle complet (clients, admins, notes, audit)
 - ✅ Relations entre tables définies
 - ✅ Migrations automatiques
 - ✅ Connexion PostgreSQL via Neon
 - ✅ Opérations CRUD complètes
+- ✅ Champs KYC et récupération ajoutés
 
 ### API Backend
 - ✅ Routes d'authentification client/admin
@@ -32,6 +35,16 @@
 - ✅ Middleware d'audit et logging
 - ✅ Gestion des sessions utilisateur
 - ✅ API de dashboard avec données crypto
+- ✅ API de récupération de mot de passe
+
+### Système KYC (NOUVEAU)
+- ✅ Interface complète de vérification KYC admin
+- ✅ Upload et gestion des documents
+- ✅ Système de révision avec approbation/rejet
+- ✅ Validation automatique et scoring de risque
+- ✅ Filtres et recherche des documents
+- ✅ Statistiques KYC en temps réel
+- ✅ Notifications de statut KYC
 
 ## 🟡 FONCTIONNALITÉS PARTIELLEMENT DÉVELOPPÉES
 
@@ -53,7 +66,7 @@
 - ✅ Interface de gestion des clients
 - ✅ Système de notes clients
 - ✅ Opérations en masse
-- ❌ **Validation KYC complète non implémentée**
+- ✅ Validation KYC complète implémentée
 - ❌ **Rapports d'audit non fonctionnels**
 - ❌ **Notifications admin manquantes**
 
@@ -81,11 +94,11 @@
 - ❌ **Page Acheter/Vendre (intégration exchange)**
 - ❌ **Page Échanger (swap de cryptos)**
 
-### Fonctionnalités KYC
-- ❌ **Validation automatique des documents**
-- ❌ **Interface de révision KYC admin**
-- ❌ **Workflow d'approbation/rejet**
-- ❌ **Notifications de statut KYC**
+### Intégration Prix Crypto
+- ❌ **API CoinGecko pour prix en temps réel**
+- ❌ **Mise à jour automatique des portefeuilles**
+- ❌ **Graphiques de prix historiques**
+- ❌ **Calculs de performance réels**
 
 ### Système de Notifications
 - ❌ **Notifications en temps réel**

@@ -247,3 +247,31 @@ export const adminApi = {
     return res.json();
   },
 };
+
+export const client = {
+  submitRecoveryRequest: async (data: any) => {
+    const res = await apiRequest('POST', '/api/client/recovery-request', data);
+    return res.json();
+  },
+
+  getRecoveryRequests: async () => {
+    const res = await apiRequest('GET', '/api/client/recovery-requests');
+    return res.json();
+  },
+
+  uploadKYCDocument: async (file: File) => {
+    const formData = new FormData();
+    formData.append('kycDocument', file);
+    
+    const res = await fetch('/api/client/kyc-upload', {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!res.ok) {
+      throw new Error('Upload failed');
+    }
+    
+    return res.json();
+  },
+};
