@@ -15,14 +15,6 @@ import {
 export default function LedgerAccess() {
   const [_, setLocation] = useLocation();
 
-  const handleClientAccess = () => {
-    setLocation('/client');
-  };
-
-  const handleAdminAccess = () => {
-    setLocation('/admin');
-  };
-
   const handleRecoveryDemo = () => {
     setLocation('/ledger');
   };
@@ -46,112 +38,43 @@ export default function LedgerAccess() {
           </p>
         </div>
 
-        {/* Options d'accès */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Accès Client */}
-          <Card className="bg-[#1E1F23] border-[#3A3B3F] hover:bg-[#252629] transition-colors cursor-pointer" onClick={handleClientAccess}>
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 bg-[#00D4AA] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users size={28} className="text-white" />
-              </div>
-              <CardTitle className="text-white text-xl">Espace Client</CardTitle>
-              <CardDescription className="text-gray-400">
-                Accédez à votre portefeuille et suivez vos récupérations
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-gray-300 text-sm">
-                  <CheckCircle size={16} className="text-[#00D4AA]" />
-                  Suivi des demandes en temps réel
-                </div>
-                <div className="flex items-center gap-2 text-gray-300 text-sm">
-                  <CheckCircle size={16} className="text-[#00D4AA]" />
-                  Historique des récupérations
-                </div>
-                <div className="flex items-center gap-2 text-gray-300 text-sm">
-                  <CheckCircle size={16} className="text-[#00D4AA]" />
-                  Support client 24/7
-                </div>
-              </div>
-              <Button className="w-full bg-[#00D4AA] hover:bg-[#00C299] text-white">
-                Se connecter
-                <ArrowRight size={16} className="ml-2" />
-              </Button>
-              <p className="text-xs text-gray-500 text-center">
-                Démo: client@demo.com / demo123
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Accès Admin */}
-          <Card className="bg-[#1E1F23] border-[#3A3B3F] hover:bg-[#252629] transition-colors cursor-pointer" onClick={handleAdminAccess}>
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 bg-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Settings size={28} className="text-[#17181C]" />
-              </div>
-              <CardTitle className="text-white text-xl">Administration</CardTitle>
-              <CardDescription className="text-gray-400">
-                Gestion des clients et supervision des opérations
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-gray-300 text-sm">
-                  <CheckCircle size={16} className="text-[#FFB800]" />
-                  Tableau de bord analytique
-                </div>
-                <div className="flex items-center gap-2 text-gray-300 text-sm">
-                  <CheckCircle size={16} className="text-[#FFB800]" />
-                  Gestion des validations KYC
-                </div>
-                <div className="flex items-center gap-2 text-gray-300 text-sm">
-                  <CheckCircle size={16} className="text-[#FFB800]" />
-                  Rapports de conformité
-                </div>
-              </div>
-              <Button className="w-full bg-[#FFB800] hover:bg-[#E6A600] text-[#17181C]">
-                Accès admin
-                <ArrowRight size={16} className="ml-2" />
-              </Button>
-              <p className="text-xs text-gray-500 text-center">
-                Démo: admin@ledger.com / admin123
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Interface de récupération */}
+        {/* Interface de récupération centralisée */}
+        <div className="max-w-md mx-auto">
           <Card className="bg-[#1E1F23] border-[#FF6B00] hover:bg-[#252629] transition-colors cursor-pointer" onClick={handleRecoveryDemo}>
             <CardHeader className="text-center">
-              <div className="w-16 h-16 bg-[#FF6B00] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Star size={28} className="text-white" />
+              <div className="w-20 h-20 bg-[#FF6B00] rounded-full flex items-center justify-center mx-auto mb-6">
+                <Star size={32} className="text-white" />
               </div>
-              <CardTitle className="text-white text-xl">Centre de Récupération</CardTitle>
-              <CardDescription className="text-gray-400">
-                Interface principale des services de récupération
+              <CardTitle className="text-white text-2xl mb-2">Centre de Récupération</CardTitle>
+              <CardDescription className="text-gray-400 text-lg">
+                Récupérez vos cryptomonnaies perdues de manière sécurisée
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <Badge className="w-full justify-center bg-[#FF6B00] text-white border-none">
+            <CardContent className="space-y-6">
+              <Badge className="w-full justify-center bg-[#FF6B00] text-white border-none py-2 text-sm">
                 Accès Direct - Aucune connexion requise
               </Badge>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-gray-300 text-sm">
-                  <CheckCircle size={16} className="text-[#FF6B00]" />
-                  Récupération de wallets
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-gray-300">
+                  <CheckCircle size={18} className="text-[#FF6B00]" />
+                  <span>Récupération de wallets corrompus</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 text-sm">
-                  <CheckCircle size={16} className="text-[#FF6B00]" />
-                  Restauration seed phrases
+                <div className="flex items-center gap-3 text-gray-300">
+                  <CheckCircle size={18} className="text-[#FF6B00]" />
+                  <span>Restauration de phrases de récupération</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300 text-sm">
-                  <CheckCircle size={16} className="text-[#FF6B00]" />
-                  Récupération mots de passe
+                <div className="flex items-center gap-3 text-gray-300">
+                  <CheckCircle size={18} className="text-[#FF6B00]" />
+                  <span>Récupération de mots de passe oubliés</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-300">
+                  <CheckCircle size={18} className="text-[#FF6B00]" />
+                  <span>Support technique 24/7</span>
                 </div>
               </div>
-              <Button className="w-full bg-[#FF6B00] hover:bg-[#E55A00] text-white">
-                Accéder maintenant
-                <ArrowRight size={16} className="ml-2" />
+              <Button className="w-full bg-[#FF6B00] hover:bg-[#E55A00] text-white py-3 text-lg">
+                Commencer la récupération
+                <ArrowRight size={20} className="ml-2" />
               </Button>
             </CardContent>
           </Card>
