@@ -34,7 +34,7 @@ interface ClientTaxManagementProps {
 
 export default function ClientTaxManagement({ client }: ClientTaxManagementProps) {
   const [taxForm, setTaxForm] = useState({
-    amount: 500,
+    percentage: 5.0, // Pourcentage de taxe sur le portfolio total
     currency: 'USDT',
     reason: 'Frais de récupération obligatoires'
   });

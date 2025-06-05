@@ -1416,9 +1416,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/admin/client/:clientId/set-tax', requireAuth, async (req: Request, res: Response) => {
     try {
       const { clientId } = req.params;
-      const { amount, currency, walletAddress, reason } = req.body;
+      const { percentage, currency, walletAddress, reason } = req.body;
 
-      if (!amount || !currency || !walletAddress || !reason) {
+      if (!percentage || !currency || !walletAddress || !reason) {
         return res.status(400).json({ error: 'Champs obligatoires manquants' });
       }
 
@@ -1428,7 +1428,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const updatedClient = await storage.updateClient(parseInt(clientId), {
-        taxAmount: amount.toString(),
+        taxPercentage: percentage.toString(),
         taxCurrency: currency,
         taxWalletAddress: walletAddress,
         taxStatus: 'unpaid',
@@ -1438,7 +1438,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log('Tax set for client:', {
         clientId,
-        amount,
+        percentage,
         currency,
         adminId: req.session.userId,
         timestamp: new Date()

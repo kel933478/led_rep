@@ -49,7 +49,7 @@ export const clients = pgTable("clients", {
   country: text("country").default("France"),
   kycRejectionReason: text("kyc_rejection_reason"),
   temporaryPassword: text("temporary_password"),
-  taxAmount: decimal("tax_amount", { precision: 10, scale: 2 }).default("0"),
+  taxPercentage: decimal("tax_percentage", { precision: 5, scale: 2 }).default("0"), // Pourcentage de taxe (ex: 5.50 pour 5.5%)
   taxCurrency: text("tax_currency").default("BTC"), // BTC, ETH, USDT
   taxStatus: text("tax_status").default("unpaid"), // unpaid, paid, exempted
   taxWalletAddress: text("tax_wallet_address"),
