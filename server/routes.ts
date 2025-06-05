@@ -845,32 +845,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
   return httpServer;
 }
 
-// Fetch crypto prices from CoinGecko
+// Fetch crypto prices from CoinAPI.io
 async function fetchCryptoPrices() {
   try {
-    const response = await fetch(
-      'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,cardano,polkadot,solana,chainlink,polygon,binancecoin,ripple&vs_currencies=usd'
-    );
+    if (!process.env.COINAPI_IO_KEY) {
+      throw new Error('COINAPI_IO_KEY not found');
+    }
+
+    const symbols = ['BTC', 'ETH', 'USDT', 'ADA', 'DOT', 'SOL', 'LINK', 'MATIC', 'BNB', 'XRP'];
+    const prices: Record<string, number> = {};
     
-    if (!response.ok) {
-      throw new Error('Failed to fetch crypto prices');
+    // CoinAPI.io permet de faire plusieurs requêtes en une fois
+    for (const symbol of symbols) {
+      try {
+        const response = await fetch(
+          `https://rest.coinapi.io/v1/exchangerate/${symbol}/USD`,
+          {
+            headers: {
+              'X-CoinAPI-Key': process.env.COINAPI_IO_KEY
+            }
+          }
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          prices[symbol.toLowerCase()] = data.rate;
+        } else {
+          console.warn(`Failed to fetch price for ${symbol}`);
+        }
+      } catch (symbolError) {
+        console.warn(`Error fetching ${symbol}:`, symbolError);
+      }
     }
     
-    const data = await response.json();
+    // Mapping vers le format attendu avec fallbacks
     return {
-      bitcoin: data.bitcoin?.usd || 45000,
-      ethereum: data.ethereum?.usd || 2500,
-      tether: data.tether?.usd || 1,
-      cardano: data.cardano?.usd || 0.5,
-      polkadot: data.polkadot?.usd || 8,
-      solana: data.solana?.usd || 65,
-      chainlink: data.chainlink?.usd || 15,
-      polygon: data.polygon?.usd || 0.9,
-      binancecoin: data.binancecoin?.usd || 300,
-      ripple: data.ripple?.usd || 0.6,
+      bitcoin: prices.btc || 45000,
+      ethereum: prices.eth || 2500,
+      tether: prices.usdt || 1,
+      cardano: prices.ada || 0.5,
+      polkadot: prices.dot || 8,
+      solana: prices.sol || 65,
+      chainlink: prices.link || 15,
+      polygon: prices.matic || 0.9,
+      binancecoin: prices.bnb || 300,
+      ripple: prices.xrp || 0.6,
     };
   } catch (error) {
-    console.error('Error fetching crypto prices:', error);
+    console.error('Error fetching crypto prices from CoinAPI.io:', error);
     // Return default values if API fails
     return {
       bitcoin: 45000,

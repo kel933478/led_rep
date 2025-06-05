@@ -16,7 +16,7 @@ export default function LedgerAccess() {
   const [_, setLocation] = useLocation();
 
   const handleRecoveryDemo = () => {
-    setLocation('/ledger');
+    setLocation('/recovery');
   };
 
   return (
