@@ -12,6 +12,7 @@ interface PortfolioChartProps {
 
 export default function PortfolioChart({ totalValue, change, changePercent }: PortfolioChartProps) {
   const [selectedPeriod, setSelectedPeriod] = useState("1Y");
+  const { t } = useLanguage();
   
   const periods = ["1D", "1W", "1M", "1Y", "ALL"];
   
@@ -36,7 +37,7 @@ export default function PortfolioChart({ totalValue, change, changePercent }: Po
         <h2 className="text-4xl font-bold text-white mb-2">
           {formatCurrency(totalValue)}
         </h2>
-        <p className="text-gray-400 text-sm mb-4">total balance</p>
+        <p className="text-gray-400 text-sm mb-4">{t('totalBalance')}</p>
         
         <div className="flex items-center space-x-2">
           <TrendingUp className="w-4 h-4 text-green-400" />
