@@ -43,6 +43,10 @@ export const clients = pgTable("clients", {
   twoFactorBackupCodes: jsonb("two_factor_backup_codes").$type<string[]>(),
   passwordResetToken: text("password_reset_token"),
   passwordResetExpires: timestamp("password_reset_expires"),
+  fullName: text("full_name"),
+  kycRejectionReason: text("kyc_rejection_reason"),
+  temporaryPassword: text("temporary_password"),
+  updatedAt: timestamp("updated_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

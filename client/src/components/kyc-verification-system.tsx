@@ -131,7 +131,7 @@ export default function KYCVerificationSystem() {
   const documents = kycData?.documents || mockKYCDocuments;
   const filteredDocuments = filterStatus === 'all' 
     ? documents 
-    : documents.filter(doc => doc.status === filterStatus);
+    : documents.filter((doc: any) => doc.status === filterStatus);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -314,7 +314,7 @@ export default function KYCVerificationSystem() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredDocuments.map((document) => (
+              {filteredDocuments.map((document: any) => (
                 <TableRow key={document.id} className="border-gray-700">
                   <TableCell>
                     <div>
