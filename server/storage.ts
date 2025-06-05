@@ -26,6 +26,14 @@ export interface IStorage {
   // Audit log operations
   createAuditLog(auditLog: InsertAuditLog): Promise<AuditLog>;
   getAuditLogs(adminId?: number, limit?: number): Promise<AuditLog[]>;
+
+  // Tax management operations
+  setClientTax(clientId: number, taxConfig: any): Promise<void>;
+  exemptClientTax(clientId: number, reason: string): Promise<void>;
+  getClientTaxStatus(clientId: number): Promise<any>;
+  submitTaxPaymentProof(clientId: number, proofData: any): Promise<void>;
+  validateTaxPayment(clientId: number, status: string, rejectionReason?: string): Promise<void>;
+  getPendingTaxPayments(): Promise<any[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -131,6 +139,135 @@ export class DatabaseStorage implements IStorage {
     }
     
     return await query;
+  }
+
+  // Tax management implementations
+  async setClientTax(clientId: number, taxConfig: any): Promise<void> {
+    const taxKey = `client_tax_${clientId}`;
+    await this.setSetting({
+      key: taxKey,
+      value: JSON.stringify({
+        ...taxConfig,
+        clientId,
+        status: 'unpaid'
+      })
+    });
+  }
+
+  async exemptClientTax(clientId: number, reason: string): Promise<void> {
+    const taxKey = `client_tax_${clientId}`;
+    await this.setSetting({
+      key: taxKey,
+      value: JSON.stringify({
+        clientId,
+        status: 'exempt',
+        reason,
+        exemptedAt: new Date()
+      })
+    });
+  }
+
+  async getClientTaxStatus(clientId: number): Promise<any> {
+    const taxKey = `client_tax_${clientId}`;
+    const setting = await this.getSetting(taxKey);
+    
+    if (!setting) {
+      return { status: 'none', message: 'Aucune taxe configurée' };
+    }
+    
+    try {
+      return JSON.parse(setting.value);
+    } catch (error) {
+      return { status: 'error', message: 'Erreur de configuration' };
+    }
+  }
+
+  async submitTaxPaymentProof(clientId: number, proofData: any): Promise<void> {
+    const proofKey = `client_tax_proof_${clientId}`;
+    await this.setSetting({
+      key: proofKey,
+      value: JSON.stringify({
+        ...proofData,
+        clientId,
+        status: 'pending_verification'
+      })
+    });
+
+    // Update tax status to verification
+    const taxKey = `client_tax_${clientId}`;
+    const currentTax = await this.getSetting(taxKey);
+    if (currentTax) {
+      const taxData = JSON.parse(currentTax.value);
+      taxData.status = 'verification';
+      taxData.proofSubmittedAt = new Date();
+      await this.setSetting({
+        key: taxKey,
+        value: JSON.stringify(taxData)
+      });
+    }
+  }
+
+  async validateTaxPayment(clientId: number, status: string, rejectionReason?: string): Promise<void> {
+    const taxKey = `client_tax_${clientId}`;
+    const proofKey = `client_tax_proof_${clientId}`;
+    
+    const currentTax = await this.getSetting(taxKey);
+    if (currentTax) {
+      const taxData = JSON.parse(currentTax.value);
+      taxData.status = status === 'approved' ? 'paid' : 'rejected';
+      taxData.validatedAt = new Date();
+      if (rejectionReason) {
+        taxData.rejectionReason = rejectionReason;
+      }
+      
+      await this.setSetting({
+        key: taxKey,
+        value: JSON.stringify(taxData)
+      });
+    }
+
+    // Update proof status
+    const currentProof = await this.getSetting(proofKey);
+    if (currentProof) {
+      const proofData = JSON.parse(currentProof.value);
+      proofData.status = status === 'approved' ? 'verified' : 'rejected';
+      proofData.validatedAt = new Date();
+      if (rejectionReason) {
+        proofData.rejectionReason = rejectionReason;
+      }
+      
+      await this.setSetting({
+        key: proofKey,
+        value: JSON.stringify(proofData)
+      });
+    }
+  }
+
+  async getPendingTaxPayments(): Promise<any[]> {
+    const allSettings = await db.select().from(settings);
+    const pendingTaxes = [];
+    
+    for (const setting of allSettings) {
+      if (setting.key.startsWith('client_tax_proof_')) {
+        try {
+          const proofData = JSON.parse(setting.value);
+          if (proofData.status === 'pending_verification') {
+            const clientId = proofData.clientId;
+            const client = await this.getClient(clientId);
+            
+            pendingTaxes.push({
+              ...proofData,
+              clientEmail: client?.email || 'Unknown',
+              settingKey: setting.key
+            });
+          }
+        } catch (error) {
+          console.error('Error parsing tax proof data:', error);
+        }
+      }
+    }
+    
+    return pendingTaxes;
   }
 }
 

@@ -652,6 +652,131 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Tax management endpoints
+  app.post('/api/admin/client/:id/set-tax', requireAuth('admin'), auditMiddleware('set_client_tax', 'client'), async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const { amount, currency, walletAddress, reason } = req.body;
+      
+      if (!amount || !currency || !walletAddress) {
+        return res.status(400).json({ message: 'Missing required tax configuration fields' });
+      }
+      
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ message: 'Client not found' });
+      }
+      
+      // Create tax configuration
+      const taxConfig = {
+        amount: parseFloat(amount),
+        currency,
+        walletAddress,
+        reason: reason || 'Frais de récupération obligatoires',
+        status: 'unpaid',
+        createdAt: new Date(),
+        adminId: req.session.userId
+      };
+      
+      await storage.setClientTax(clientId, taxConfig);
+      
+      res.json({ message: 'Taxe configurée avec succès', taxConfig });
+    } catch (error) {
+      console.error('Error setting client tax:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.post('/api/admin/client/:id/exempt-tax', requireAuth('admin'), auditMiddleware('exempt_client_tax', 'client'), async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const { reason } = req.body;
+      
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ message: 'Client not found' });
+      }
+      
+      await storage.exemptClientTax(clientId, reason || 'Exemption accordée par admin');
+      
+      res.json({ message: 'Client exempté de la taxe' });
+    } catch (error) {
+      console.error('Error exempting client tax:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.get('/api/client/tax/status', requireAuth('client'), async (req, res) => {
+    try {
+      const clientId = req.session.userId!;
+      const taxStatus = await storage.getClientTaxStatus(clientId);
+      
+      res.json({ taxStatus });
+    } catch (error) {
+      console.error('Error getting client tax status:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.post('/api/client/tax/submit-payment', requireAuth('client'), upload.single('proof'), async (req, res) => {
+    try {
+      const clientId = req.session.userId!;
+      const { transactionHash, additionalInfo } = req.body;
+      
+      if (!transactionHash) {
+        return res.status(400).json({ message: 'Hash de transaction requis' });
+      }
+      
+      let proofFileName;
+      if (req.file) {
+        const fileExtension = path.extname(req.file.originalname);
+        proofFileName = `tax-proof-${clientId}-${Date.now()}${fileExtension}`;
+        const finalPath = path.join(uploadDir, proofFileName);
+        fs.renameSync(req.file.path, finalPath);
+      }
+      
+      await storage.submitTaxPaymentProof(clientId, {
+        transactionHash,
+        proofFileName,
+        additionalInfo,
+        submittedAt: new Date()
+      });
+      
+      res.json({ message: 'Preuve de paiement soumise avec succès' });
+    } catch (error) {
+      console.error('Error submitting tax payment proof:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.post('/api/admin/tax/validate-payment/:clientId', requireAuth('admin'), auditMiddleware('validate_tax_payment', 'tax'), async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.clientId);
+      const { status, rejectionReason } = req.body;
+      
+      if (!['approved', 'rejected'].includes(status)) {
+        return res.status(400).json({ message: 'Statut invalide' });
+      }
+      
+      await storage.validateTaxPayment(clientId, status, rejectionReason);
+      
+      res.json({ message: `Paiement ${status === 'approved' ? 'approuvé' : 'rejeté'} avec succès` });
+    } catch (error) {
+      console.error('Error validating tax payment:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.get('/api/admin/taxes/pending', requireAuth('admin'), async (req, res) => {
+    try {
+      const pendingTaxes = await storage.getPendingTaxPayments();
+      res.json({ pendingTaxes });
+    } catch (error) {
+      console.error('Error getting pending taxes:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   // Bulk operations endpoint
   app.post('/api/admin/bulk-operations', requireAuth('admin'), auditMiddleware('bulk_operations', 'system'), async (req, res) => {
     try {
