@@ -15,6 +15,7 @@ import AdminLogin from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
 import LedgerManager from "@/pages/ledger-manager";
 import LedgerAccess from "@/pages/ledger-access";
+import RecoveryCenter from "@/pages/recovery-center";
 import NotFound from "@/pages/not-found";
 import { LanguageProvider } from "@/hooks/use-language";
 
@@ -73,6 +74,7 @@ function AuthRouter() {
         <Switch>
           <Route path="/access" component={LedgerAccess} />
           <Route path="/ledger" component={LedgerManager} />
+          <Route path="/recovery" component={RecoveryCenter} />
           <Route path="/client" component={ClientLogin} />
           <Route path="/admin" component={AdminLogin} />
           {user?.type === 'client' && (

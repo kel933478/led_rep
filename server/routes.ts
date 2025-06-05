@@ -738,6 +738,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // API pour les demandes de récupération client
+  app.post('/api/client/recovery-request', async (req: Request, res: Response) => {
+    try {
+      const { serviceType, clientName, clientEmail, phoneNumber, walletType, problemDescription, urgencyLevel, estimatedValue } = req.body;
+      
+      // Validation des données
+      if (!clientName || !clientEmail || !problemDescription) {
+        return res.status(400).json({ error: 'Champs obligatoires manquants' });
+      }
+
+      // Génération d'un ID unique pour la demande
+      const requestId = `REC-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Simulation de stockage de la demande
+      const recoveryRequest = {
+        id: requestId,
+        serviceType,
+        clientName,
+        clientEmail,
+        phoneNumber,
+        walletType,
+        problemDescription,
+        urgencyLevel,
+        estimatedValue,
+        status: 'pending',
+        submittedAt: new Date(),
+        estimatedCompletionDate: new Date(Date.now() + (urgencyLevel === 'critical' ? 1 : urgencyLevel === 'high' ? 3 : urgencyLevel === 'medium' ? 7 : 14) * 24 * 60 * 60 * 1000)
+      };
+
+      // Log d'audit
+      console.log('Recovery request submitted:', {
+        requestId,
+        serviceType,
+        urgencyLevel,
+        estimatedValue,
+        timestamp: new Date()
+      });
+
+      res.json({ 
+        success: true, 
+        requestId,
+        message: 'Demande de récupération envoyée avec succès',
+        estimatedResponse: '24 heures'
+      });
+    } catch (error) {
+      console.error('Recovery request error:', error);
+      res.status(500).json({ error: 'Erreur lors de la soumission de la demande' });
+    }
+  });
+
+  app.get('/api/client/recovery-requests', requireAuth, async (req: Request, res: Response) => {
+    try {
+      
+      // Simulation de récupération des demandes pour le client
+      const mockRequests = [
+        {
+          id: 'REC-2024-001',
+          serviceType: 'wallet',
+          status: 'in_progress',
+          submittedAt: new Date('2024-01-15'),
+          estimatedCompletionDate: new Date('2024-01-22'),
+          urgencyLevel: 'medium',
+          estimatedValue: 15000
+        },
+        {
+          id: 'REC-2024-002', 
+          serviceType: 'seed',
+          status: 'completed',
+          submittedAt: new Date('2024-01-10'),
+          completedAt: new Date('2024-01-18'),
+          urgencyLevel: 'high',
+          estimatedValue: 25000
+        }
+      ];
+
+      res.json({ requests: mockRequests });
+    } catch (error) {
+      console.error('Get recovery requests error:', error);
+      res.status(500).json({ error: 'Erreur lors de la récupération des demandes' });
+    }
+  });
+
   // Logout with audit trail
   app.post('/api/auth/logout', async (req, res) => {
     try {
