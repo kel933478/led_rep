@@ -134,6 +134,26 @@ export default function AssetAllocationTable({ assets, totalValue }: AssetAlloca
                     {formatCurrency(asset.value)}
                   </div>
                 </td>
+                <td className="py-4 text-right">
+                  <div className="flex justify-end space-x-1">
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 px-2"
+                      onClick={() => setLocation('/client/tax-payment')}
+                    >
+                      Acheter
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="text-red-400 hover:text-red-300 hover:bg-red-900/20 px-2"
+                      onClick={() => setLocation('/client/tax-payment')}
+                    >
+                      Vendre
+                    </Button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
