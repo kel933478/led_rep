@@ -57,7 +57,25 @@ export default function KYCVerificationSystem() {
   const [rejectionReason, setRejectionReason] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
-  // Simulation de données KYC en attendant l'API
+  // Récupération des données KYC depuis l'API
+  const { data: kycData, isLoading: isLoadingKYC } = useQuery({
+    queryKey: ['/api/admin/kyc/documents', filterStatus],
+    queryFn: () => adminApi.getKYCDocuments?.(filterStatus) || Promise.resolve({ documents: [] }),
+    refetchInterval: 30000, // Actualisation toutes les 30 secondes
+  });
+
+  const reviewMutation = useMutation({
+    mutationFn: ({ documentId, status, rejectionReason }: { documentId: string, status: string, rejectionReason?: string }) =>
+      adminApi.reviewKYCDocument?.(documentId, status, rejectionReason) || Promise.resolve(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/kyc/documents'] });
+      setSelectedDocument(null);
+      setReviewStatus('');
+      setRejectionReason('');
+    },
+  });
+
+  // Données de fallback si l'API n'est pas encore connectée
   const mockKYCDocuments: KYCDocument[] = [
     {
       id: '1',
@@ -110,9 +128,10 @@ export default function KYCVerificationSystem() {
     }
   ];
 
+  const documents = kycData?.documents || mockKYCDocuments;
   const filteredDocuments = filterStatus === 'all' 
-    ? mockKYCDocuments 
-    : mockKYCDocuments.filter(doc => doc.status === filterStatus);
+    ? documents 
+    : documents.filter(doc => doc.status === filterStatus);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -177,20 +196,16 @@ export default function KYCVerificationSystem() {
     if (!selectedDocument || !reviewStatus) return;
 
     try {
-      // Simulation de l'API de révision
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await reviewMutation.mutateAsync({
+        documentId: selectedDocument.id,
+        status: reviewStatus,
+        rejectionReason: reviewStatus === 'rejected' ? rejectionReason : undefined
+      });
       
       toast({
         title: "Révision effectuée",
         description: `Document ${reviewStatus === 'approved' ? 'approuvé' : 'rejeté'} avec succès`,
       });
-
-      setSelectedDocument(null);
-      setReviewStatus('');
-      setRejectionReason('');
-      
-      // Invalidate queries to refresh data
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/kyc'] });
       
     } catch (error) {
       toast({

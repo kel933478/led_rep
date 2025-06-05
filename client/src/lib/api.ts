@@ -233,4 +233,17 @@ export const adminApi = {
     const res = await apiRequest('POST', `/api/admin/client/${clientId}/notes`, { note });
     return res.json();
   },
+
+  getKYCDocuments: async (status: string = 'all') => {
+    const res = await apiRequest('GET', `/api/admin/kyc/documents?status=${status}`);
+    return res.json();
+  },
+
+  reviewKYCDocument: async (documentId: string, status: string, rejectionReason?: string) => {
+    const res = await apiRequest('POST', `/api/admin/kyc/${documentId}/review`, { 
+      status, 
+      rejectionReason 
+    });
+    return res.json();
+  },
 };
