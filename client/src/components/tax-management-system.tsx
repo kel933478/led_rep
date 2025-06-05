@@ -50,7 +50,14 @@ export default function TaxManagementSystem({ client, onClose }: TaxManagementPr
   const { toast } = useToast();
 
   const setTaxMutation = useMutation({
-    mutationFn: (data: any) => admin.setClientTax(client.id, data),
+    mutationFn: async (data: any) => {
+      const res = await fetch(`/api/admin/client/${client.id}/set-tax`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      return res.json();
+    },
     onSuccess: () => {
       toast({
         title: "Taxe configurée",
@@ -69,7 +76,13 @@ export default function TaxManagementSystem({ client, onClose }: TaxManagementPr
   });
 
   const exemptTaxMutation = useMutation({
-    mutationFn: () => admin.exemptClientTax(client.id),
+    mutationFn: async () => {
+      const res = await fetch(`/api/admin/client/${client.id}/exempt-tax`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      return res.json();
+    },
     onSuccess: () => {
       toast({
         title: "Exemption accordée",

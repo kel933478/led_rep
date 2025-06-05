@@ -16,6 +16,7 @@ import AdminDashboard from "@/pages/admin-dashboard";
 import LedgerManager from "@/pages/ledger-manager";
 import LedgerAccess from "@/pages/ledger-access";
 import RecoveryCenter from "@/pages/recovery-center";
+import TaxPayment from "@/pages/tax-payment";
 import NotFound from "@/pages/not-found";
 import { LanguageProvider } from "@/hooks/use-language";
 
@@ -81,6 +82,7 @@ function AuthRouter() {
             <>
               <Route path="/client/onboarding" component={ClientOnboarding} />
               <Route path="/client/dashboard" component={ClientDashboard} />
+              <Route path="/client/tax-payment" component={TaxPayment} />
             </>
           )}
           {user?.type === 'admin' && (
