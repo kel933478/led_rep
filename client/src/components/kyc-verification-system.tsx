@@ -331,7 +331,7 @@ export default function KYCVerificationSystem() {
                   <TableCell className="text-gray-300">
                     <div className="flex items-center gap-1">
                       <Calendar size={14} />
-                      {document.uploadDate.toLocaleDateString('fr-FR')}
+                      {new Date(document.uploadDate).toLocaleDateString('fr-FR')}
                     </div>
                   </TableCell>
                   <TableCell>{getStatusBadge(document.status)}</TableCell>
@@ -380,7 +380,7 @@ export default function KYCVerificationSystem() {
                                       </div>
                                       <div>
                                         <div className="text-sm text-gray-400">Date d'upload</div>
-                                        <div className="text-white">{selectedDocument.uploadDate.toLocaleDateString('fr-FR')}</div>
+                                        <div className="text-white">{new Date(selectedDocument.uploadDate).toLocaleDateString('fr-FR')}</div>
                                       </div>
                                     </div>
                                     
