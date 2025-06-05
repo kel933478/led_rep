@@ -70,11 +70,11 @@ export default function AdminLogin() {
             <div className="flex items-center justify-center gap-2 mb-4">
               <Shield className="h-6 w-6 text-blue-400" />
               <h1 className="text-2xl font-semibold text-white">
-                Admin Access
+                {t('adminAccess')}
               </h1>
             </div>
             <p className="text-gray-400 text-sm">
-              Connexion sécurisée à l'interface d'administration Ledger Recovery
+              {t('secureAdminLogin')}
             </p>
           </div>
 
@@ -89,7 +89,7 @@ export default function AdminLogin() {
                       <Input
                         {...field}
                         type="email"
-                        placeholder="Email administrateur"
+                        placeholder={t('emailAdmin')}
                         className="h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 rounded-lg focus:border-blue-500 focus:ring-0"
                       />
                     </FormControl>
@@ -108,7 +108,7 @@ export default function AdminLogin() {
                         <Input
                           {...field}
                           type={showPassword ? "text" : "password"}
-                          placeholder="Mot de passe"
+                          placeholder={t('password')}
                           className="h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 rounded-lg focus:border-blue-500 focus:ring-0 pr-10"
                         />
                         <button
@@ -135,17 +135,17 @@ export default function AdminLogin() {
                 className="w-full h-12 bg-blue-600 text-white hover:bg-blue-700 font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
               >
                 <Shield className="h-4 w-4" />
-                {loginMutation.isPending ? 'Connexion...' : 'Accès Admin'}
+                {loginMutation.isPending ? t('loading') : t('adminAccess')}
               </Button>
             </form>
           </Form>
 
           <div className="text-center pt-4">
             <p className="text-sm text-gray-500">
-              Accès client? {' '}
+              {t('clientAccess')} {' '}
               <Link href="/client-login">
                 <span className="text-blue-400 hover:text-blue-300 cursor-pointer transition-colors">
-                  Se connecter ici
+                  {t('connectHere')}
                 </span>
               </Link>
             </p>
@@ -153,7 +153,7 @@ export default function AdminLogin() {
 
           <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 mt-6">
             <p className="text-xs text-gray-400 text-center">
-              🔒 Accès sécurisé réservé aux administrateurs autorisés
+              {t('secureAccess')}
             </p>
           </div>
         </div>
