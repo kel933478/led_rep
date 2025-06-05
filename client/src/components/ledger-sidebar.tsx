@@ -15,62 +15,50 @@ import { cn } from "@/lib/utils";
 const sidebarItems = [
   {
     icon: BarChart3,
-    label: "Portfolio",
+    label: "Portefeuille",
     href: "/client/dashboard",
     section: "main"
   },
   {
     icon: TrendingUp,
-    label: "Market",
+    label: "Marché",
     href: "/client/market",
     section: "main"
   },
   {
     icon: CreditCard,
-    label: "Accounts",
+    label: "Comptes",
     href: "/client/accounts", 
     section: "main"
   },
   {
-    icon: Compass,
-    label: "Discover",
-    href: "/client/discover",
-    section: "main"
-  },
-  {
     icon: Send,
-    label: "Send",
+    label: "Envoyer",
     href: "/client/send",
     section: "actions"
   },
   {
     icon: Download,
-    label: "Receive",
+    label: "Recevoir",
     href: "/client/receive",
     section: "actions"
   },
   {
     icon: ShoppingCart,
-    label: "Buy / Sell",
+    label: "Acheter / Vendre",
     href: "/client/buy-sell",
     section: "actions"
   },
   {
     icon: ArrowLeftRight,
-    label: "Swap",
+    label: "Échanger",
     href: "/client/swap",
     section: "actions"
   },
   {
-    icon: CreditCard,
-    label: "Card",
-    href: "/client/card",
-    section: "tools"
-  },
-  {
     icon: Settings,
-    label: "Manager",
-    href: "/client/manager",
+    label: "Récupération",
+    href: "/client/recovery",
     section: "tools",
     active: true
   }
