@@ -80,8 +80,28 @@ export default function LedgerAccess() {
           </Card>
         </div>
 
+        {/* Accès rapides */}
+        <div className="mt-12 flex justify-center gap-6">
+          <Button 
+            variant="outline" 
+            onClick={() => setLocation('/client')}
+            className="border-[#00D4AA] text-[#00D4AA] hover:bg-[#00D4AA] hover:text-white"
+          >
+            <Users size={16} className="mr-2" />
+            Accès Client
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => setLocation('/admin')}
+            className="border-[#FFB800] text-[#FFB800] hover:bg-[#FFB800] hover:text-[#17181C]"
+          >
+            <Settings size={16} className="mr-2" />
+            Administration
+          </Button>
+        </div>
+
         {/* Statistiques */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="text-center">
             <div className="text-2xl font-bold text-[#FFB800]">98.5%</div>
             <div className="text-gray-400 text-sm">Taux de succès</div>
