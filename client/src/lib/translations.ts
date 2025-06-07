@@ -235,6 +235,7 @@ export const translations = {
     messageSet: "Message défini avec succès",
     secureSellerLogin: "Connexion sécurisée à l'interface vendeur",
     sellerCredentials: "Identifiants vendeur :",
+    search: "Rechercher",
   },
   en: {
     // Common
@@ -472,6 +473,7 @@ export const translations = {
     messageSet: "Message set successfully",
     secureSellerLogin: "Secure login to seller interface",
     sellerCredentials: "Seller credentials:",
+    search: "Search",
   },
 };
 
