@@ -46,11 +46,13 @@ export default function SellerLogin({ onLogin }: SellerLoginProps = {}) {
       const result = await response.json();
 
       if (response.ok) {
-        onLogin(result.user);
+        onLogin?.(result.user);
         toast({
           title: t('success'),
           description: language === 'fr' ? 'Connexion réussie' : 'Login successful',
         });
+        // Redirect to seller dashboard
+        window.location.href = '/seller/dashboard';
       } else {
         toast({
           title: t('error'),

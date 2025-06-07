@@ -17,7 +17,7 @@ import Academy from "@/pages/academy";
 import AdminLogin from "@/pages/admin-login";
 import AdminDashboardEnhanced from "@/components/admin-dashboard-enhanced";
 import SellerLogin from "@/pages/seller-login";
-import SellerDashboard from "@/pages/seller-dashboard";
+import SellerDashboard from "@/pages/seller-dashboard-complete";
 import LedgerManager from "@/pages/ledger-manager";
 import LedgerAccess from "@/pages/ledger-access";
 import RecoveryCenter from "@/pages/recovery-center";
@@ -100,6 +100,7 @@ function AuthRouter() {
           {user?.type === 'seller' && (
             <Route path="/seller/dashboard" component={SellerDashboard} />
           )}
+          <Route path="/seller/dashboard" component={SellerDashboard} />
           <Route component={NotFound} />
         </Switch>
       )}
