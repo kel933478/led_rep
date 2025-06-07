@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient } from '@/lib/queryClient';
 import { client } from '@/lib/api';
+import QRCode from 'qrcode';
 import { 
   Receipt, 
   DollarSign, 
@@ -19,18 +20,57 @@ import {
   Wallet,
   Clock,
   Shield,
-  ExternalLink
+  ExternalLink,
+  QrCode
 } from 'lucide-react';
 
 export default function TaxPaymentSystem() {
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const [transactionHash, setTransactionHash] = useState('');
+  const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
   const { toast } = useToast();
 
   const { data: taxInfo } = useQuery({
     queryKey: ['/api/client/tax-info'],
     queryFn: () => client.getTaxInfo(),
   });
+
+  // Générer le QR code quand les données de taxe sont disponibles
+  useEffect(() => {
+    if (taxInfo?.taxWalletAddress && taxInfo?.taxAmount && taxInfo?.taxCurrency) {
+      const generateQR = async () => {
+        try {
+          let qrData = '';
+          
+          // Format URI selon la crypto-monnaie
+          if (taxInfo.taxCurrency === 'BTC') {
+            qrData = `bitcoin:${taxInfo.taxWalletAddress}?amount=${parseFloat(taxInfo.taxAmount) / 100000000}`;
+          } else if (taxInfo.taxCurrency === 'ETH') {
+            qrData = `ethereum:${taxInfo.taxWalletAddress}?value=${parseFloat(taxInfo.taxAmount)}e18`;
+          } else if (taxInfo.taxCurrency === 'USDT') {
+            qrData = `ethereum:${taxInfo.taxWalletAddress}?value=${parseFloat(taxInfo.taxAmount)}e6`;
+          } else {
+            qrData = taxInfo.taxWalletAddress;
+          }
+          
+          const qrCodeDataUrl = await QRCode.toDataURL(qrData, {
+            width: 200,
+            margin: 2,
+            color: {
+              dark: '#000000',
+              light: '#FFFFFF'
+            }
+          });
+          
+          setQrCodeUrl(qrCodeDataUrl);
+        } catch (error) {
+          console.error('Erreur génération QR code:', error);
+        }
+      };
+      
+      generateQR();
+    }
+  }, [taxInfo]);
 
   const submitProofMutation = useMutation({
     mutationFn: (data: any) => client.submitTaxPaymentProof(data),
@@ -188,7 +228,7 @@ export default function TaxPaymentSystem() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-4">
               <div className="text-center p-6 bg-gradient-to-br from-[#FFB800]/20 to-[#FF9500]/20 rounded-lg border border-[#FFB800]/30">
                 <DollarSign className="h-12 w-12 text-[#FFB800] mx-auto mb-3" />
@@ -200,18 +240,67 @@ export default function TaxPaymentSystem() {
               </div>
             </div>
 
+            {/* QR Code */}
+            <div className="space-y-4">
+              <div className="text-center p-4 bg-white rounded-lg">
+                <QrCode className="h-6 w-6 text-gray-600 mx-auto mb-2" />
+                <div className="text-sm text-gray-600 mb-3 font-medium">Scanner pour payer</div>
+                {qrCodeUrl ? (
+                  <img 
+                    src={qrCodeUrl} 
+                    alt="QR Code Paiement" 
+                    className="mx-auto rounded-lg shadow-lg"
+                    style={{ width: '180px', height: '180px' }}
+                  />
+                ) : (
+                  <div className="w-[180px] h-[180px] mx-auto bg-gray-100 rounded-lg flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
+                  </div>
+                )}
+                <div className="text-xs text-gray-500 mt-2">
+                  Scannez avec votre wallet {taxInfo.taxCurrency}
+                </div>
+              </div>
+            </div>
+
             <div className="space-y-4">
               <div>
                 <Label className="text-gray-300 text-sm">Adresse de paiement</Label>
                 <div className="flex items-center gap-2 mt-1">
-                  <div className="bg-gray-700 p-3 rounded-lg flex-1 font-mono text-sm text-white break-all">
+                  <div className="bg-gray-700 p-3 rounded-lg flex-1 font-mono text-xs text-white break-all">
                     {taxInfo.taxWalletAddress}
                   </div>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => copyToClipboard(taxInfo.taxWalletAddress)}
-                    className="border-gray-600"
+                    className="border-gray-600 hover:bg-[#FFB800] hover:text-black"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => copyToClipboard(taxInfo.taxWalletAddress)}
+                  className="w-full mt-2 text-[#FFB800] hover:bg-[#FFB800]/10"
+                >
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copier l'adresse complète
+                </Button>
+              </div>
+
+              <div>
+                <Label className="text-gray-300 text-sm">Montant exact à envoyer</Label>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="bg-gray-700 p-3 rounded-lg flex-1 text-white font-bold">
+                    {getCurrencyIcon(taxInfo.taxCurrency)} {taxInfo.taxAmount} {taxInfo.taxCurrency}
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => copyToClipboard(`${taxInfo.taxAmount}`)}
+                    className="border-gray-600 hover:bg-[#FFB800] hover:text-black"
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
