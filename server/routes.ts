@@ -1210,6 +1210,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get('/api/seller/assigned-clients', requireAuth('seller'), async (req, res) => {
+    try {
+      const sellerId = req.session.userId!;
+      const assignedClients = await storage.getSellerAssignedClients(sellerId);
+      
+      res.json({
+        assignedClients: assignedClients.map(client => ({
+          ...client,
+          taxStatus: client.taxStatus || 'pending'
+        }))
+      });
+    } catch (error) {
+      console.error('Get assigned clients error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   app.patch('/api/seller/client/:id/amount', requireAuth('seller'), async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
