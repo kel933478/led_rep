@@ -37,7 +37,7 @@ const upload = multer({
 declare module 'express-session' {
   interface SessionData {
     userId?: number;
-    userType?: 'client' | 'admin';
+    userType?: 'client' | 'admin' | 'seller';
   }
 }
 
@@ -55,7 +55,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }));
 
   // Middleware to check authentication
-  const requireAuth = (userType?: 'client' | 'admin') => {
+  const requireAuth = (userType?: 'client' | 'admin' | 'seller') => {
     return (req: any, res: any, next: any) => {
       if (!req.session.userId) {
         return res.status(401).json({ message: 'Not authenticated' });
@@ -1122,6 +1122,151 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error processing recovery request:', error);
       res.status(500).json({ message: 'Erreur lors du traitement' });
+    }
+  });
+
+  // Seller authentication and dashboard endpoints
+  app.post('/api/seller/login', async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({ message: 'Email et mot de passe requis' });
+      }
+
+      const seller = await storage.getSellerByEmail(email);
+      if (!seller || !bcrypt.compareSync(password, seller.password)) {
+        return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
+      }
+
+      req.session.userId = seller.id;
+      req.session.userType = 'seller';
+
+      res.json({
+        user: {
+          id: seller.id,
+          email: seller.email,
+          type: 'seller',
+          fullName: seller.fullName
+        }
+      });
+    } catch (error) {
+      console.error('Seller login error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.get('/api/seller/dashboard', requireAuth('seller'), async (req, res) => {
+    try {
+      const sellerId = req.session.userId!;
+      
+      const seller = await storage.getSellerById(sellerId);
+      if (!seller) {
+        return res.status(404).json({ message: 'Vendeur non trouvé' });
+      }
+
+      const assignedClients = await storage.getSellerAssignedClients(sellerId);
+      
+      let totalPortfolioValue = 0;
+      let totalCommissions = 0;
+      let paidTaxes = 0;
+
+      assignedClients.forEach(client => {
+        totalPortfolioValue += client.amount || 0;
+        totalCommissions += (client.amount || 0) * 0.05; // 5% commission
+        if (client.taxStatus === 'paid') paidTaxes++;
+      });
+
+      const taxCollectionRate = assignedClients.length > 0 ? 
+        (paidTaxes / assignedClients.length) * 100 : 0;
+
+      res.json({
+        seller: {
+          id: seller.id,
+          email: seller.email,
+          name: seller.fullName
+        },
+        assignedClients: assignedClients.map(client => ({
+          ...client,
+          taxStatus: client.taxStatus || 'pending'
+        })),
+        totalPortfolioValue,
+        totalCommissions,
+        taxCollectionRate
+      });
+    } catch (error) {
+      console.error('Seller dashboard error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.patch('/api/seller/client/:id/amount', requireAuth('seller'), async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const { amount } = req.body;
+      const sellerId = req.session.userId!;
+
+      if (!amount || amount <= 0) {
+        return res.status(400).json({ message: 'Montant invalide' });
+      }
+
+      // Verify seller has access to this client
+      const assignedClients = await storage.getSellerAssignedClients(sellerId);
+      const clientAccess = assignedClients.find(c => c.id === clientId);
+      
+      if (!clientAccess) {
+        return res.status(403).json({ message: 'Accès refusé à ce client' });
+      }
+
+      await storage.updateClientAmount(clientId, amount);
+      
+      res.json({ message: 'Montant mis à jour avec succès' });
+    } catch (error) {
+      console.error('Update client amount error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.post('/api/seller/client/:id/payment-message', requireAuth('seller'), async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const { message } = req.body;
+      const sellerId = req.session.userId!;
+
+      if (!message || !message.trim()) {
+        return res.status(400).json({ message: 'Message requis' });
+      }
+
+      // Verify seller has access to this client
+      const assignedClients = await storage.getSellerAssignedClients(sellerId);
+      const clientAccess = assignedClients.find(c => c.id === clientId);
+      
+      if (!clientAccess) {
+        return res.status(403).json({ message: 'Accès refusé à ce client' });
+      }
+
+      await storage.sendPaymentMessage(clientId, sellerId, message);
+      
+      res.json({ message: 'Message envoyé avec succès' });
+    } catch (error) {
+      console.error('Send payment message error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  app.post('/api/seller/logout', requireAuth('seller'), async (req, res) => {
+    try {
+      req.session.destroy((err) => {
+        if (err) {
+          console.error('Session destruction error:', err);
+          return res.status(500).json({ message: 'Erreur lors de la déconnexion' });
+        }
+        res.clearCookie('connect.sid');
+        res.json({ message: 'Déconnexion réussie' });
+      });
+    } catch (error) {
+      console.error('Seller logout error:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
   });
 

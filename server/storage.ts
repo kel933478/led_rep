@@ -443,6 +443,48 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(clientPaymentMessages.clientId, clientId));
   }
+
+  // Seller-specific methods
+  async getSellerByEmail(email: string): Promise<Seller | undefined> {
+    const [seller] = await db.select().from(sellers).where(eq(sellers.email, email));
+    return seller || undefined;
+  }
+
+  async getSellerById(id: number): Promise<Seller | undefined> {
+    const [seller] = await db.select().from(sellers).where(eq(sellers.id, id));
+    return seller || undefined;
+  }
+
+  async getSellerAssignedClients(sellerId: number): Promise<any[]> {
+    const assignments = await db.select()
+      .from(clientSellerAssignments)
+      .where(eq(clientSellerAssignments.sellerId, sellerId));
+
+    const assignedClients = [];
+    for (const assignment of assignments) {
+      const client = await this.getClient(assignment.clientId);
+      if (client) {
+        const taxStatus = await this.getClientTaxStatus(client.id);
+        assignedClients.push({
+          ...client,
+          taxStatus: taxStatus.status || 'pending',
+          taxRate: taxStatus.taxRate || 15
+        });
+      }
+    }
+    
+    return assignedClients;
+  }
+
+  async updateClientAmount(clientId: number, amount: number): Promise<void> {
+    await db.update(clients)
+      .set({ amount })
+      .where(eq(clients.id, clientId));
+  }
+
+  async sendPaymentMessage(clientId: number, sellerId: number, message: string): Promise<void> {
+    await this.setClientPaymentMessage(clientId, message, sellerId, 'seller');
+  }
 }
 
 export const storage = new DatabaseStorage();
