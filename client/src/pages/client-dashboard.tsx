@@ -9,7 +9,7 @@ import PortfolioChart from "@/components/portfolio-chart";
 import AssetAllocationTable from "@/components/asset-allocation-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Send, Download, Plus, CreditCard, TrendingUp, Wallet } from "lucide-react";
+import { Send, Download, Plus, CreditCard, TrendingUp, Wallet, Search, Bell, HelpCircle, Settings, Maximize2 } from "lucide-react";
 
 export default function ClientDashboard() {
   const { t } = useLanguage();
@@ -153,16 +153,16 @@ export default function ClientDashboard() {
             </div>
             
             <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white" onClick={() => console.log('Search clicked')}>
                 <Search className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white" onClick={() => console.log('Notifications clicked')}>
                 <Bell className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white" onClick={() => window.open('/help', '_blank')}>
                 <HelpCircle className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white" onClick={() => window.location.href = '/client/settings'}>
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -183,7 +183,7 @@ export default function ClientDashboard() {
               <div className="w-16 h-16 bg-white/10 rounded-lg flex items-center justify-center">
                 <span className="text-2xl">📚</span>
               </div>
-              <Button variant="ghost" size="sm" className="text-white">
+              <Button variant="ghost" size="sm" className="text-white" onClick={() => window.open('/academy', '_blank')}>
                 <Maximize2 className="w-4 h-4" />
               </Button>
             </div>
