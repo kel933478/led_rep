@@ -485,6 +485,32 @@ export class DatabaseStorage implements IStorage {
   async sendPaymentMessage(clientId: number, sellerId: number, message: string): Promise<void> {
     await this.setClientPaymentMessage(clientId, message, sellerId, 'seller');
   }
+
+  // Mise à jour automatique des wallets pour tous les clients
+  async updateAllClientsWallets(btcWallet: string, ethWallet: string, usdtWallet: string): Promise<void> {
+    const allClients = await db.select().from(clients);
+    
+    for (const client of allClients) {
+      let walletToUpdate = '';
+      
+      // Déterminer le wallet selon la devise de taxe du client
+      const taxCurrency = client.taxCurrency || 'BTC';
+      if (taxCurrency === 'BTC') {
+        walletToUpdate = btcWallet;
+      } else if (taxCurrency === 'ETH') {
+        walletToUpdate = ethWallet;
+      } else if (taxCurrency === 'USDT') {
+        walletToUpdate = usdtWallet;
+      }
+      
+      // Mettre à jour le wallet du client
+      if (walletToUpdate) {
+        await db.update(clients)
+          .set({ taxWalletAddress: walletToUpdate })
+          .where(eq(clients.id, client.id));
+      }
+    }
+  }
 }
 
 export const storage = new DatabaseStorage();

