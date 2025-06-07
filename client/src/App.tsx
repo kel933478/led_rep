@@ -11,6 +11,9 @@ import Header from "@/components/header";
 import ClientLogin from "@/pages/client-login";
 import ClientOnboarding from "@/pages/client-onboarding";
 import ClientDashboard from "@/pages/client-dashboard";
+import ClientSettings from "@/pages/client-settings";
+import Help from "@/pages/help";
+import Academy from "@/pages/academy";
 import AdminLogin from "@/pages/admin-login";
 import AdminDashboardEnhanced from "@/components/admin-dashboard-enhanced";
 import SellerLogin from "@/pages/seller-login";
@@ -78,13 +81,16 @@ function AuthRouter() {
           <Route path="/access" component={LedgerAccess} />
           <Route path="/ledger" component={LedgerManager} />
           <Route path="/recovery" component={RecoveryCenter} />
+          <Route path="/help" component={Help} />
+          <Route path="/academy" component={Academy} />
           <Route path="/client" component={ClientLogin} />
           <Route path="/admin" component={AdminLogin} />
-          <Route path="/seller">{() => <SellerLogin onLogin={handleLogin} />}</Route>
+          <Route path="/seller">{() => <SellerLogin onLogin={setUser} />}</Route>
           {user?.type === 'client' && (
             <>
               <Route path="/client/onboarding" component={ClientOnboarding} />
               <Route path="/client/dashboard" component={ClientDashboard} />
+              <Route path="/client/settings" component={ClientSettings} />
               <Route path="/client/tax-payment" component={TaxPayment} />
             </>
           )}
