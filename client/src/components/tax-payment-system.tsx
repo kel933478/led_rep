@@ -340,34 +340,34 @@ export default function TaxPaymentSystem() {
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Upload className="h-5 w-5" />
-              Preuve de Paiement
+              {t('paymentProof')}
             </CardTitle>
             <CardDescription className="text-gray-300">
-              Soumettez votre preuve de paiement pour validation
+              {t('submitPaymentProofDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmitProof} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="transactionHash" className="text-gray-300">Hash de transaction</Label>
+                <Label htmlFor="transactionHash" className="text-gray-300">{t('transactionHash')}</Label>
                 <Input
                   id="transactionHash"
                   value={transactionHash}
                   onChange={(e) => setTransactionHash(e.target.value)}
                   className="bg-gray-700 border-gray-600 text-white font-mono"
-                  placeholder="0x... ou hash de transaction Bitcoin"
+                  placeholder={t('transactionHashPlaceholder')}
                 />
                 <p className="text-xs text-gray-400">
-                  Copiez le hash de votre transaction depuis votre wallet
+                  {t('transactionHashHelp')}
                 </p>
               </div>
 
               <div className="text-center text-gray-400 text-sm">
-                ou
+                {t('or')}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="paymentProof" className="text-gray-300">Capture d'écran de paiement</Label>
+                <Label htmlFor="paymentProof" className="text-gray-300">{t('paymentScreenshot')}</Label>
                 <Input
                   id="paymentProof"
                   type="file"
@@ -376,7 +376,7 @@ export default function TaxPaymentSystem() {
                   className="bg-gray-700 border-gray-600 text-white file:bg-[#FFB800] file:text-black file:border-0 file:rounded file:px-3 file:py-1"
                 />
                 <p className="text-xs text-gray-400">
-                  Formats acceptés: PNG, JPG, PDF (max 5MB)
+                  {t('acceptedFormats')}
                 </p>
               </div>
 
@@ -388,12 +388,12 @@ export default function TaxPaymentSystem() {
                 {submitProofMutation.isPending ? (
                   <>
                     <Clock className="h-4 w-4 mr-2 animate-spin" />
-                    Envoi en cours...
+                    {t('sendingInProgress')}
                   </>
                 ) : (
                   <>
                     <Upload className="h-4 w-4 mr-2" />
-                    Soumettre la preuve
+                    {t('submitProof')}
                   </>
                 )}
               </Button>
@@ -407,13 +407,13 @@ export default function TaxPaymentSystem() {
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="p-8 text-center">
             <Clock className="h-16 w-16 text-yellow-400 mx-auto mb-4" />
-            <h3 className="text-xl font-medium text-white mb-2">Vérification en cours</h3>
+            <h3 className="text-xl font-medium text-white mb-2">{t('verificationInProgress')}</h3>
             <p className="text-gray-400 mb-4">
-              Votre preuve de paiement est en cours de vérification. Vous recevrez une notification une fois validée.
+              {t('verificationInProgressMessage')}
             </p>
             <Badge variant="secondary" className="bg-yellow-500 text-white">
               <Clock size={12} className="mr-1" />
-              Délai habituel : 1-3 heures
+              {t('usualDelay')}
             </Badge>
           </CardContent>
         </Card>
@@ -424,7 +424,7 @@ export default function TaxPaymentSystem() {
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
             <Wallet className="h-5 w-5" />
-            Instructions de Paiement
+            {t('paymentInstructions')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
