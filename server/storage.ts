@@ -336,6 +336,8 @@ export class DatabaseStorage implements IStorage {
     return seller || undefined;
   }
 
+
+
   async createSeller(insertSeller: InsertSeller): Promise<Seller> {
     const [seller] = await db
       .insert(sellers)
@@ -444,16 +446,7 @@ export class DatabaseStorage implements IStorage {
       .where(eq(clientPaymentMessages.clientId, clientId));
   }
 
-  // Seller-specific methods
-  async getSellerByEmail(email: string): Promise<Seller | undefined> {
-    const [seller] = await db.select().from(sellers).where(eq(sellers.email, email));
-    return seller || undefined;
-  }
-
-  async getSellerById(id: number): Promise<Seller | undefined> {
-    const [seller] = await db.select().from(sellers).where(eq(sellers.id, id));
-    return seller || undefined;
-  }
+  // Seller-specific methods (removing duplicates)
 
   async getSellerAssignedClients(sellerId: number): Promise<any[]> {
     const assignments = await db.select()

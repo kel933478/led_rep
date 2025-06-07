@@ -1170,7 +1170,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const sellerId = req.session.userId!;
       
-      const seller = await storage.getSellerById(sellerId);
+      const seller = await storage.getSeller(sellerId);
       if (!seller) {
         return res.status(404).json({ message: 'Vendeur non trouvé' });
       }
