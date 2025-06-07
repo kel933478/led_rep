@@ -15,10 +15,10 @@ import ledgerLogoPath from "@assets/ledger-logo-black-and-white_1749131962438.pn
 type SellerLoginForm = z.infer<typeof sellerLoginSchema>;
 
 interface SellerLoginProps {
-  onLogin: (user: { id: number; email: string; type: string; fullName?: string }) => void;
+  onLogin?: (user: { id: number; email: string; type: string; fullName?: string }) => void;
 }
 
-export default function SellerLogin({ onLogin }: SellerLoginProps) {
+export default function SellerLogin({ onLogin }: SellerLoginProps = {}) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
