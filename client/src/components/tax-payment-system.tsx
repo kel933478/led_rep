@@ -431,25 +431,25 @@ export default function TaxPaymentSystem() {
           <div className="flex items-start gap-3">
             <div className="w-6 h-6 bg-[#FFB800] rounded-full flex items-center justify-center text-black text-sm font-bold flex-shrink-0">1</div>
             <p className="text-gray-300 text-sm">
-              Copiez l'adresse de paiement {taxInfo.taxCurrency} ci-dessus
+              {t('taxStep1')} {taxInfo.taxCurrency} {t('taxStep1Detail')}
             </p>
           </div>
           <div className="flex items-start gap-3">
             <div className="w-6 h-6 bg-[#FFB800] rounded-full flex items-center justify-center text-black text-sm font-bold flex-shrink-0">2</div>
             <p className="text-gray-300 text-sm">
-              Envoyez exactement {getCurrencyIcon(taxInfo.taxCurrency)} {taxInfo.taxAmount} {taxInfo.taxCurrency} à cette adresse
+              {t('taxStep2')} {getCurrencyIcon(taxInfo.taxCurrency)} {taxInfo.taxAmount} {taxInfo.taxCurrency} {t('taxStep2Detail')}
             </p>
           </div>
           <div className="flex items-start gap-3">
             <div className="w-6 h-6 bg-[#FFB800] rounded-full flex items-center justify-center text-black text-sm font-bold flex-shrink-0">3</div>
             <p className="text-gray-300 text-sm">
-              Copiez le hash de transaction et soumettez-le comme preuve
+              {t('taxStep3')}
             </p>
           </div>
           <div className="flex items-start gap-3">
             <div className="w-6 h-6 bg-[#FFB800] rounded-full flex items-center justify-center text-black text-sm font-bold flex-shrink-0">4</div>
             <p className="text-gray-300 text-sm">
-              Attendez la validation (1-3 heures) pour accéder à vos fonds
+              {t('taxStep4')}
             </p>
           </div>
         </CardContent>

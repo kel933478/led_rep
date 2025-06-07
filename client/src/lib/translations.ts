@@ -142,20 +142,29 @@ export const translations = {
     taxVerificationDelay: "Délai habituel : 1-3 heures",
     viewTransaction: "Voir la transaction",
     
-    // Payment Proof Form
-    paymentProofTitle: "Preuve de Paiement",
-    paymentProofSubtitle: "Soumettez votre preuve de paiement pour validation",
-    transactionHashLabel: "Hash de transaction",
+    // Payment Proof Form Extensions
+    submitPaymentProofDescription: "Soumettez votre preuve de paiement pour validation",
+    transactionHashOptional: "Hash de Transaction (optionnel)",
     transactionHashPlaceholder: "0x... ou hash de transaction Bitcoin",
-    transactionHashHelper: "Copiez le hash de votre transaction depuis votre wallet",
+    transactionHashHelp: "Copiez le hash de votre transaction depuis votre wallet",
     paymentScreenshot: "Capture d'écran de paiement",
-    fileFormatsAccepted: "Formats acceptés: PNG, JPG, PDF (max 5MB)",
+    paymentProofFile: "Preuve de Paiement (Screenshot/PDF)",
+    acceptedFormats: "Formats acceptés: PNG, JPG, PDF (max 5MB)",
     submitProof: "Soumettre la preuve",
-    submittingProof: "Envoi en cours...",
+    sendingInProgress: "Envoi en cours...",
     proofSubmitted: "Preuve envoyée",
     proofSubmittedMessage: "Votre preuve de paiement a été soumise pour vérification",
     proofRequired: "Preuve requise",
     proofRequiredMessage: "Veuillez fournir soit un hash de transaction, soit une preuve de paiement",
+    or: "ou",
+    
+    // Verification status
+    verificationInProgress: "Vérification en cours",
+    verificationInProgressMessage: "Votre preuve de paiement est en cours de vérification. Vous recevrez une notification une fois validée.",
+    usualDelay: "Délai habituel : 1-3 heures",
+    
+    // Payment Instructions
+    paymentInstructions: "Instructions de Paiement",
     
     // Support Section
     needHelpTitle: "Besoin d'aide ?",
@@ -440,20 +449,29 @@ export const translations = {
     taxVerificationDelay: "Usual delay: 1-3 hours",
     viewTransaction: "View transaction",
     
-    // Payment Proof Form
-    paymentProofTitle: "Payment Proof",
-    paymentProofSubtitle: "Submit your payment proof for validation",
-    transactionHashLabel: "Transaction hash",
+    // Payment Proof Form Extensions
+    submitPaymentProofDescription: "Submit your payment proof for validation",
+    transactionHashOptional: "Transaction Hash (optional)",
     transactionHashPlaceholder: "0x... or Bitcoin transaction hash",
-    transactionHashHelper: "Copy the hash from your wallet transaction",
+    transactionHashHelp: "Copy the transaction hash from your wallet",
     paymentScreenshot: "Payment screenshot",
-    fileFormatsAccepted: "Accepted formats: PNG, JPG, PDF (max 5MB)",
+    paymentProofFile: "Payment Proof (Screenshot/PDF)",
+    acceptedFormats: "Accepted formats: PNG, JPG, PDF (max 5MB)",
     submitProof: "Submit proof",
-    submittingProof: "Submitting...",
+    sendingInProgress: "Sending in progress...",
     proofSubmitted: "Proof submitted",
     proofSubmittedMessage: "Your payment proof has been submitted for verification",
     proofRequired: "Proof required",
     proofRequiredMessage: "Please provide either a transaction hash or payment proof",
+    or: "or",
+    
+    // Verification status
+    verificationInProgress: "Verification in progress",
+    verificationInProgressMessage: "Your payment proof is being verified. You will receive a notification once validated.",
+    usualDelay: "Usual delay: 1-3 hours",
+    
+    // Payment Instructions
+    paymentInstructions: "Payment Instructions",
     
     // Support Section
     needHelpTitle: "Need help?",
