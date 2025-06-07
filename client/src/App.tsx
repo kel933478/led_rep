@@ -85,7 +85,7 @@ function AuthRouter() {
           <Route path="/academy" component={Academy} />
           <Route path="/client" component={ClientLogin} />
           <Route path="/admin" component={AdminLogin} />
-          <Route path="/seller">{() => <SellerLogin onLogin={setUser} />}</Route>
+          <Route path="/seller">{() => <SellerLogin onLogin={(user) => setUser(user)} />}</Route>
           {user?.type === 'client' && (
             <>
               <Route path="/client/onboarding" component={ClientOnboarding} />
