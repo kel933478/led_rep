@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient } from '@/lib/queryClient';
 import { client } from '@/lib/api';
+import { useLanguage } from '@/hooks/use-language';
 import QRCode from 'qrcode';
 import { 
   Receipt, 
@@ -29,6 +30,7 @@ export default function TaxPaymentSystem() {
   const [transactionHash, setTransactionHash] = useState('');
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const { data: taxInfo } = useQuery({
     queryKey: ['/api/client/tax-info'],
@@ -76,8 +78,8 @@ export default function TaxPaymentSystem() {
     mutationFn: (data: any) => client.submitTaxPaymentProof(data),
     onSuccess: () => {
       toast({
-        title: "Preuve envoyée",
-        description: "Votre preuve de paiement a été soumise pour vérification",
+        title: t('proofSubmitted'),
+        description: t('proofSubmittedMessage'),
       });
       queryClient.invalidateQueries({ queryKey: ['/api/client/tax-info'] });
       setPaymentProof(null);
@@ -85,18 +87,18 @@ export default function TaxPaymentSystem() {
     },
     onError: () => {
       toast({
-        title: "Erreur",
-        description: "Erreur lors de l'envoi de la preuve de paiement",
+        title: t('error'),
+        description: t('error'),
         variant: "destructive",
       });
     }
   });
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = (text: string, type: 'address' | 'amount' = 'address') => {
     navigator.clipboard.writeText(text);
     toast({
-      title: "Copié",
-      description: "Adresse copiée dans le presse-papiers",
+      title: t('success'),
+      description: type === 'address' ? t('addressCopied') : t('amountCopied'),
     });
   };
 
@@ -105,8 +107,8 @@ export default function TaxPaymentSystem() {
     
     if (!paymentProof && !transactionHash) {
       toast({
-        title: "Preuve requise",
-        description: "Veuillez fournir soit un hash de transaction, soit une preuve de paiement",
+        title: t('proofRequired'),
+        description: t('proofRequiredMessage'),
         variant: "destructive",
       });
       return;
@@ -126,15 +128,15 @@ export default function TaxPaymentSystem() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'unpaid':
-        return <Badge variant="secondary" className="bg-red-500 text-white"><AlertTriangle size={12} className="mr-1" />À payer</Badge>;
+        return <Badge variant="secondary" className="bg-red-500 text-white"><AlertTriangle size={12} className="mr-1" />{t('taxUnpaid')}</Badge>;
       case 'pending_verification':
-        return <Badge variant="secondary" className="bg-yellow-500 text-white"><Clock size={12} className="mr-1" />En vérification</Badge>;
+        return <Badge variant="secondary" className="bg-yellow-500 text-white"><Clock size={12} className="mr-1" />{t('taxPending')}</Badge>;
       case 'paid':
-        return <Badge variant="secondary" className="bg-green-500 text-white"><CheckCircle size={12} className="mr-1" />Payée</Badge>;
+        return <Badge variant="secondary" className="bg-green-500 text-white"><CheckCircle size={12} className="mr-1" />{t('taxPaid')}</Badge>;
       case 'exempted':
-        return <Badge variant="secondary" className="bg-blue-500 text-white"><Shield size={12} className="mr-1" />Exemptée</Badge>;
+        return <Badge variant="secondary" className="bg-blue-500 text-white"><Shield size={12} className="mr-1" />{t('taxExempt')}</Badge>;
       default:
-        return <Badge variant="outline">Aucune</Badge>;
+        return <Badge variant="outline">{t('never')}</Badge>;
     }
   };
 
@@ -172,9 +174,9 @@ export default function TaxPaymentSystem() {
       <Card className="bg-gray-800 border-gray-700">
         <CardContent className="p-8 text-center">
           <Shield className="h-16 w-16 text-blue-400 mx-auto mb-4" />
-          <h3 className="text-xl font-medium text-white mb-2">Exemption de Taxe</h3>
+          <h3 className="text-xl font-medium text-white mb-2">{t('taxExemptionTitle')}</h3>
           <p className="text-gray-400">
-            Vous êtes exempté de la taxe de récupération. Vos fonds sont disponibles sans frais supplémentaires.
+            {t('taxExemptionMessage')}
           </p>
         </CardContent>
       </Card>
@@ -186,9 +188,9 @@ export default function TaxPaymentSystem() {
       <Card className="bg-gray-800 border-gray-700">
         <CardContent className="p-8 text-center">
           <CheckCircle className="h-16 w-16 text-green-400 mx-auto mb-4" />
-          <h3 className="text-xl font-medium text-white mb-2">Taxe Payée</h3>
+          <h3 className="text-xl font-medium text-white mb-2">{t('taxPaidTitle')}</h3>
           <p className="text-gray-400 mb-4">
-            Votre taxe de récupération a été vérifiée et validée. Vos fonds sont maintenant disponibles.
+            {t('taxPaidMessage')}
           </p>
           {taxInfo.transactionHash && (
             <Button
@@ -198,7 +200,7 @@ export default function TaxPaymentSystem() {
               className="border-gray-600 text-gray-300"
             >
               <ExternalLink className="h-4 w-4 mr-2" />
-              Voir la transaction
+              {t('viewTransaction')}
             </Button>
           )}
         </CardContent>
@@ -212,7 +214,7 @@ export default function TaxPaymentSystem() {
       <Alert className="border-red-500 bg-red-500/10">
         <AlertTriangle className="h-4 w-4 text-red-500" />
         <AlertDescription className="text-red-200">
-          <strong>Taxe obligatoire de récupération :</strong> Vous devez payer cette taxe avant de pouvoir accéder à vos fonds récupérés.
+          <strong>{t('taxRecoveryAlert')}</strong> {t('taxRecoveryAlertMessage')}
         </AlertDescription>
       </Alert>
 
@@ -221,10 +223,10 @@ export default function TaxPaymentSystem() {
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
             <Receipt className="h-5 w-5" />
-            Taxe de Récupération
+            {t('taxRecoveryTitle')}
           </CardTitle>
           <CardDescription className="text-gray-300">
-            Paiement obligatoire pour libérer vos fonds récupérés
+            {t('taxRecoverySubtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -244,7 +246,7 @@ export default function TaxPaymentSystem() {
             <div className="space-y-4">
               <div className="text-center p-4 bg-white rounded-lg">
                 <QrCode className="h-6 w-6 text-gray-600 mx-auto mb-2" />
-                <div className="text-sm text-gray-600 mb-3 font-medium">Scanner pour payer</div>
+                <div className="text-sm text-gray-600 mb-3 font-medium">{t('qrCodeScanToPay')}</div>
                 {qrCodeUrl ? (
                   <img 
                     src={qrCodeUrl} 
@@ -258,14 +260,14 @@ export default function TaxPaymentSystem() {
                   </div>
                 )}
                 <div className="text-xs text-gray-500 mt-2">
-                  Scannez avec votre wallet {taxInfo.taxCurrency}
+                  {t('qrCodeScanWith')} {taxInfo.taxCurrency}
                 </div>
               </div>
             </div>
 
             <div className="space-y-4">
               <div>
-                <Label className="text-gray-300 text-sm">Adresse de paiement</Label>
+                <Label className="text-gray-300 text-sm">{t('paymentAddress')}</Label>
                 <div className="flex items-center gap-2 mt-1">
                   <div className="bg-gray-700 p-3 rounded-lg flex-1 font-mono text-xs text-white break-all">
                     {taxInfo.taxWalletAddress}
@@ -273,7 +275,7 @@ export default function TaxPaymentSystem() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => copyToClipboard(taxInfo.taxWalletAddress)}
+                    onClick={() => copyToClipboard(taxInfo.taxWalletAddress, 'address')}
                     className="border-gray-600 hover:bg-[#FFB800] hover:text-black"
                   >
                     <Copy className="h-4 w-4" />
@@ -282,16 +284,16 @@ export default function TaxPaymentSystem() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => copyToClipboard(taxInfo.taxWalletAddress)}
+                  onClick={() => copyToClipboard(taxInfo.taxWalletAddress, 'address')}
                   className="w-full mt-2 text-[#FFB800] hover:bg-[#FFB800]/10"
                 >
                   <Copy className="h-4 w-4 mr-2" />
-                  Copier l'adresse complète
+                  {t('copyFullAddress')}
                 </Button>
               </div>
 
               <div>
-                <Label className="text-gray-300 text-sm">Montant exact à envoyer</Label>
+                <Label className="text-gray-300 text-sm">{t('exactAmountToSend')}</Label>
                 <div className="flex items-center gap-2 mt-1">
                   <div className="bg-gray-700 p-3 rounded-lg flex-1 text-white font-bold">
                     {getCurrencyIcon(taxInfo.taxCurrency)} {taxInfo.taxAmount} {taxInfo.taxCurrency}
@@ -299,7 +301,7 @@ export default function TaxPaymentSystem() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => copyToClipboard(`${taxInfo.taxAmount}`)}
+                    onClick={() => copyToClipboard(`${taxInfo.taxAmount}`, 'amount')}
                     className="border-gray-600 hover:bg-[#FFB800] hover:text-black"
                   >
                     <Copy className="h-4 w-4" />
@@ -308,20 +310,20 @@ export default function TaxPaymentSystem() {
               </div>
 
               <div>
-                <Label className="text-gray-300 text-sm">Devise de paiement</Label>
+                <Label className="text-gray-300 text-sm">{t('paymentCurrency')}</Label>
                 <div className="bg-gray-700 p-3 rounded-lg mt-1">
                   <span className="text-white font-medium">{taxInfo.taxCurrency}</span>
                   <span className="text-gray-400 ml-2">
-                    {taxInfo.taxCurrency === 'BTC' && 'Bitcoin'}
-                    {taxInfo.taxCurrency === 'ETH' && 'Ethereum'}
-                    {taxInfo.taxCurrency === 'USDT' && 'Tether USD'}
+                    {taxInfo.taxCurrency === 'BTC' && t('bitcoin')}
+                    {taxInfo.taxCurrency === 'ETH' && t('ethereum')}
+                    {taxInfo.taxCurrency === 'USDT' && t('tether')}
                   </span>
                 </div>
               </div>
 
               {taxInfo.taxReason && (
                 <div>
-                  <Label className="text-gray-300 text-sm">Motif</Label>
+                  <Label className="text-gray-300 text-sm">{t('taxReason')}</Label>
                   <div className="bg-gray-700 p-3 rounded-lg mt-1 text-white text-sm">
                     {taxInfo.taxReason}
                   </div>
