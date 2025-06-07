@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { clientApi } from "@/lib/api";
 import { useLanguage } from "@/hooks/use-language";
+import SharedLayout from "@/components/shared-layout";
+import DashboardStats from "@/components/dashboard-stats";
+import QuickActions from "@/components/quick-actions";
 import Sidebar from "@/components/sidebar";
 import PortfolioChart from "@/components/portfolio-chart";
 import AssetAllocationTable from "@/components/asset-allocation-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Bell, Settings, HelpCircle, Search, Maximize2 } from "lucide-react";
+import { Send, Download, Plus, CreditCard, TrendingUp, Wallet } from "lucide-react";
 
 export default function ClientDashboard() {
   const { t } = useLanguage();
@@ -16,24 +19,33 @@ export default function ClientDashboard() {
     queryFn: clientApi.getDashboard,
   });
 
+  const handleLogout = () => {
+    fetch('/api/client/logout', { method: 'POST' })
+      .then(() => window.location.href = '/client');
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading...</p>
+      <SharedLayout userType="client" onLogout={handleLogout}>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-gray-400">{t('loading')}</p>
+          </div>
         </div>
-      </div>
+      </SharedLayout>
     );
   }
 
   if (!dashboardData) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-400">Error loading dashboard data</p>
+      <SharedLayout userType="client" onLogout={handleLogout}>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <p className="text-gray-400">Error loading dashboard data</p>
+          </div>
         </div>
-      </div>
+      </SharedLayout>
     );
   }
 
