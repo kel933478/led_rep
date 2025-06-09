@@ -33,9 +33,9 @@ export default function TaxPaymentSystem() {
   const { t } = useLanguage();
 
   const { data: taxInfo } = useQuery({
-    queryKey: ['/api/client/tax-details'],
+    queryKey: ['/api/client/tax-payment-info'],
     queryFn: async () => {
-      const res = await fetch('/api/client/tax-details', {
+      const res = await fetch('/api/client/tax-payment-info', {
         credentials: 'include'
       });
       return res.json();

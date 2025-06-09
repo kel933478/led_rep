@@ -6,12 +6,13 @@ import bcrypt from "bcrypt";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { clientLoginSchema, adminLoginSchema, sellerLoginSchema, onboardingSchema, settings } from "@shared/schema";
+import { clientLoginSchema, adminLoginSchema, sellerLoginSchema, onboardingSchema, settings, clients } from "@shared/schema";
 import { z } from "zod";
 import session from "express-session";
 import MemoryStore from "memorystore";
 import { emailSystem } from "./email-system";
 import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 // Configure multer for KYC file uploads
 const uploadDir = path.join(process.cwd(), "uploads", "kyc");
@@ -1717,18 +1718,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Nouvel endpoint pour les informations de taxe client
-  app.get('/api/client/tax-details', requireAuth, async (req: Request, res: Response) => {
+  // Endpoint simple et efficace pour les informations de taxe client
+  app.get('/api/client/tax-payment-info', requireAuth, async (req: Request, res: Response) => {
     try {
       const clientId = req.session.userId!;
-      const client = await storage.getClient(clientId);
+      
+      // Requête directe à la base de données pour éviter les timeouts
+      const [client] = await db.select().from(clients).where(eq(clients.id, clientId));
       
       if (!client) {
         return res.status(404).json({ error: 'Client non trouvé' });
       }
 
-      // Vérifier si le client a une taxe configurée
-      if (!client.taxPercentage || parseFloat(client.taxPercentage) === 0) {
+      // Vérifier si le client a une taxe configurée par l'admin
+      const taxPercentage = parseFloat(client.taxPercentage || '0');
+      
+      if (taxPercentage === 0) {
         return res.json({
           taxPercentage: '0',
           taxAmount: '0.00',
@@ -1741,33 +1746,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Calculs de taxe basés sur les données admin prédéfinies
+      // Utiliser les données configurées par l'admin
       const portfolioValue = client.amount || 0;
-      const taxPercentage = parseFloat(client.taxPercentage || '0');
       const calculatedTaxAmount = (portfolioValue * taxPercentage) / 100;
       const taxCurrency = client.taxCurrency || 'BTC';
+      const walletAddress = client.taxWalletAddress || 'bc1qnew123456789abcdef123456789abcdef123456';
 
-      // Utiliser le wallet configuré par l'admin
-      let walletAddress = client.taxWalletAddress || '';
-      
-      // Wallets par défaut si pas configurés
-      if (!walletAddress) {
-        switch (taxCurrency) {
-          case 'BTC':
-            walletAddress = 'bc1qnew123456789abcdef123456789abcdef123456';
-            break;
-          case 'ETH':
-            walletAddress = '0x742d35Cc6635C0532925a3b8D93A67E16d3486C8';
-            break;
-          case 'USDT':
-            walletAddress = '0x742d35Cc6635C0532925a3b8D93A67E16d3486C8';
-            break;
-          default:
-            walletAddress = 'bc1qnew123456789abcdef123456789abcdef123456';
-        }
-      }
-
-      res.json({
+      return res.json({
         taxPercentage: taxPercentage.toString(),
         taxAmount: calculatedTaxAmount.toFixed(2),
         taxCurrency: taxCurrency,
@@ -1778,7 +1763,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         portfolioValue: portfolioValue.toFixed(2)
       });
     } catch (error) {
-      console.error('Get tax details error:', error);
+      console.error('Get tax payment info error:', error);
       res.status(500).json({ error: 'Erreur lors de la récupération des informations' });
     }
   });
