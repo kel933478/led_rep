@@ -52,8 +52,7 @@ export default function SellerLogin(props: any = {}) {
           title: t('success'),
           description: language === 'fr' ? 'Connexion réussie' : 'Login successful',
         });
-        // Redirect to seller dashboard
-        window.location.href = '/seller/dashboard';
+        // La redirection sera gérée automatiquement par le système de routing
       } else {
         toast({
           title: t('error'),
