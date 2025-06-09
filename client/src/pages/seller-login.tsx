@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { sellerLoginSchema } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
+import { useLocation } from "wouter";
+import { queryClient } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -24,6 +26,7 @@ export default function SellerLogin(props: any = {}) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { t, language } = useLanguage();
+  const [, setLocation] = useLocation();
 
   const form = useForm<SellerLoginForm>({
     resolver: zodResolver(sellerLoginSchema),
@@ -47,12 +50,19 @@ export default function SellerLogin(props: any = {}) {
       const result = await response.json();
 
       if (response.ok) {
+        // Invalider le cache d'authentification
+        queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+        
         onLogin?.(result.user);
         toast({
           title: t('success'),
           description: language === 'fr' ? 'Connexion réussie' : 'Login successful',
         });
-        // La redirection sera gérée automatiquement par le système de routing
+        
+        // Redirection forcée vers l'espace vendeur
+        setTimeout(() => {
+          setLocation('/seller/dashboard');
+        }, 1000);
       } else {
         toast({
           title: t('error'),
