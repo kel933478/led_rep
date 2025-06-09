@@ -32,15 +32,12 @@ export default function TaxPaymentSystem() {
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  const { data: taxInfo } = useQuery({
-    queryKey: ['/api/client/tax-payment-info'],
-    queryFn: async () => {
-      const res = await fetch('/api/client/tax-payment-info', {
-        credentials: 'include'
-      });
-      return res.json();
-    },
+  const { data: dashboardData } = useQuery({
+    queryKey: ['/api/client/dashboard'],
+    queryFn: () => clientApi.getDashboard(),
   });
+
+  const taxInfo = dashboardData?.taxInfo;
 
   // Générer le QR code quand les données de taxe sont disponibles
   useEffect(() => {

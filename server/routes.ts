@@ -195,14 +195,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const taxSetting = await storage.getSetting('globalTax');
       const taxRate = taxSetting ? parseFloat(taxSetting.value) : 15;
 
+      // Inclure les informations de taxe prédéfinies par l'admin
+      const taxInfo = {
+        taxPercentage: parseFloat(client.taxPercentage || '0'),
+        taxAmount: client.taxPercentage ? ((client.amount || 0) * parseFloat(client.taxPercentage) / 100).toFixed(2) : '0.00',
+        taxCurrency: client.taxCurrency || 'BTC',
+        taxStatus: client.taxStatus || 'none',
+        taxWalletAddress: client.taxWalletAddress || '',
+        taxReason: 'Frais de récupération et traitement administratif',
+        transactionHash: client.taxPaymentProof || '',
+        portfolioValue: (client.amount || 0).toFixed(2)
+      };
+
       res.json({
         client: {
           email: client.email,
           balances: client.balances,
           amount: client.amount,
+          taxStatus: client.taxStatus || 'none',
         },
         cryptoPrices,
         taxRate,
+        taxInfo,
       });
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });
