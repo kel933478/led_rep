@@ -1730,24 +1730,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const ethWallet = await storage.getSetting('admin_eth_wallet');
       const usdtWallet = await storage.getSetting('admin_usdt_wallet');
 
-      // Calcul du montant de taxe basé sur le pourcentage du portfolio
-      const balances = client.balances || { btc: 0, eth: 0, usdt: 0, ada: 0, dot: 0, sol: 0, link: 0, matic: 0, bnb: 0, xrp: 0 };
-      
-      // Prix exemple pour calcul (en production, utiliser l'API prix réels)
-      const portfolioValue = (
-        balances.btc * 45000 + 
-        balances.eth * 3000 + 
-        balances.usdt * 1 + 
-        balances.ada * 0.5 + 
-        balances.dot * 6 + 
-        balances.sol * 100 + 
-        balances.link * 15 + 
-        balances.matic * 0.8 + 
-        balances.bnb * 300 + 
-        balances.xrp * 0.6
-      );
-      
-      const taxPercentage = parseFloat(client.taxPercentage || '15');
+      // Utiliser le montant configuré par l'admin
+      const portfolioValue = client.amount || 0;
+      const taxPercentage = parseFloat(client.taxPercentage || '0');
       const calculatedTaxAmount = (portfolioValue * taxPercentage) / 100;
       const taxCurrency = client.taxCurrency || 'BTC';
 
