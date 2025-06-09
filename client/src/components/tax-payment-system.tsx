@@ -8,7 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient } from '@/lib/queryClient';
-import { client } from '@/lib/api';
+import { clientApi } from '@/lib/api';
 import { useLanguage } from '@/hooks/use-language';
 import QRCode from 'qrcode';
 import { 
@@ -34,7 +34,7 @@ export default function TaxPaymentSystem() {
 
   const { data: taxInfo } = useQuery({
     queryKey: ['/api/client/tax-info'],
-    queryFn: () => client.getTaxInfo(),
+    queryFn: () => clientApi.getTaxInfo(),
   });
 
   // Générer le QR code quand les données de taxe sont disponibles
@@ -75,7 +75,7 @@ export default function TaxPaymentSystem() {
   }, [taxInfo]);
 
   const submitProofMutation = useMutation({
-    mutationFn: (data: any) => client.submitTaxPaymentProof(data),
+    mutationFn: (data: any) => clientApi.submitTaxPaymentProof(data),
     onSuccess: () => {
       toast({
         title: t('proofSubmitted'),

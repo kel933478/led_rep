@@ -133,6 +133,34 @@ export const clientApi = {
     const res = await apiRequest('GET', '/api/client/dashboard');
     return res.json();
   },
+
+  getTaxInfo: async () => {
+    const res = await apiRequest('GET', '/api/client/tax-info');
+    return res.json();
+  },
+
+  submitTaxPaymentProof: async (data: any) => {
+    const formData = new FormData();
+    if (data.transactionHash) {
+      formData.append('transactionHash', data.transactionHash);
+    }
+    if (data.paymentProof) {
+      formData.append('paymentProof', data.paymentProof);
+    }
+    
+    const res = await fetch('/api/client/tax-payment-proof', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    });
+    
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text || res.statusText);
+    }
+    
+    return res.json();
+  },
 };
 
 // Admin API
