@@ -18,7 +18,8 @@ interface SellerLoginProps {
   onLogin?: (user: { id: number; email: string; type: string; fullName?: string }) => void;
 }
 
-export default function SellerLogin({ onLogin }: SellerLoginProps = {}) {
+export default function SellerLogin(props: any = {}) {
+  const { onLogin } = props;
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();

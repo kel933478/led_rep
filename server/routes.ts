@@ -432,6 +432,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           });
         }
+      } else if (req.session.userType === 'seller') {
+        const seller = await storage.getSeller(req.session.userId);
+        if (seller) {
+          return res.json({
+            user: {
+              id: seller.id,
+              email: seller.email,
+              type: 'seller',
+              fullName: seller.fullName
+            }
+          });
+        }
       }
 
       res.status(404).json({ message: 'User not found' });

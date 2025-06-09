@@ -52,7 +52,7 @@ function AuthRouter() {
       }
       
       if (!user) {
-        if (!['/client', '/admin', '/ledger', '/access'].includes(location)) {
+        if (!['/client', '/admin', '/seller', '/ledger', '/access'].includes(location)) {
           setLocation('/client');
         }
       } else if (user && user.type === 'client') {
@@ -63,6 +63,8 @@ function AuthRouter() {
         }
       } else if (user && user.type === 'admin' && location !== '/admin/dashboard') {
         setLocation('/admin/dashboard');
+      } else if (user && user.type === 'seller' && location !== '/seller/dashboard') {
+        setLocation('/seller/dashboard');
       }
     }
   }, [user, location, setLocation, isLoading]);
