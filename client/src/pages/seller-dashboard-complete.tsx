@@ -51,6 +51,24 @@ export default function SellerDashboardComplete() {
   const [editingAmount, setEditingAmount] = useState<{ clientId: number; amount: string } | null>(null);
   const [paymentMessage, setPaymentMessage] = useState('');
 
+  // Logout function
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/seller/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      
+      // Clear cache and redirect to login
+      queryClient.clear();
+      window.location.href = '/seller';
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force redirect even if API call fails
+      window.location.href = '/seller';
+    }
+  };
+
   // Fetch seller dashboard data
   const { data: dashboardData, isLoading, error } = useQuery<SellerDashboardData>({
     queryKey: ['/api/seller/dashboard'],
@@ -230,7 +248,7 @@ export default function SellerDashboardComplete() {
             </div>
             <Button
               variant="outline"
-              onClick={() => window.location.href = '/seller'}
+              onClick={handleLogout}
             >
               Déconnexion
             </Button>
