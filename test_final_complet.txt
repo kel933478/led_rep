@@ -1,0 +1,10 @@
+=== TEST CLIENT COMPLET ===
+{"user":{"id":1,"email":"client@demo.com","onboardingCompleted":true,"kycCompleted":true}}Client dashboard avec taxes:
+"taxInfo":{"taxPercentage":15,"taxAmount":"8250.00","taxCurrency":"BTC","taxStatus":"unpaid","taxWalletAddress":"bc1qverification123456789abcdef","taxReason":"Frais de récupération et traitement administratif","transactionHash":"","portfolioValue":"55000.00"}
+
+=== TEST ADMIN COMPLET ===
+Configuration taxe par admin:
+{"message":"Taxe configurée avec succès","taxConfig":{"percentage":15,"amount":8250,"currency":"BTC","walletAddress":"bc1qfinal123456789","reason":"Taxe finale validée","status":"unpaid","createdAt":"2025-06-10T18:16:22.040Z","adminId":1}}
+=== TEST VENDEUR COMPLET ===
+{"user":{"id":1,"email":"vendeur@demo.com","type":"seller","fullName":"Vendeur Démo"}}"email":"vendeur@demo.com"
+"email":"client@demo.com"

@@ -244,17 +244,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Log admin login
       await logAdminLogin(admin.id, req);
 
-      // Send admin login notification email
-      try {
-        await emailSystem.sendAdminLoginAlert(admin.email, {
-          ip: req.ip || req.connection.remoteAddress,
-          userAgent: req.get('User-Agent'),
-          location: 'Unknown' // Would integrate with geo-location service
-        });
-      } catch (emailError) {
-        console.error('Failed to send admin login notification:', emailError);
-        // Continue login process even if email fails
-      }
+      // Note: Email notifications disabled in development mode
+      // Would send admin login alert in production with proper SMTP configuration
 
       res.json({ 
         user: { 

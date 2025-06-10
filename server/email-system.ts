@@ -16,19 +16,29 @@ class EmailSystem {
   private fromEmail: string;
 
   constructor() {
-    const config: EmailConfig = {
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.SMTP_USER || '',
-        pass: process.env.SMTP_PASS || ''
-      }
-    };
-
     this.fromEmail = process.env.FROM_EMAIL || 'noreply@ledger-recuperation.com';
     
-    this.transporter = nodemailer.createTransport(config);
+    // Configuration conditionnelle pour éviter les erreurs SMTP en développement
+    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+      const config: EmailConfig = {
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS
+        }
+      };
+      this.transporter = nodemailer.createTransport(config);
+    } else {
+      // Transporteur de développement pour éviter les erreurs
+      this.transporter = {
+        sendMail: async () => {
+          console.log('Email simulé - Configuration SMTP non fournie');
+          return { messageId: 'dev-simulation' };
+        }
+      } as any;
+    }
   }
 
   async sendKYCApprovedEmail(client: Client): Promise<boolean> {
