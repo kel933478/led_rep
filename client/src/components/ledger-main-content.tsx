@@ -99,15 +99,15 @@ export function LedgerMainContent() {
             {/* Statistiques de récupération */}
             <div className="grid grid-cols-3 gap-6 mb-8">
               <div className="bg-[hsl(var(--ledger-bg-secondary))] p-6 rounded-lg border border-[hsl(var(--ledger-border))]">
-                <div className="text-2xl font-bold text-[hsl(var(--ledger-orange))]">98.5%</div>
+                <div className="text-2xl font-bold text-black">98.5%</div>
                 <div className="text-sm text-[hsl(var(--ledger-text-muted))]">Taux de succès</div>
               </div>
               <div className="bg-[hsl(var(--ledger-bg-secondary))] p-6 rounded-lg border border-[hsl(var(--ledger-border))]">
-                <div className="text-2xl font-bold text-[hsl(var(--ledger-orange))]">24-72h</div>
+                <div className="text-2xl font-bold text-black">24-72h</div>
                 <div className="text-sm text-[hsl(var(--ledger-text-muted))]">Délai moyen</div>
               </div>
               <div className="bg-[hsl(var(--ledger-bg-secondary))] p-6 rounded-lg border border-[hsl(var(--ledger-border))]">
-                <div className="text-2xl font-bold text-[hsl(var(--ledger-orange))]">2500+</div>
+                <div className="text-2xl font-bold text-black">2500+</div>
                 <div className="text-sm text-[hsl(var(--ledger-text-muted))]">Clients satisfaits</div>
               </div>
             </div>
@@ -163,7 +163,7 @@ export function LedgerMainContent() {
                       {service.description}
                     </p>
                     <div className="flex items-center gap-4 text-xs">
-                      <span className="text-[hsl(var(--ledger-orange))]">{service.price}</span>
+                      <span className="text-black">{service.price}</span>
                       <Badge 
                         variant="secondary" 
                         className="bg-[hsl(var(--ledger-green))] text-white border-none"
@@ -177,7 +177,7 @@ export function LedgerMainContent() {
                 
                 <Button 
                   variant="secondary" 
-                  className="bg-[hsl(var(--ledger-orange))] hover:bg-[hsl(var(--ledger-orange))]/80 text-white border-none"
+                  className="bg-black hover:bg-black/80 text-white border-none"
                 >
                   Commencer
                 </Button>

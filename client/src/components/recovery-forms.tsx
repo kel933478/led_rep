@@ -167,19 +167,19 @@ export default function RecoveryForms() {
       {/* Tabs pour les différents services */}
       <Tabs value={activeService} onValueChange={setActiveService} className="w-full">
         <TabsList className="grid w-full grid-cols-4 bg-gray-800">
-          <TabsTrigger value="wallet" className="data-[state=active]:bg-[#FFB800] data-[state=active]:text-black">
+          <TabsTrigger value="wallet" className="data-[state=active]:bg-[black] data-[state=active]:text-black">
             <Wallet className="h-4 w-4 mr-2" />
             Wallet
           </TabsTrigger>
-          <TabsTrigger value="seed" className="data-[state=active]:bg-[#FFB800] data-[state=active]:text-black">
+          <TabsTrigger value="seed" className="data-[state=active]:bg-[black] data-[state=active]:text-black">
             <Key className="h-4 w-4 mr-2" />
             Seed Phrase
           </TabsTrigger>
-          <TabsTrigger value="password" className="data-[state=active]:bg-[#FFB800] data-[state=active]:text-black">
+          <TabsTrigger value="password" className="data-[state=active]:bg-[black] data-[state=active]:text-black">
             <Shield className="h-4 w-4 mr-2" />
             Mot de Passe
           </TabsTrigger>
-          <TabsTrigger value="custom" className="data-[state=active]:bg-[#FFB800] data-[state=active]:text-black">
+          <TabsTrigger value="custom" className="data-[state=active]:bg-[black] data-[state=active]:text-black">
             <HelpCircle className="h-4 w-4 mr-2" />
             Personnalisé
           </TabsTrigger>
@@ -280,14 +280,14 @@ export default function RecoveryForms() {
                         key={level.value}
                         className={`p-4 rounded-lg border cursor-pointer transition-all ${
                           formData.urgencyLevel === level.value 
-                            ? 'border-[#FFB800] bg-[#FFB800]/10' 
+                            ? 'border-[black] bg-[black]/10' 
                             : 'border-gray-600 bg-gray-700 hover:border-gray-500'
                         }`}
                         onClick={() => setFormData(prev => ({ ...prev, urgencyLevel: level.value }))}
                       >
                         <div className="flex justify-between items-center">
                           <span className="text-white text-sm">{level.label}</span>
-                          <Badge variant="outline" className="text-[#FFB800] border-[#FFB800]">
+                          <Badge variant="outline" className="text-[black] border-[black]">
                             {level.price}
                           </Badge>
                         </div>
@@ -304,7 +304,7 @@ export default function RecoveryForms() {
                     type="file"
                     multiple
                     onChange={(e) => setFormData(prev => ({ ...prev, additionalFiles: e.target.files || undefined }))}
-                    className="bg-gray-700 border-gray-600 text-white file:bg-[#FFB800] file:text-black file:border-0 file:rounded file:px-3 file:py-1"
+                    className="bg-gray-700 border-gray-600 text-white file:bg-[black] file:text-black file:border-0 file:rounded file:px-3 file:py-1"
                   />
                   <p className="text-xs text-gray-400">
                     Screenshots, logs, ou tout autre document utile (max 10MB par fichier)
@@ -314,7 +314,7 @@ export default function RecoveryForms() {
                 <Button
                   type="submit"
                   disabled={submitRecoveryMutation.isPending}
-                  className="w-full bg-[#FFB800] hover:bg-[#FFB800]/90 text-black font-medium py-3"
+                  className="w-full bg-[black] hover:bg-[black]/90 text-black font-medium py-3"
                 >
                   {submitRecoveryMutation.isPending ? (
                     <>
@@ -345,21 +345,21 @@ export default function RecoveryForms() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
-              <div className="w-10 h-10 bg-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-3">
+              <div className="w-10 h-10 bg-[black] rounded-full flex items-center justify-center mx-auto mb-3">
                 <span className="text-black font-bold">1</span>
               </div>
               <h4 className="text-white font-medium mb-2">Analyse</h4>
               <p className="text-gray-400 text-sm">Nos experts analysent votre cas et évaluent la faisabilité</p>
             </div>
             <div className="text-center">
-              <div className="w-10 h-10 bg-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-3">
+              <div className="w-10 h-10 bg-[black] rounded-full flex items-center justify-center mx-auto mb-3">
                 <span className="text-black font-bold">2</span>
               </div>
               <h4 className="text-white font-medium mb-2">Récupération</h4>
               <p className="text-gray-400 text-sm">Utilisation d'outils avancés pour récupérer vos cryptos</p>
             </div>
             <div className="text-center">
-              <div className="w-10 h-10 bg-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-3">
+              <div className="w-10 h-10 bg-[black] rounded-full flex items-center justify-center mx-auto mb-3">
                 <span className="text-black font-bold">3</span>
               </div>
               <h4 className="text-white font-medium mb-2">Restitution</h4>

@@ -125,7 +125,7 @@ export default function AdminWalletConfig() {
           {/* Bitcoin Wallet */}
           <div className="space-y-2">
             <Label htmlFor="btcWallet" className="text-gray-300 flex items-center gap-2">
-              <Bitcoin className="h-4 w-4 text-orange-500" />
+              <Bitcoin className="h-4 w-4 text-black" />
               Adresse Bitcoin (BTC)
             </Label>
             <Input

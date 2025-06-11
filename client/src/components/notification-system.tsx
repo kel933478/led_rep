@@ -133,7 +133,7 @@ export default function NotificationSystem() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high': return 'border-l-red-500';
-      case 'medium': return 'border-l-yellow-500';
+      case 'medium': return 'border-l-black';
       default: return 'border-l-blue-500';
     }
   };
