@@ -116,7 +116,7 @@ export default function ClientDashboardImproved() {
               ✓ {t('synchronized')}
             </Badge>
             {client.taxStatus === 'unpaid' && (
-              <Badge variant="outline" className="border-yellow-500 text-yellow-500">
+              <Badge variant="outline" className="border-black text-black">
                 ⚠ {t('taxRequired')}
               </Badge>
             )}

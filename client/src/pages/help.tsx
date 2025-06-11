@@ -212,7 +212,7 @@ export default function Help() {
               <Card className="bg-gray-900 border-gray-800">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center">
-                    <Phone className="w-5 h-5 mr-2 text-yellow-400" />
+                    <Phone className="w-5 h-5 mr-2 text-black" />
                     Phone Support
                   </CardTitle>
                 </CardHeader>
@@ -280,7 +280,7 @@ export default function Help() {
                     <p className="text-white font-medium">Email Notifications</p>
                     <p className="text-sm text-gray-400">Email delivery service</p>
                   </div>
-                  <Badge className="bg-yellow-600 text-white">Degraded</Badge>
+                  <Badge className="bg-black text-white">Degraded</Badge>
                 </div>
 
                 <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
@@ -288,7 +288,7 @@ export default function Help() {
                     <p className="text-white font-medium">Real-time Pricing</p>
                     <p className="text-sm text-gray-400">Cryptocurrency price feeds</p>
                   </div>
-                  <Badge className="bg-yellow-600 text-white">Degraded</Badge>
+                  <Badge className="bg-black text-white">Degraded</Badge>
                 </div>
 
                 <div className="bg-gray-800 p-4 rounded-lg">

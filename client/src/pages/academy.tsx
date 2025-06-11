@@ -130,7 +130,7 @@ export default function Academy() {
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'Beginner': return 'bg-green-600';
-      case 'Intermediate': return 'bg-yellow-600';
+      case 'Intermediate': return 'bg-black';
       case 'Advanced': return 'bg-red-600';
       default: return 'bg-gray-600';
     }
