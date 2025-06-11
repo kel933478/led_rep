@@ -261,8 +261,8 @@ export default function CreateClientForm({ onSuccess, onCancel }: CreateClientFo
               </div>
               
               {formData.enableTax && (
-                <div className="bg-yellow-900/20 border border-yellow-500 rounded-lg p-4 space-y-4">
-                  <div className="flex items-center gap-2 text-yellow-400">
+                <div className="bg-black/20 border border-black rounded-lg p-4 space-y-4">
+                  <div className="flex items-center gap-2 text-black">
                     <AlertTriangle className="h-4 w-4" />
                     <span className="text-sm">Configuration de la taxe obligatoire</span>
                   </div>

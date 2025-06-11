@@ -32,7 +32,7 @@ export default function RecoveryCenter() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="secondary" className="bg-yellow-500 text-white"><Clock size={12} className="mr-1" />En attente</Badge>;
+        return <Badge variant="secondary" className="bg-black text-white"><Clock size={12} className="mr-1" />En attente</Badge>;
       case 'in_progress':
         return <Badge variant="secondary" className="bg-blue-500 text-white"><TrendingUp size={12} className="mr-1" />En cours</Badge>;
       case 'completed':

@@ -292,7 +292,7 @@ export default function TaxManagementSystem({ client, onClose }: TaxManagementPr
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-yellow-500" />
+            <AlertTriangle className="h-5 w-5 text-black" />
             Informations Importantes
           </CardTitle>
         </CardHeader>

@@ -132,7 +132,7 @@ export default function ClientDashboard() {
               <Badge className="bg-green-600 text-white">
                 ✓ Synchronized
               </Badge>
-              <Badge variant="outline" className="border-yellow-500 text-yellow-500">
+              <Badge variant="outline" className="border-black text-black">
                 ⚠
               </Badge>
               <Badge variant="outline" className="border-gray-600 text-gray-400">

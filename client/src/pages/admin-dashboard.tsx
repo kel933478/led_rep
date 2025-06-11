@@ -227,7 +227,7 @@ export default function AdminDashboard() {
                       <TableCell>
                         <Badge
                           variant={client.onboardingCompleted ? "default" : "secondary"}
-                          className={client.onboardingCompleted ? "bg-green-900 text-green-300" : "bg-orange-900 text-orange-300"}
+                          className={client.onboardingCompleted ? "bg-green-900 text-green-300" : "bg-black text-white"}
                         >
                           {client.onboardingCompleted ? t('completed') : t('inProgress')}
                         </Badge>

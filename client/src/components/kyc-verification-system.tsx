@@ -157,7 +157,7 @@ export default function KYCVerificationSystem() {
       case 'driver_license':
         return <CreditCard size={16} className="text-purple-500" />;
       case 'proof_address':
-        return <MapPin size={16} className="text-orange-500" />;
+        return <MapPin size={16} className="text-black" />;
       case 'selfie':
         return <User size={16} className="text-pink-500" />;
       default:
@@ -186,7 +186,7 @@ export default function KYCVerificationSystem() {
     if (score < 30) {
       return <Badge variant="secondary" className="bg-green-500 text-white">Risque faible</Badge>;
     } else if (score < 70) {
-      return <Badge variant="secondary" className="bg-yellow-500 text-white">Risque moyen</Badge>;
+      return <Badge variant="secondary" className="bg-black text-white">Risque moyen</Badge>;
     } else {
       return <Badge variant="secondary" className="bg-red-500 text-white">Risque élevé</Badge>;
     }
@@ -258,7 +258,7 @@ export default function KYCVerificationSystem() {
             <CardTitle className="text-sm text-gray-400">En attente</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-400">
+            <div className="text-2xl font-bold text-black">
               {mockKYCDocuments.filter(d => d.status === 'pending').length}
             </div>
           </CardContent>
@@ -460,7 +460,7 @@ export default function KYCVerificationSystem() {
                                           <div className="space-y-2">
                                             <div className="text-sm text-gray-400">Problèmes détectés</div>
                                             {validation.issues.map((issue, index) => (
-                                              <div key={index} className="flex items-center gap-2 text-orange-400">
+                                              <div key={index} className="flex items-center gap-2 text-black">
                                                 <AlertTriangle size={16} />
                                                 <span className="text-sm">{issue}</span>
                                               </div>
