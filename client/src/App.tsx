@@ -59,7 +59,9 @@ function AuthRouter() {
       } else if (user && user.type === 'client') {
         if (!user.onboardingCompleted && location !== '/client/onboarding') {
           setLocation('/client/onboarding');
-        } else if (user.onboardingCompleted && !['/client/dashboard', '/client/tax-payment'].includes(location)) {
+        } else if (user.onboardingCompleted && !user.profileCompleted && location !== '/client/profile-setup') {
+          setLocation('/client/profile-setup');
+        } else if (user.onboardingCompleted && user.profileCompleted && !['/client/dashboard', '/client/tax-payment', '/client/settings'].includes(location)) {
           setLocation('/client/dashboard');
         }
       } else if (user && user.type === 'admin' && location !== '/admin/dashboard') {
@@ -92,6 +94,7 @@ function AuthRouter() {
           {user?.type === 'client' && (
             <>
               <Route path="/client/onboarding" component={ClientOnboarding} />
+              <Route path="/client/profile-setup" component={ClientProfileSetup} />
               <Route path="/client/dashboard" component={ClientDashboard} />
               <Route path="/client/settings" component={ClientSettings} />
               <Route path="/client/tax-payment" component={TaxPayment} />
