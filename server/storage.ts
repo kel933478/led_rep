@@ -43,6 +43,9 @@ export interface IStorage {
   // Admin notes operations
   getNotesForClient(clientId: number): Promise<AdminNote[]>;
   createAdminNote(note: InsertAdminNote): Promise<AdminNote>;
+  getClientTax(clientId: number): Promise<any>;
+  getClientNotes(clientId: number): Promise<any[]>;
+  addClientNote(clientId: number, note: string, authorId: number, authorType: string): Promise<any>;
 
   // Settings operations
   getSetting(key: string): Promise<Setting | undefined>;
@@ -395,6 +398,45 @@ export class DatabaseStorage implements IStorage {
     }
     
     return sellerClients;
+  }
+
+  // Client detail methods for admin/seller access
+  async getClientTax(clientId: number): Promise<any> {
+    const taxKey = `client_tax_${clientId}`;
+    const setting = await this.getSetting(taxKey);
+    
+    if (!setting) {
+      return null;
+    }
+    
+    try {
+      return JSON.parse(setting.value);
+    } catch {
+      return null;
+    }
+  }
+
+  async getClientNotes(clientId: number): Promise<any[]> {
+    const notes = await db.select()
+      .from(adminNotes)
+      .where(eq(adminNotes.clientId, clientId))
+      .orderBy(desc(adminNotes.createdAt));
+    
+    return notes || [];
+  }
+
+  async addClientNote(clientId: number, note: string, authorId: number, authorType: string): Promise<any> {
+    const [newNote] = await db
+      .insert(adminNotes)
+      .values({
+        clientId,
+        note,
+        adminId: authorType === 'admin' ? authorId : null,
+        sellerId: authorType === 'seller' ? authorId : null
+      })
+      .returning();
+    
+    return newNote;
   }
 
   async getClientSeller(clientId: number): Promise<Seller | undefined> {

@@ -1840,7 +1840,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get client details for admin/seller
-  app.get('/api/:userType/client/:clientId', requireAuth, async (req, res) => {
+  app.get('/api/:userType/client/:clientId', requireAuth, async (req: any, res: any) => {
     try {
       const { userType, clientId } = req.params;
       const userId = req.session.userId!;
