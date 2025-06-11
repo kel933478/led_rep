@@ -1,0 +1,3 @@
+=== TEST FINAL AVANT DÉPLOIEMENT ===
+{"user":{"id":1,"email":"client@demo.com","onboardingCompleted":true,"kycCompleted":true}}"taxAmount":"8250.00"
+{"user":{"id":1,"email":"admin@ledger.com","type":"admin"}}{"user":{"id":1,"email":"vendeur@demo.com","type":"seller","fullName":"Vendeur Démo"}}Status: Tests terminés
