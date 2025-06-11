@@ -307,6 +307,16 @@ export const translations = {
     search: "Rechercher",
     logoutSuccess: "Déconnexion réussie",
     logoutError: "Erreur lors de la déconnexion",
+    
+    // Asset Management
+    assetAllocation: "Allocation des actifs",
+    buy: "Acheter",
+    sell: "Vendre",
+    asset: "Actif",
+    allocation: "Allocation",
+    change24h: "Variation 24h",
+    quantity: "Quantité",
+    value: "Valeur",
   },
   en: {
     // Common
@@ -616,6 +626,16 @@ export const translations = {
     search: "Search",
     logoutSuccess: "Logout successful",
     logoutError: "Logout error",
+    
+    // Asset Management
+    assetAllocation: "Asset Allocation",
+    buy: "Buy",
+    sell: "Sell",
+    asset: "Asset",
+    allocation: "Allocation",
+    change24h: "24h Change",
+    quantity: "Quantity",
+    value: "Value",
   },
 };
 

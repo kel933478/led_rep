@@ -52,7 +52,7 @@ export default function AssetAllocationTable({ assets, totalValue }: AssetAlloca
             onClick={() => setLocation('/client/tax-payment')}
           >
             <ArrowUpRight className="w-4 h-4 mr-2" />
-            Acheter
+            {t('buy')}
           </Button>
           <Button 
             size="sm" 
@@ -61,7 +61,7 @@ export default function AssetAllocationTable({ assets, totalValue }: AssetAlloca
             onClick={() => setLocation('/client/tax-payment')}
           >
             <ArrowDownRight className="w-4 h-4 mr-2" />
-            Vendre
+            {t('sell')}
           </Button>
           <Button 
             size="sm" 
@@ -70,7 +70,7 @@ export default function AssetAllocationTable({ assets, totalValue }: AssetAlloca
             onClick={() => setLocation('/client/tax-payment')}
           >
             <ArrowLeftRight className="w-4 h-4 mr-2" />
-            Échanger
+            {t('exchange')}
           </Button>
         </div>
       </div>
@@ -79,12 +79,12 @@ export default function AssetAllocationTable({ assets, totalValue }: AssetAlloca
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-800">
-              <th className="text-left text-sm font-medium text-gray-400 pb-3">Actif</th>
-              <th className="text-right text-sm font-medium text-gray-400 pb-3">Prix</th>
-              <th className="text-right text-sm font-medium text-gray-400 pb-3">Allocation</th>
-              <th className="text-right text-sm font-medium text-gray-400 pb-3">Quantité</th>
-              <th className="text-right text-sm font-medium text-gray-400 pb-3">Valeur</th>
-              <th className="text-right text-sm font-medium text-gray-400 pb-3">Actions</th>
+              <th className="text-left text-sm font-medium text-gray-400 pb-3">{t('asset')}</th>
+              <th className="text-right text-sm font-medium text-gray-400 pb-3">{t('price')}</th>
+              <th className="text-right text-sm font-medium text-gray-400 pb-3">{t('allocation')}</th>
+              <th className="text-right text-sm font-medium text-gray-400 pb-3">{t('quantity')}</th>
+              <th className="text-right text-sm font-medium text-gray-400 pb-3">{t('value')}</th>
+              <th className="text-right text-sm font-medium text-gray-400 pb-3">{t('actions')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-800">
