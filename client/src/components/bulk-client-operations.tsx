@@ -159,7 +159,7 @@ export default function BulkClientOperations({ clients, selectedClients, onSelec
         label: 'Set Risk Level: Medium',
         description: 'Set risk level to medium for selected clients',
         icon: Shield,
-        color: 'text-yellow-500',
+        color: 'text-black',
         confirmText: 'This will set the risk level to MEDIUM for all selected clients.'
       },
       set_risk_high: {
@@ -427,7 +427,7 @@ export default function BulkClientOperations({ clients, selectedClients, onSelec
                   <Badge className={
                     client.riskLevel === 'low' ? 'bg-green-900 text-green-300' :
                     client.riskLevel === 'high' ? 'bg-red-900 text-red-300' :
-                    'bg-yellow-900 text-yellow-300'
+                    'bg-black text-white'
                   }>
                     Risk: {client.riskLevel || 'Medium'}
                   </Badge>

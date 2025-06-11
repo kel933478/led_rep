@@ -136,13 +136,13 @@ export default function KYCVerificationSystem() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="secondary" className="bg-yellow-500 text-white"><Clock size={12} className="mr-1" />En attente</Badge>;
+        return <Badge variant="secondary" className="bg-black text-white"><Clock size={12} className="mr-1" />En attente</Badge>;
       case 'approved':
         return <Badge variant="secondary" className="bg-green-500 text-white"><CheckCircle size={12} className="mr-1" />Approuvé</Badge>;
       case 'rejected':
         return <Badge variant="secondary" className="bg-red-500 text-white"><XCircle size={12} className="mr-1" />Rejeté</Badge>;
       case 'requires_review':
-        return <Badge variant="secondary" className="bg-orange-500 text-white"><AlertTriangle size={12} className="mr-1" />Révision</Badge>;
+        return <Badge variant="secondary" className="bg-black text-white"><AlertTriangle size={12} className="mr-1" />Révision</Badge>;
       default:
         return <Badge variant="outline">Inconnu</Badge>;
     }

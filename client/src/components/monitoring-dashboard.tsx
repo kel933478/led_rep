@@ -80,7 +80,7 @@ export default function MonitoringDashboard() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'healthy': return 'text-green-500';
-      case 'warning': return 'text-yellow-500';
+      case 'warning': return 'text-black';
       case 'critical': return 'text-red-500';
       default: return 'text-gray-500';
     }
@@ -89,7 +89,7 @@ export default function MonitoringDashboard() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'healthy': return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'warning': return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
+      case 'warning': return <AlertTriangle className="w-5 h-5 text-black" />;
       case 'critical': return <XCircle className="w-5 h-5 text-red-500" />;
       default: return <Activity className="w-5 h-5 text-gray-500" />;
     }
@@ -147,9 +147,9 @@ export default function MonitoringDashboard() {
 
       {/* Alertes actives */}
       {systemStatus.alerts.length > 0 && (
-        <Card className="border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20">
+        <Card className="border-black bg-gray-50 dark:bg-black/20">
           <CardHeader>
-            <CardTitle className="flex items-center text-yellow-700 dark:text-yellow-300">
+            <CardTitle className="flex items-center text-black dark:text-white">
               <AlertTriangle className="w-5 h-5 mr-2" />
               Alertes Actives ({systemStatus.alerts.length})
             </CardTitle>
@@ -234,7 +234,7 @@ export default function MonitoringDashboard() {
                   {systemStatus.metrics.database.errors} erreurs
                 </p>
               </div>
-              <Database className="w-8 h-8 text-orange-500" />
+              <Database className="w-8 h-8 text-black" />
             </div>
           </CardContent>
         </Card>
@@ -372,7 +372,7 @@ export default function MonitoringDashboard() {
                       documents à vérifier
                     </p>
                   </div>
-                  <Clock className="w-8 h-8 text-yellow-500" />
+                  <Clock className="w-8 h-8 text-black" />
                 </div>
               </CardContent>
             </Card>
