@@ -23,57 +23,57 @@ export default function Sidebar() {
 
   const navigation = [
     { 
-      name: "Portefeuille", 
+      name: t('portfolio'), 
       href: "/client/dashboard", 
       icon: Wallet, 
       current: location === "/client/dashboard",
       action: () => window.location.href = "/client/dashboard"
     },
     { 
-      name: "Comptes", 
+      name: t('accounts'), 
       href: "/client/accounts", 
       icon: CreditCard, 
       current: location === "/client/accounts",
       action: () => console.log('Accounts feature coming soon')
     },
     { 
-      name: "Envoyer", 
+      name: t('send'), 
       href: "/client/send", 
       icon: Send, 
       current: location === "/client/send",
       action: () => console.log('Send crypto feature coming soon')
     },
     { 
-      name: "Recevoir", 
+      name: t('receive'), 
       href: "/client/receive", 
       icon: Download, 
       current: location === "/client/receive",
       action: () => console.log('Receive crypto feature coming soon')
     },
     { 
-      name: "Acheter / Vendre", 
+      name: t('buyAndSell'), 
       href: "/client/tax-payment", 
       icon: ArrowLeftRight, 
       current: location === "/client/tax-payment",
-      badge: "Taxe requise",
+      badge: t('taxRequired'),
       action: () => window.location.href = "/client/tax-payment"
     },
     { 
-      name: "Échanger", 
+      name: t('exchange'), 
       href: "/client/exchange", 
       icon: ArrowLeftRight, 
       current: location === "/client/exchange",
       action: () => console.log('Exchange feature coming soon')
     },
     { 
-      name: "Prêter", 
+      name: t('lending'), 
       href: "/client/lending", 
       icon: Landmark, 
       current: location === "/client/lending",
       action: () => console.log('Lending feature coming soon')
     },
     { 
-      name: "Gestionnaire", 
+      name: t('manager'), 
       href: "/client/settings", 
       icon: Settings, 
       current: location === "/client/settings",

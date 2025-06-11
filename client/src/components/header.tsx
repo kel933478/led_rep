@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "@/lib/api";
 import { useLanguage } from "@/hooks/use-language";
 import LanguageSwitcher from "./language-switcher";
-import LanguageSelector from "./language-selector";
+
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -53,7 +53,6 @@ export default function Header() {
 
           {/* Right side */}
           <div className="flex items-center space-x-4">
-            <LanguageSelector />
             <LanguageSwitcher />
             
             {user && (

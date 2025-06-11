@@ -616,6 +616,16 @@ export const translations = {
     search: "Search",
     logoutSuccess: "Logout successful",
     logoutError: "Logout error",
+    
+    // Navigation Menu
+    portfolio: "Portfolio",
+    accounts: "Accounts", 
+    send: "Send",
+    receive: "Receive",
+    buyAndSell: "Buy & Sell",
+    exchange: "Exchange",
+    lending: "Lending",
+    manager: "Manager",
   },
 };
 
