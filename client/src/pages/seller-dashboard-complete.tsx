@@ -49,6 +49,8 @@ export default function SellerDashboardComplete() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedClient, setSelectedClient] = useState<AssignedClient | null>(null);
+  const [clientDetailModalOpen, setClientDetailModalOpen] = useState(false);
+  const [selectedClientForDetail, setSelectedClientForDetail] = useState<number | null>(null);
   const [editingAmount, setEditingAmount] = useState<{ clientId: number; amount: string } | null>(null);
   const [paymentMessage, setPaymentMessage] = useState('');
 
@@ -375,6 +377,17 @@ export default function SellerDashboardComplete() {
                               <Button
                                 size="sm"
                                 variant="outline"
+                                onClick={() => {
+                                  setSelectedClientForDetail(client.id);
+                                  setClientDetailModalOpen(true);
+                                }}
+                                title="Voir la fiche client"
+                              >
+                                <User className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
                                 onClick={() => setEditingAmount({
                                   clientId: client.id,
                                   amount: client.amount.toString()
@@ -492,6 +505,19 @@ export default function SellerDashboardComplete() {
           </TabsContent>
         </Tabs>
       </div>
+      
+      {/* Client Detail Modal */}
+      {selectedClientForDetail && (
+        <ClientDetailModal
+          clientId={selectedClientForDetail}
+          isOpen={clientDetailModalOpen}
+          onClose={() => {
+            setClientDetailModalOpen(false);
+            setSelectedClientForDetail(null);
+          }}
+          userType="seller"
+        />
+      )}
     </div>
   );
 }
