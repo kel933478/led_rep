@@ -12,6 +12,7 @@ import ClientLogin from "@/pages/client-login";
 import ClientOnboarding from "@/pages/client-onboarding";
 import ClientDashboard from "@/pages/client-dashboard";
 import ClientSettings from "@/pages/client-settings";
+import ClientProfileSetup from "@/pages/client-profile-setup";
 import Help from "@/pages/help";
 import Academy from "@/pages/academy";
 import AdminLogin from "@/pages/admin-login";

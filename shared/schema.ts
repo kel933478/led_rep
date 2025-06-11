@@ -45,6 +45,7 @@ export const clients = pgTable("clients", {
   passwordResetExpires: timestamp("password_reset_expires"),
   fullName: text("full_name"),
   phone: text("phone"),
+  profileCompleted: boolean("profile_completed").default(false),
   address: text("address"),
   country: text("country").default("France"),
   kycRejectionReason: text("kyc_rejection_reason"),

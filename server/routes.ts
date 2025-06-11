@@ -424,6 +424,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
               type: 'client',
               onboardingCompleted: client.onboardingCompleted,
               kycCompleted: client.kycCompleted,
+              profileCompleted: client.profileCompleted,
+              fullName: client.fullName,
+              phone: client.phone,
             }
           });
         }
@@ -1811,6 +1814,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Logout with audit trail
+  // Client profile update
+  app.put('/api/client/profile', requireAuth('client'), async (req, res) => {
+    try {
+      const { fullName, phone, address } = req.body;
+      const clientId = req.session.userId!;
+
+      const updatedClient = await storage.updateClient(clientId, {
+        fullName,
+        phone,
+        address,
+        profileCompleted: true,
+        updatedAt: new Date(),
+      });
+
+      if (!updatedClient) {
+        return res.status(404).json({ message: 'Client not found' });
+      }
+
+      res.json({ message: "Profile updated successfully" });
+    } catch (error) {
+      console.error('Profile update error:', error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.post('/api/auth/logout', async (req, res) => {
     try {
       if (req.session.userId && req.session.userType === 'admin') {
