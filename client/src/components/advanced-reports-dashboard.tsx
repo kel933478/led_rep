@@ -266,7 +266,7 @@ export default function AdvancedReportsDashboard() {
                   {metrics.onboardingCompleted} sur {metrics.totalClients}
                 </p>
               </div>
-              <Activity className="w-8 h-8 text-orange-500" />
+              <Activity className="w-8 h-8 text-black" />
             </div>
           </CardContent>
         </Card>

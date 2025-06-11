@@ -112,7 +112,7 @@ export default function AdvancedClientManagement({ client }: AdvancedClientManag
     switch (risk) {
       case "low": return "bg-green-900 text-green-300";
       case "high": return "bg-red-900 text-red-300";
-      default: return "bg-yellow-900 text-yellow-300";
+      default: return "bg-black text-white";
     }
   };
 
@@ -165,7 +165,7 @@ export default function AdvancedClientManagement({ client }: AdvancedClientManag
       {/* Risk Level Dialog */}
       <Dialog open={isRiskDialogOpen} onOpenChange={setIsRiskDialogOpen}>
         <DialogTrigger asChild>
-          <Button size="sm" variant="ghost" className="text-yellow-400 hover:text-yellow-300">
+          <Button size="sm" variant="ghost" className="text-black hover:text-gray-800">
             <Shield className="w-4 h-4" />
           </Button>
         </DialogTrigger>

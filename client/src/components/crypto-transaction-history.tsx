@@ -150,7 +150,7 @@ export default function CryptoTransactionHistory() {
       case 'completed':
         return <Badge className="bg-green-900 text-green-300">Complété</Badge>;
       case 'pending':
-        return <Badge className="bg-yellow-900 text-yellow-300">En attente</Badge>;
+        return <Badge className="bg-black text-white">En attente</Badge>;
       case 'failed':
         return <Badge className="bg-red-900 text-red-300">Échoué</Badge>;
       default:
