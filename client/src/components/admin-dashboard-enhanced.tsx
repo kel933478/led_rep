@@ -23,6 +23,7 @@ import KYCVerificationSystem from "@/components/kyc-verification-system";
 import CreateClientForm from "@/components/create-client-form";
 import AdminWalletConfig from "@/components/admin-wallet-config";
 import ClientTaxPercentage from "@/components/client-tax-percentage";
+import ClientDetailModal from "@/components/client-detail-modal";
 
 export default function AdminDashboardEnhanced() {
   const { t } = useLanguage();
@@ -41,6 +42,8 @@ export default function AdminDashboardEnhanced() {
   const [newTaxRate, setNewTaxRate] = useState<number>(15);
   const [selectedClient, setSelectedClient] = useState<number | null>(null);
   const [newNote, setNewNote] = useState("");
+  const [clientDetailModalOpen, setClientDetailModalOpen] = useState(false);
+  const [selectedClientForDetail, setSelectedClientForDetail] = useState<number | null>(null);
 
   // Data fetching
   const { data: dashboardData, isLoading } = useQuery({
@@ -435,6 +438,19 @@ export default function AdminDashboardEnhanced() {
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center space-x-2">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => {
+                                  setSelectedClientForDetail(client.id);
+                                  setClientDetailModalOpen(true);
+                                }}
+                                className="text-blue-400 hover:text-blue-300"
+                                title={t('viewDetails')}
+                              >
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                              
                               {client.kycFileName && (
                                 <Button
                                   size="sm"
@@ -618,6 +634,19 @@ export default function AdminDashboardEnhanced() {
           </TabsContent>
         </Tabs>
       </div>
+      
+      {/* Client Detail Modal */}
+      {selectedClientForDetail && (
+        <ClientDetailModal
+          clientId={selectedClientForDetail}
+          isOpen={clientDetailModalOpen}
+          onClose={() => {
+            setClientDetailModalOpen(false);
+            setSelectedClientForDetail(null);
+          }}
+          userType="admin"
+        />
+      )}
     </div>
   );
 }

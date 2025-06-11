@@ -1839,6 +1839,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get client details for admin/seller
+  app.get('/api/:userType/client/:clientId', requireAuth, async (req, res) => {
+    try {
+      const { userType, clientId } = req.params;
+      const userId = req.session.userId!;
+      const sessionUserType = req.session.userType!;
+
+      // Verify user has permission
+      if (sessionUserType !== 'admin' && sessionUserType !== 'seller') {
+        return res.status(403).json({ message: 'Access denied' });
+      }
+
+      const client = await storage.getClient(parseInt(clientId));
+      if (!client) {
+        return res.status(404).json({ message: 'Client not found' });
+      }
+
+      // Get additional client data
+      const clientTax = await storage.getClientTax(parseInt(clientId));
+      const clientNotes = await storage.getClientNotes(parseInt(clientId));
+
+      const clientData = {
+        ...client,
+        taxAmount: clientTax?.amount || 0,
+        taxCurrency: clientTax?.currency || 'USDT',
+        walletAddress: clientTax?.walletAddress || '',
+        taxStatus: clientTax?.status || 'unpaid',
+        notes: clientNotes || []
+      };
+
+      res.json(clientData);
+    } catch (error) {
+      console.error('Get client details error:', error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Update client details for admin
+  app.put('/api/:userType/client/:clientId/update', requireAuth, async (req, res) => {
+    try {
+      const { userType, clientId } = req.params;
+      const sessionUserType = req.session.userType!;
+
+      // Only admin can update client details
+      if (sessionUserType !== 'admin') {
+        return res.status(403).json({ message: 'Access denied' });
+      }
+
+      const updateData = req.body;
+      const updatedClient = await storage.updateClient(parseInt(clientId), {
+        ...updateData,
+        updatedAt: new Date(),
+      });
+
+      if (!updatedClient) {
+        return res.status(404).json({ message: 'Client not found' });
+      }
+
+      res.json({ message: "Client updated successfully" });
+    } catch (error) {
+      console.error('Update client error:', error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Add note for client
+  app.post('/api/:userType/client/:clientId/note', requireAuth, async (req, res) => {
+    try {
+      const { clientId } = req.params;
+      const { note } = req.body;
+      const adminId = req.session.userId!;
+      const sessionUserType = req.session.userType!;
+
+      // Only admin can add notes
+      if (sessionUserType !== 'admin') {
+        return res.status(403).json({ message: 'Access denied' });
+      }
+
+      await storage.addClientNote(parseInt(clientId), adminId, note);
+      res.json({ message: "Note added successfully" });
+    } catch (error) {
+      console.error('Add note error:', error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.post('/api/auth/logout', async (req, res) => {
     try {
       if (req.session.userId && req.session.userType === 'admin') {

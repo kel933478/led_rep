@@ -19,6 +19,7 @@ import {
   Edit
 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
+import ClientDetailModal from '@/components/client-detail-modal';
 
 interface AssignedClient {
   id: number;
