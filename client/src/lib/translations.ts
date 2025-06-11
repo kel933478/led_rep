@@ -614,6 +614,8 @@ export const translations = {
     secureSellerLogin: "Secure login to seller interface",
     sellerCredentials: "Seller credentials:",
     search: "Search",
+    logoutSuccess: "Logout successful",
+    logoutError: "Logout error",
   },
 };
 

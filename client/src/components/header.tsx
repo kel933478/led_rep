@@ -23,13 +23,13 @@ export default function Header() {
       queryClient.clear();
       toast({
         title: t('success'),
-        description: t('logout') + " " + t('success').toLowerCase(),
+        description: t('logoutSuccess'),
       });
     },
     onError: () => {
       toast({
         title: t('error'),
-        description: "Erreur lors de la déconnexion",
+        description: t('logoutError'),
         variant: "destructive",
       });
     },
