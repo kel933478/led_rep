@@ -131,7 +131,7 @@ export default function Sidebar() {
                 <>
                   <span className="flex-1 text-left">{item.name}</span>
                   {item.badge && (
-                    <Badge className="bg-black text-black text-xs">
+                    <Badge className="bg-orange-500 text-white text-xs">
                       {item.badge}
                     </Badge>
                   )}

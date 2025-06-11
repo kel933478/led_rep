@@ -144,7 +144,7 @@ export default function ClientDashboard() {
               <Badge className="bg-green-600 text-white">
                 ✓ {t('synchronized')}
               </Badge>
-              <Badge variant="outline" className="border-black text-black">
+              <Badge variant="outline" className="border-orange-500 text-orange-500">
                 ⚠ {t('taxRequired')}
               </Badge>
               <Badge variant="outline" className="border-gray-600 text-gray-400">
