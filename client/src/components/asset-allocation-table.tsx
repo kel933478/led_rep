@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import { useLanguage } from "@/hooks/use-language";
 import { ArrowUpRight, ArrowDownRight, ArrowLeftRight } from "lucide-react";
 
 interface Asset {
@@ -22,6 +23,7 @@ interface AssetAllocationTableProps {
 }
 
 export default function AssetAllocationTable({ assets, totalValue }: AssetAllocationTableProps) {
+  const { t } = useLanguage();
   const [_, setLocation] = useLocation();
   
   const formatCurrency = (value: number) => {
@@ -41,7 +43,7 @@ export default function AssetAllocationTable({ assets, totalValue }: AssetAlloca
     <div className="bg-gray-900 rounded-lg p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-white">
-          Allocation des actifs ({assets.length})
+          {t('assetAllocation')} ({assets.length})
         </h3>
         <div className="flex space-x-2">
           <Button 

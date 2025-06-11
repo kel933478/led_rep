@@ -92,7 +92,7 @@ export default function Sidebar() {
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">L</span>
             </div>
-            <span className="text-white font-semibold">LEDGER LIVE</span>
+            <span className="text-white font-semibold">{t('appTitle')}</span>
           </div>
         )}
         <Button
