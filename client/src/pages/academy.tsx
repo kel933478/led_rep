@@ -140,10 +140,10 @@ export default function Academy() {
     switch (category) {
       case 'Basics': return 'bg-blue-600';
       case 'Technology': return 'bg-purple-600';
-      case 'Legal': return 'bg-orange-600';
+      case 'Legal': return 'bg-black';
       case 'Security': return 'bg-red-600';
       case 'Tutorial': return 'bg-green-600';
-      case 'Trading': return 'bg-yellow-600';
+      case 'Trading': return 'bg-black';
       case 'DeFi': return 'bg-pink-600';
       default: return 'bg-gray-600';
     }
@@ -186,7 +186,7 @@ export default function Academy() {
           <CardContent className="p-8">
             <div className="flex items-center justify-between">
               <div className="space-y-4">
-                <Badge className="bg-yellow-500 text-black font-medium">Featured</Badge>
+                <Badge className="bg-black text-black font-medium">Featured</Badge>
                 <h2 className="text-2xl font-bold text-white">Cryptocurrency Masterclass</h2>
                 <p className="text-gray-200 max-w-lg">
                   Complete guide to understanding, investing, and securing your digital assets. 

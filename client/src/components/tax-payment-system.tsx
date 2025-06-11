@@ -132,7 +132,7 @@ export default function TaxPaymentSystem() {
       case 'unpaid':
         return <Badge variant="secondary" className="bg-red-500 text-white"><AlertTriangle size={12} className="mr-1" />{t('taxUnpaid')}</Badge>;
       case 'pending_verification':
-        return <Badge variant="secondary" className="bg-yellow-500 text-white"><Clock size={12} className="mr-1" />{t('taxPending')}</Badge>;
+        return <Badge variant="secondary" className="bg-black text-white"><Clock size={12} className="mr-1" />{t('taxPending')}</Badge>;
       case 'paid':
         return <Badge variant="secondary" className="bg-green-500 text-white"><CheckCircle size={12} className="mr-1" />{t('taxPaid')}</Badge>;
       case 'exempted':
@@ -408,12 +408,12 @@ export default function TaxPaymentSystem() {
       {taxInfo.taxStatus === 'pending_verification' && (
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="p-8 text-center">
-            <Clock className="h-16 w-16 text-yellow-400 mx-auto mb-4" />
+            <Clock className="h-16 w-16 text-black mx-auto mb-4" />
             <h3 className="text-xl font-medium text-white mb-2">{t('verificationInProgress')}</h3>
             <p className="text-gray-400 mb-4">
               {t('verificationInProgressMessage')}
             </p>
-            <Badge variant="secondary" className="bg-yellow-500 text-white">
+            <Badge variant="secondary" className="bg-black text-white">
               <Clock size={12} className="mr-1" />
               {t('usualDelay')}
             </Badge>

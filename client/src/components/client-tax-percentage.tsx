@@ -144,7 +144,7 @@ export default function ClientTaxPercentage({ client }: ClientTaxPercentageProps
 
   const getCurrencyIcon = (currency: string) => {
     switch (currency) {
-      case 'BTC': return <Bitcoin className="h-4 w-4 text-orange-500" />;
+      case 'BTC': return <Bitcoin className="h-4 w-4 text-black" />;
       case 'ETH': return <Coins className="h-4 w-4 text-blue-500" />;
       case 'USDT': return <Coins className="h-4 w-4 text-green-500" />;
       default: return <DollarSign className="h-4 w-4" />;
@@ -158,7 +158,7 @@ export default function ClientTaxPercentage({ client }: ClientTaxPercentageProps
       case 'paid':
         return <Badge variant="default" className="bg-green-600">Payé</Badge>;
       case 'pending':
-        return <Badge variant="secondary" className="bg-orange-500">En vérification</Badge>;
+        return <Badge variant="secondary" className="bg-black">En vérification</Badge>;
       case 'exempted':
         return <Badge variant="outline" className="border-blue-500 text-blue-500">Exempté</Badge>;
       default:
@@ -275,7 +275,7 @@ export default function ClientTaxPercentage({ client }: ClientTaxPercentageProps
                       <SelectContent className="bg-gray-700 border-gray-600">
                         <SelectItem value="BTC" disabled={!walletsData?.btcWallet}>
                           <div className="flex items-center gap-2">
-                            <Bitcoin className="h-4 w-4 text-orange-500" />
+                            <Bitcoin className="h-4 w-4 text-black" />
                             Bitcoin (BTC)
                             {!walletsData?.btcWallet && <span className="text-red-400 text-xs">(Non configuré)</span>}
                           </div>

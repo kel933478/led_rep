@@ -162,7 +162,7 @@ export default function SellerDashboardComplete() {
   const getTaxStatusColor = (status: string) => {
     switch (status) {
       case 'paid': return 'bg-green-500';
-      case 'pending': return 'bg-yellow-500';
+      case 'pending': return 'bg-black';
       case 'overdue': return 'bg-red-500';
       case 'exempt': return 'bg-blue-500';
       default: return 'bg-gray-500';

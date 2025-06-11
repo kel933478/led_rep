@@ -210,12 +210,12 @@ export default function AdminWalletConfig() {
           </div>
 
           {/* Important Notice */}
-          <div className="bg-yellow-900/20 border border-yellow-500 rounded-lg p-4">
-            <div className="flex items-center gap-2 text-yellow-400 mb-2">
+          <div className="bg-black/20 border border-black rounded-lg p-4">
+            <div className="flex items-center gap-2 text-black mb-2">
               <AlertTriangle className="h-4 w-4" />
               <span className="font-medium">Important</span>
             </div>
-            <ul className="text-sm text-yellow-200 space-y-1">
+            <ul className="text-sm text-black space-y-1">
               <li>• Ces adresses recevront tous les paiements de taxes des clients</li>
               <li>• Vérifiez bien les adresses avant de sauvegarder</li>
               <li>• Une fois configurées, elles seront utilisées automatiquement pour les nouvelles taxes</li>
