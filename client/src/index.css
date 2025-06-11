@@ -5,40 +5,40 @@
 @tailwind utilities;
 
 :root {
-  /* Couleurs exactes Ledger Live selon l'image */
-  --background: 220 13% 9%; /* #17181C - Fond principal très sombre */
-  --foreground: 0 0% 85%; /* #D9D9D9 - Texte principal gris clair */
-  --muted: 220 9% 15%; /* #242529 - Zones atténuées */
-  --muted-foreground: 210 11% 55%; /* #8B8FA3 - Texte atténué */
-  --popover: 225 9% 13%; /* #1F2023 - Popover sombre */
-  --popover-foreground: 0 0% 85%;
-  --card: 225 9% 13%; /* #1F2023 - Cartes sombres */
-  --card-foreground: 0 0% 85%;
-  --border: 220 9% 20%; /* #2C2D30 - Bordures subtiles */
-  --input: 220 9% 18%; /* #282A2D - Champs de saisie */
+  /* Couleurs Ledger Live avec noir dominant */
+  --background: 0 0% 0%; /* #000000 - Fond principal noir */
+  --foreground: 0 0% 100%; /* #FFFFFF - Texte blanc */
+  --muted: 0 0% 10%; /* #1A1A1A - Zones atténuées noir foncé */
+  --muted-foreground: 0 0% 70%; /* #B3B3B3 - Texte atténué gris clair */
+  --popover: 0 0% 5%; /* #0D0D0D - Popover noir foncé */
+  --popover-foreground: 0 0% 100%;
+  --card: 0 0% 5%; /* #0D0D0D - Cartes noir foncé */
+  --card-foreground: 0 0% 100%;
+  --border: 0 0% 20%; /* #333333 - Bordures grises */
+  --input: 0 0% 10%; /* #1A1A1A - Champs de saisie noir foncé */
   --primary: 0 0% 0%; /* #000000 - Noir 100% */
   --primary-foreground: 0 0% 100%;
-  --secondary: 220 9% 20%; /* #2C2D30 - Éléments secondaires */
-  --secondary-foreground: 0 0% 85%;
-  --accent: 220 9% 25%; /* #36373A - Accents */
-  --accent-foreground: 0 0% 85%;
+  --secondary: 0 0% 15%; /* #262626 - Éléments secondaires */
+  --secondary-foreground: 0 0% 100%;
+  --accent: 0 0% 20%; /* #333333 - Accents */
+  --accent-foreground: 0 0% 100%;
   --destructive: 0 72% 51%; /* #EF4444 */
   --destructive-foreground: 0 0% 98%;
   --ring: 0 0% 0%; /* #000000 - Noir 100% */
   --radius: 0.5rem;
   
-  /* Variables spécifiques Ledger Live */
-  --ledger-bg-main: 220 13% 9%; /* #17181C */
-  --ledger-bg-secondary: 225 9% 13%; /* #1F2023 */
-  --ledger-bg-tertiary: 220 9% 15%; /* #242529 */
-  --ledger-text-primary: 0 0% 85%; /* #D9D9D9 */
-  --ledger-text-secondary: 210 11% 65%; /* #A8AABA */
-  --ledger-text-muted: 210 11% 55%; /* #8B8FA3 */
+  /* Variables spécifiques Ledger Live - Noir dominant */
+  --ledger-bg-main: 0 0% 0%; /* #000000 */
+  --ledger-bg-secondary: 0 0% 5%; /* #0D0D0D */
+  --ledger-bg-tertiary: 0 0% 10%; /* #1A1A1A */
+  --ledger-text-primary: 0 0% 100%; /* #FFFFFF */
+  --ledger-text-secondary: 0 0% 80%; /* #CCCCCC */
+  --ledger-text-muted: 0 0% 70%; /* #B3B3B3 */
   --ledger-orange: 0 0% 0%; /* #000000 - Noir 100% */
   --ledger-blue: 220 100% 65%; /* #6C5CE7 */
   --ledger-green: 140 60% 50%; /* #27AE60 */
-  --ledger-border: 220 9% 20%; /* #2C2D30 */
-  --ledger-hover: 220 9% 25%; /* #36373A */
+  --ledger-border: 0 0% 20%; /* #333333 */
+  --ledger-hover: 0 0% 15%; /* #262626 */
 }
 
 .dark {

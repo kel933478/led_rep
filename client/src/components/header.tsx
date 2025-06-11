@@ -38,16 +38,16 @@ export default function Header() {
   const user = authData?.user;
 
   return (
-    <header className="bg-card border-b border-border">
+    <header className="bg-black border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">L</span>
+              <div className="w-8 h-8 bg-black border border-white rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">L</span>
               </div>
-              <span className="text-xl font-semibold">{t('appTitle')}</span>
+              <span className="text-xl font-semibold text-white">{t('appTitle')}</span>
             </div>
           </div>
 
@@ -57,13 +57,13 @@ export default function Header() {
             
             {user && (
               <div className="flex items-center space-x-3">
-                <span className="text-sm text-muted-foreground">{user.email}</span>
+                <span className="text-sm text-gray-300">{user.email}</span>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => logoutMutation.mutate()}
                   disabled={logoutMutation.isPending}
-                  className="text-destructive hover:text-destructive"
+                  className="text-red-500 hover:text-red-400 hover:bg-gray-800"
                 >
                   <LogOut className="w-4 h-4" />
                 </Button>
