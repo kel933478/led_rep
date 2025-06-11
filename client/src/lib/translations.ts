@@ -305,6 +305,8 @@ export const translations = {
     secureSellerLogin: "Connexion sécurisée à l'interface vendeur",
     sellerCredentials: "Identifiants vendeur :",
     search: "Rechercher",
+    logoutSuccess: "Déconnexion réussie",
+    logoutError: "Erreur lors de la déconnexion",
   },
   en: {
     // Common
