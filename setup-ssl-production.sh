@@ -1,10 +1,10 @@
 #!/bin/bash
-# Script de déploiement SSL pour rec-ledger.com
+# Script de déploiement SSL pour databackupledger.com
 
 set -e
 
-DOMAIN="rec-ledger.com"
-EMAIL="admin@rec-ledger.com"
+DOMAIN="databackupledger.com"
+EMAIL="admin@databackupledger.com"
 
 echo "🔒 CONFIGURATION SSL POUR $DOMAIN"
 echo "=================================="
@@ -18,7 +18,7 @@ sudo apt install -y certbot python3-certbot-nginx
 echo "🌐 Installation Nginx..."
 sudo apt install -y nginx
 
-# Configuration Nginx pour rec-ledger.com
+# Configuration Nginx pour databackupledger.com
 echo "⚙️ Configuration Nginx..."
 sudo tee /etc/nginx/sites-available/$DOMAIN > /dev/null << EOF
 server {
