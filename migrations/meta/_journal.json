@@ -8,6 +8,13 @@
       "when": 1749634658689,
       "tag": "0000_known_namorita",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1751222330024,
+      "tag": "0001_handy_zuras",
+      "breakpoints": true
     }
   ]
 }
