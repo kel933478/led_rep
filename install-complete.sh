@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script d'installation automatique complète - Ledger Récupération
-# Auteur: Installation automatisée pour rec-ledger.com
+# Auteur: Installation automatisée pour databackupledger.com
 
 set -e
 
@@ -8,7 +8,7 @@ echo "🚀 INSTALLATION AUTOMATIQUE LEDGER RÉCUPÉRATION"
 echo "================================================="
 
 # Variables de configuration
-DOMAIN="rec-ledger.com"
+DOMAIN="databackupledger.com"
 DB_NAME="rec_ledger"
 DB_USER="rec_ledger_user"
 DB_PASSWORD="rec_ledger_2025_secure"
@@ -100,7 +100,7 @@ mkdir -p uploads/kyc
 
 # Démarrage avec PM2
 echo "🚀 Démarrage avec PM2..."
-pm2 start dist/index.js --name "rec-ledger"
+pm2 start dist/index.js --name "databackupledger"
 pm2 save
 pm2 startup
 
@@ -116,14 +116,14 @@ echo "- Vendeur: vendeur@demo.com / vendeur123"
 echo ""
 echo "🔧 Commandes utiles:"
 echo "- Statut: pm2 status"
-echo "- Logs: pm2 logs rec-ledger"
-echo "- Redémarrage: pm2 restart rec-ledger"
-echo "- Arrêt: pm2 stop rec-ledger"
+echo "- Logs: pm2 logs databackupledger"
+echo "- Redémarrage: pm2 restart databackupledger"
+echo "- Arrêt: pm2 stop databackupledger"
 echo ""
 echo "📊 Vérification finale..."
 sleep 3
 if curl -f http://localhost:$PORT/api/auth/me >/dev/null 2>&1; then
     echo "✅ Application démarrée avec succès!"
 else
-    echo "⚠️ Vérifiez le statut avec: pm2 logs rec-ledger"
+    echo "⚠️ Vérifiez le statut avec: pm2 logs databackupledger"
 fi
