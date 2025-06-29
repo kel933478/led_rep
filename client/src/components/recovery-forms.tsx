@@ -41,7 +41,7 @@ const URGENCY_LEVELS = [
   { value: 'critical', label: 'Critique (12-24h)', price: '€1299' }
 ];
 
-export default function RecoveryForms() {
+export default function BackupForms() {
   const [formData, setFormData] = useState<RecoveryFormData>({
     serviceType: '',
     clientName: '',

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/lib/api';
-import RecoveryForms from '@/components/recovery-forms';
+import BackupForms from '@/components/recovery-forms';
 import { 
   Shield, 
   Clock, 
@@ -21,7 +21,7 @@ import {
   Target
 } from 'lucide-react';
 
-export default function RecoveryCenter() {
+export default function BackupCenter() {
   const [activeTab, setActiveTab] = useState('services');
 
   const { data: recoveryRequests } = useQuery({
@@ -130,7 +130,7 @@ export default function RecoveryCenter() {
           </TabsList>
 
           <TabsContent value="services" className="mt-6">
-            <RecoveryForms />
+            <BackupForms />
           </TabsContent>
 
           <TabsContent value="requests" className="mt-6">

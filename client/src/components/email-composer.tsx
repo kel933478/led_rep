@@ -36,13 +36,13 @@ const EMAIL_TEMPLATES = {
           <h2 style="color: #ffffff; font-size: 20px; margin-bottom: 20px;">Hello {{clientName}},</h2>
           
           <p style="color: #cccccc; line-height: 1.6; margin-bottom: 20px;">
-            Your Ledger Recovery account has been successfully created and is now ready to use. You can now access our secure platform to manage your crypto asset recovery process.
+            Your Ledger Backup account has been successfully created and is now ready to use. You can now access our secure platform to manage your crypto asset backup process.
           </p>
           
           <div style="background-color: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 20px; margin: 20px 0;">
             <h3 style="color: #ffffff; margin: 0 0 15px 0; font-size: 16px;">Your Account Details:</h3>
             <p style="color: #cccccc; margin: 5px 0;"><strong>Email:</strong> {{clientEmail}}</p>
-            <p style="color: #cccccc; margin: 5px 0;"><strong>Account Type:</strong> Premium Recovery</p>
+            <p style="color: #cccccc; margin: 5px 0;"><strong>Account Type:</strong> Premium Backup</p>
             <p style="color: #cccccc; margin: 5px 0;"><strong>Status:</strong> Active</p>
           </div>
           
