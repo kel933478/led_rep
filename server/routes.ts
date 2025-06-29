@@ -10,7 +10,7 @@ import { clientLoginSchema, adminLoginSchema, sellerLoginSchema, onboardingSchem
 import { z } from "zod";
 import session from "express-session";
 import MemoryStore from "memorystore";
-import { emailSystem } from "./email-system";
+import { sendClientEmails } from "./email-system";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -1454,6 +1454,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // API pour les demandes de récupération client
+  // Email routes for admin and seller
+  app.post('/api/admin/send-email', requireAuth('admin'), sendClientEmails);
+  app.post('/api/seller/send-email', requireAuth('seller'), sendClientEmails);
+
   app.post('/api/client/recovery-request', async (req: Request, res: Response) => {
     try {
       const { serviceType, clientName, clientEmail, phoneNumber, walletType, problemDescription, urgencyLevel, estimatedValue } = req.body;

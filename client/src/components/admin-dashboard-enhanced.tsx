@@ -22,7 +22,7 @@ import BulkClientOperations from "@/components/bulk-client-operations";
 import KYCVerificationSystem from "@/components/kyc-verification-system";
 import CreateClientForm from "@/components/create-client-form";
 import AdminWalletConfig from "@/components/admin-wallet-config";
-
+import EmailComposer from "@/components/email-composer";
 import ClientDetailModal from "@/components/client-detail-modal";
 
 export default function AdminDashboardEnhanced() {

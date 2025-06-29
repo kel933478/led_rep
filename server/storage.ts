@@ -240,6 +240,25 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
+  async logEmailActivity(data: {
+    senderType: string;
+    senderId: number;
+    recipientCount: number;
+    subject: string;
+    sentAt: Date;
+    success: number;
+    failed: number;
+  }): Promise<void> {
+    // Log email activity in settings for audit purposes
+    await this.setSetting({
+      key: `email_log_${Date.now()}`,
+      value: JSON.stringify({
+        ...data,
+        timestamp: new Date().toISOString()
+      })
+    });
+  }
+
   async submitTaxPaymentProof(clientId: number, proofData: any): Promise<void> {
     const proofKey = `client_tax_proof_${clientId}`;
     await this.setSetting({
