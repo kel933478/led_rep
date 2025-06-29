@@ -30,13 +30,6 @@ export default function Sidebar() {
       action: () => window.location.href = "/client/dashboard"
     },
     { 
-      name: t('accounts'), 
-      href: "/client/accounts", 
-      icon: CreditCard, 
-      current: location === "/client/accounts",
-      action: () => console.log('Accounts feature coming soon')
-    },
-    { 
       name: t('send'), 
       href: "/client/send", 
       icon: Send, 
@@ -51,26 +44,11 @@ export default function Sidebar() {
       action: () => window.location.href = "/client/receive"
     },
     { 
-      name: t('buyAndSell'), 
-      href: "/client/tax-payment", 
-      icon: ArrowLeftRight, 
-      current: location === "/client/tax-payment",
-      badge: t('taxRequired'),
-      action: () => window.location.href = "/client/tax-payment"
-    },
-    { 
       name: t('exchange'), 
       href: "/client/exchange", 
       icon: ArrowLeftRight, 
       current: location === "/client/exchange",
       action: () => window.location.href = "/client/exchange"
-    },
-    { 
-      name: t('lending'), 
-      href: "/client/lending", 
-      icon: Landmark, 
-      current: location === "/client/lending",
-      action: () => console.log('Lending feature coming soon')
     },
     { 
       name: t('manager'), 
