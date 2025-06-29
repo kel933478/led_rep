@@ -50,13 +50,7 @@ export const clients = pgTable("clients", {
   country: text("country").default("France"),
   kycRejectionReason: text("kyc_rejection_reason"),
   temporaryPassword: text("temporary_password"),
-  taxPercentage: decimal("tax_percentage", { precision: 5, scale: 2 }).default("0"), // Pourcentage de taxe (ex: 5.50 pour 5.5%)
-  taxCurrency: text("tax_currency").default("BTC"), // BTC, ETH, USDT
-  taxStatus: text("tax_status").default("unpaid"), // unpaid, paid, exempted
-  taxWalletAddress: text("tax_wallet_address"),
-  taxPaymentProof: text("tax_payment_proof"),
-  taxSetBy: integer("tax_set_by"), // admin ID who set the tax
-  taxSetAt: timestamp("tax_set_at"),
+
   updatedAt: timestamp("updated_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
 });

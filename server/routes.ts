@@ -191,32 +191,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get crypto prices from CoinGecko
       const cryptoPrices = await fetchCryptoPrices();
       
-      // Get global tax rate
-      const taxSetting = await storage.getSetting('globalTax');
-      const taxRate = taxSetting ? parseFloat(taxSetting.value) : 15;
-
-      // Inclure les informations de taxe prédéfinies par l'admin
-      const taxInfo = {
-        taxPercentage: parseFloat(client.taxPercentage || '0'),
-        taxAmount: client.taxPercentage ? ((client.amount || 0) * parseFloat(client.taxPercentage) / 100).toFixed(2) : '0.00',
-        taxCurrency: client.taxCurrency || 'BTC',
-        taxStatus: client.taxStatus || 'none',
-        taxWalletAddress: client.taxWalletAddress || '',
-        taxReason: 'Frais de récupération et traitement administratif',
-        transactionHash: client.taxPaymentProof || '',
-        portfolioValue: (client.amount || 0).toFixed(2)
-      };
-
       res.json({
         client: {
           email: client.email,
           balances: client.balances,
           amount: client.amount,
-          taxStatus: client.taxStatus || 'none',
         },
         cryptoPrices,
-        taxRate,
-        taxInfo,
       });
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });
@@ -876,79 +857,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/admin/client/:id/exempt-tax', requireAuth('admin'), auditMiddleware('exempt_client_tax', 'client'), async (req, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-      const { reason } = req.body;
-      
-      const client = await storage.getClient(clientId);
-      if (!client) {
-        return res.status(404).json({ message: 'Client not found' });
-      }
-      
-      await storage.exemptClientTax(clientId, reason || 'Exemption accordée par admin');
-      
-      res.json({ message: 'Client exempté de la taxe' });
-    } catch (error) {
-      console.error('Error exempting client tax:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
 
-  app.get('/api/client/tax/status', requireAuth('client'), async (req, res) => {
-    try {
-      const clientId = req.session.userId!;
-      const taxStatus = await storage.getClientTaxStatus(clientId);
-      
-      res.json({ taxStatus });
-    } catch (error) {
-      console.error('Error getting client tax status:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
 
-  app.get('/api/admin/client/:id/tax-status', requireAuth('admin'), async (req, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-      const taxStatus = await storage.getClientTaxStatus(clientId);
-      
-      res.json(taxStatus);
-    } catch (error) {
-      console.error('Error getting client tax status:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
 
-  app.post('/api/client/tax/submit-payment', requireAuth('client'), upload.single('proof'), async (req, res) => {
-    try {
-      const clientId = req.session.userId!;
-      const { transactionHash, additionalInfo } = req.body;
-      
-      if (!transactionHash) {
-        return res.status(400).json({ message: 'Hash de transaction requis' });
-      }
-      
-      let proofFileName;
-      if (req.file) {
-        const fileExtension = path.extname(req.file.originalname);
-        proofFileName = `tax-proof-${clientId}-${Date.now()}${fileExtension}`;
-        const finalPath = path.join(uploadDir, proofFileName);
-        fs.renameSync(req.file.path, finalPath);
-      }
-      
-      await storage.submitTaxPaymentProof(clientId, {
-        transactionHash,
-        proofFileName,
-        additionalInfo,
-        submittedAt: new Date()
-      });
-      
-      res.json({ message: 'Preuve de paiement soumise avec succès' });
-    } catch (error) {
-      console.error('Error submitting tax payment proof:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
+
+
+
+
 
   app.post('/api/admin/tax/validate-payment/:clientId', requireAuth('admin'), auditMiddleware('validate_tax_payment', 'tax'), async (req, res) => {
     try {
