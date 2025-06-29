@@ -1,6 +1,7 @@
 // Monitoring et alertes pour production
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
 
 class ProductionMonitor {
   constructor() {
@@ -70,7 +71,7 @@ class ProductionMonitor {
       timestamp: new Date().toISOString(),
       type,
       message,
-      hostname: require('os').hostname(),
+      hostname: os.hostname(),
       domain: 'rec-ledger.com'
     };
 
@@ -102,4 +103,4 @@ if (process.env.NODE_ENV === 'production') {
   console.log('Production monitoring started for rec-ledger.com');
 }
 
-module.exports = ProductionMonitor;
+export default ProductionMonitor;

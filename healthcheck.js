@@ -1,5 +1,5 @@
 // Healthcheck pour monitoring production
-const http = require('http');
+import http from 'http';
 
 const options = {
   hostname: 'localhost',

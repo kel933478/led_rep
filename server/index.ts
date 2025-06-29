@@ -117,7 +117,7 @@ app.use((req, res, next) => {
 
   // Production monitoring
   if (process.env.NODE_ENV === "production") {
-    require("../monitoring");
+    import("../monitoring.mjs").catch(console.error);
   }
 
   // ALWAYS serve the app on port 5000
