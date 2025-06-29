@@ -41,14 +41,14 @@ export default function Sidebar() {
       href: "/client/send", 
       icon: Send, 
       current: location === "/client/send",
-      action: () => console.log('Send crypto feature coming soon')
+      action: () => window.location.href = "/client/send"
     },
     { 
       name: t('receive'), 
       href: "/client/receive", 
       icon: Download, 
       current: location === "/client/receive",
-      action: () => console.log('Receive crypto feature coming soon')
+      action: () => window.location.href = "/client/receive"
     },
     { 
       name: t('buyAndSell'), 
