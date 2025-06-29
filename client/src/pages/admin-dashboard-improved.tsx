@@ -100,20 +100,20 @@ export default function AdminDashboardImproved() {
       changeType: 'increase' as const
     },
     {
-      title: 'Active Clients',
+      title: t('activeClients'),
       value: metrics.activeClients,
       icon: <TrendingUp className="w-4 h-4" />,
       change: 12.5,
       changeType: 'increase' as const
     },
     {
-      title: 'KYC Rate',
+      title: t('kycRate'),
       value: metrics.kycRate,
       format: 'percentage' as const,
       icon: <AlertTriangle className="w-4 h-4" />
     },
     {
-      title: 'Total Revenue',
+      title: t('totalRevenue'),
       value: metrics.totalRevenue,
       format: 'currency' as const,
       icon: <DollarSign className="w-4 h-4" />,
@@ -186,19 +186,19 @@ export default function AdminDashboardImproved() {
   const clientFilters = [
     {
       key: 'kycCompleted',
-      label: 'KYC Status',
+      label: t('kycStatus'),
       options: [
-        { value: 'true', label: 'Completed' },
-        { value: 'false', label: 'Pending' }
+        { value: 'true', label: t('completed') },
+        { value: 'false', label: t('pending') }
       ]
     },
     {
       key: 'taxStatus',
-      label: 'Tax Status',
+      label: t('taxStatus'),
       options: [
-        { value: 'paid', label: 'Paid' },
-        { value: 'unpaid', label: 'Unpaid' },
-        { value: 'pending', label: 'Pending' }
+        { value: 'paid', label: t('paid') },
+        { value: 'unpaid', label: t('unpaid') },
+        { value: 'pending', label: t('pending') }
       ]
     }
   ];
