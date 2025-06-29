@@ -92,7 +92,6 @@ export const translations = {
     proofSubmittedMessage: "Votre preuve de paiement a été soumise pour vérification",
     proofRequired: "Preuve requise",
     proofRequiredMessage: "Veuillez fournir soit un hash de transaction, soit une preuve de paiement",
-    or: "ou",
     
     // Verification status
     verificationInProgress: "Vérification en cours",
@@ -189,7 +188,6 @@ export const translations = {
     actionDetails: "Détails de l'Action",
     viewDetails: "Voir Détails",
     current: "Actuel",
-    system: "système",
     
     // Action Types
     adminLogin: "Connexion admin",
@@ -270,6 +268,25 @@ export const translations = {
     kycApprovalTemplate: "Approbation KYC",
     reminderTemplate: "Rappel",
     customTemplate: "Personnalisé",
+    
+    // Clés manquantes pour l'interface principale
+    successRate: "Taux de Réussite",
+    satisfiedClients: "Clients Satisfaits", 
+    averageDelay: "Délai Moyen",
+    supportAvailable: "Support Disponible",
+    totalClients: "Total Clients",
+    activeClients: "Clients Actifs",
+    kycRate: "Taux KYC",
+    totalRevenue: "Revenus Totaux",
+    or: "ou",
+    system: "système",
+    send: "Envoyer",
+    receive: "Recevoir",
+    paid: "Payé",
+    unpaid: "Impayé",
+    taxStatus: "Statut Taxe",
+    taxConfig: "Configuration Taxe",
+    globalTax: "Taxe Globale",
   },
   en: {
     // Common
