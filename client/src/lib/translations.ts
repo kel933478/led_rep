@@ -73,8 +73,6 @@ export const translations = {
     notes: "Notes",
     
     // Status
-    completedFr: "Terminé",
-    pendingFr: "En attente",
     inProgress: "En cours",
     validated: "Validé",
     completed: "Terminé",
