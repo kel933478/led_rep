@@ -116,21 +116,6 @@ export default function Sidebar() {
           );
         })}
       </nav>
-
-      {/* Starred Accounts Section */}
-      {!isCollapsed && (
-        <div className="border-t border-gray-800 p-4">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs text-gray-500 uppercase tracking-wider font-medium">
-              STARRED ACCOUNTS
-            </span>
-          </div>
-          <div className="flex items-center space-x-2 text-gray-400 text-sm">
-            <Star className="w-4 h-4" />
-            <span>Star an account to display it here.</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
