@@ -601,6 +601,115 @@ export const translations = {
     kycApprovalTemplate: "KYC Approval",
     reminderTemplate: "Reminder",
     customTemplate: "Custom",
+    
+    // Missing Dashboard Elements
+    myAccounts: "My Accounts",
+    counterValue: "Counter value",
+    portfolioValue: "Portfolio Value",
+    cryptoAssets: "Crypto Assets",
+    recentActivity: "Recent Activity",
+    securityStatus: "Security Status",
+    deviceStatus: "Device Status",
+    latestTransactions: "Latest Transactions",
+    manageAssets: "Manage Assets",
+    stakingRewards: "Staking Rewards",
+    defiServices: "DeFi Services",
+    nftCollection: "NFT Collection",
+    
+    // Navigation Menu
+    myLedger: "My Ledger",
+    discover: "Discover",
+    earn: "Earn",
+    market: "Market",
+    
+    // Portfolio Details
+    totalPortfolioValue: "Total Portfolio Value",
+    available: "Available",
+    staked: "Staked",
+    rewards: "Rewards",
+    performanceChart: "Performance Chart",
+    
+    // Transaction Details
+    transaction: "Transaction",
+    confirmations: "Confirmations",
+    successful: "Successful",
+    failed: "Failed",
+    
+    // Security & Settings
+    twoFactorAuth: "Two-Factor Authentication",
+    sessionTimeout: "Session Timeout",
+    deviceManagement: "Device Management",
+    accountSettings: "Account Settings",
+    privacySettings: "Privacy Settings",
+    
+    // Additional Status Messages
+    loadingData: "Loading data...",
+    noDataAvailable: "No data available",
+    connectionError: "Connection error",
+    retryConnection: "Retry connection",
+    lastUpdated: "Last updated",
+    
+    // Common Actions
+    refresh: "Refresh",
+    export: "Export",
+    import: "Import",
+    configure: "Configure",
+    manage: "Manage",
+    validate: "Validate",
+    approve: "Approve",
+    reject: "Reject",
+    
+    // Additional Client Dashboard Elements
+    accountBalance: "Account Balance",
+    totalAssets: "Total Assets",
+    cryptoPortfolio: "Crypto Portfolio",
+    recentTransactions: "Recent Transactions",
+    securityCenter: "Security Center",
+    helpCenter: "Help Center",
+    contactSupport: "Contact Support",
+    
+    // Performance Metrics
+    dayChange: "24h Change",
+    weekChange: "7d Change",
+    monthChange: "30d Change",
+    yearChange: "1y Change",
+    allTimeHigh: "All Time High",
+    allTimeLow: "All Time Low",
+    
+    // Market Data
+    marketCap: "Market Cap",
+    volume24h: "24h Volume",
+    supply: "Supply",
+    rank: "Rank",
+    
+    // Error Messages
+    networkError: "Network error",
+    serverError: "Server error",
+    sessionExpired: "Session expired",
+    accessDenied: "Access denied",
+    invalidData: "Invalid data",
+    operationFailed: "Operation failed",
+    
+    // Success Messages
+    operationSuccessful: "Operation successful",
+    dataUpdated: "Data updated",
+    settingsSaved: "Settings saved",
+    profileUpdated: "Profile updated",
+    
+    // Time Periods
+    today: "Today",
+    yesterday: "Yesterday",
+    thisWeek: "This week",
+    thisMonth: "This month",
+    thisYear: "This year",
+    
+    // Additional Interface Elements
+    quickActions: "Quick Actions",
+    recentActivities: "Recent Activities",
+    overview: "Overview",
+    analytics: "Analytics",
+    reports: "Reports",
+    statistics: "Statistics",
   },
 };
 
