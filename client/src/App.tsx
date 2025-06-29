@@ -41,9 +41,9 @@ function AuthRouter() {
 
   useEffect(() => {
     if (!isLoading) {
-      // Redirection par défaut vers la page d'accès
+      // Redirection par défaut vers la page client
       if (location === '/') {
-        setLocation('/access');
+        setLocation('/client');
         return;
       }
       
