@@ -52,9 +52,7 @@ export const translations = {
     // Dashboard
     dashboardTitle: "Tableau de bord",
     dashboardSubtitle: "Gérez vos actifs numériques en toute sécurité",
-    taxInfo: "Informations fiscales",
-    taxDescription: "Taxe appliquée sur vos transactions",
-    taxRate: "Taux appliqué",
+
     successTitle: "Configuration terminée",
     successMessage: "Vos données ont bien été enregistrées et sont maintenant sécurisées.",
     
@@ -63,8 +61,7 @@ export const translations = {
     adminSubtitle: "Gestion des clients et configuration système",
     exportCsv: "Export CSV",
     importCsv: "Import CSV",
-    taxConfig: "Configuration fiscale",
-    globalTax: "Taxe globale (%)",
+
     clientList: "Liste des clients",
     kycStatus: "KYC",
     onboarding: "Onboarding",
