@@ -186,6 +186,7 @@ export const translations = {
     ipAddress: "Adresse IP",
     details: "Détails",
     actionDetails: "Détails de l'Action",
+    viewDetails: "Voir Détails",
     current: "Actuel",
     system: "système",
     

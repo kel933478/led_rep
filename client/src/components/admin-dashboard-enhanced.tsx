@@ -38,8 +38,7 @@ export default function AdminDashboardEnhanced() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [showMetrics, setShowMetrics] = useState(true);
   
-  // Existing states
-  const [newTaxRate, setNewTaxRate] = useState<number>(15);
+
   const [selectedClient, setSelectedClient] = useState<number | null>(null);
   const [newNote, setNewNote] = useState("");
   const [clientDetailModalOpen, setClientDetailModalOpen] = useState(false);
@@ -124,14 +123,7 @@ export default function AdminDashboardEnhanced() {
     return filtered;
   }, [dashboardData?.clients, searchTerm, statusFilter, sortBy, sortOrder]);
 
-  // Mutations
-  const updateTaxMutation = useMutation({
-    mutationFn: adminApi.updateTaxRate,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/dashboard'] });
-      toast({ title: t('success'), description: "Taux de taxe mis à jour" });
-    },
-  });
+
 
   const addNoteMutation = useMutation({
     mutationFn: ({ clientId, note }: { clientId: number; note: string }) =>
@@ -351,14 +343,10 @@ export default function AdminDashboardEnhanced() {
 
         {/* Enhanced Tabs */}
         <Tabs defaultValue="clients" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="clients">
               <Users className="w-4 h-4 mr-2" />
               Clients ({filteredAndSortedClients.length})
-            </TabsTrigger>
-            <TabsTrigger value="taxes">
-              <DollarSign className="w-4 h-4 mr-2" />
-              Taxes
             </TabsTrigger>
             <TabsTrigger value="kyc">
               <FileText className="w-4 h-4 mr-2" />
@@ -539,29 +527,14 @@ export default function AdminDashboardEnhanced() {
               <AdminWalletConfig />
               <Card className="bg-card border-border">
                 <CardHeader>
-                  <CardTitle>Configuration Globale</CardTitle>
+                  <CardTitle>Global Configuration</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center space-x-4">
-                    <label className="text-sm font-medium">Taux de taxe global (%)</label>
-                    <Input
-                      type="number"
-                      value={newTaxRate}
-                      onChange={(e) => setNewTaxRate(Number(e.target.value))}
-                      min={0}
-                      max={50}
-                      className="w-24"
-                    />
-                    <Button
-                      onClick={() => updateTaxMutation.mutate(newTaxRate)}
-                      disabled={updateTaxMutation.isPending}
-                      className="bg-primary hover:shadow-lg"
-                    >
-                      {updateTaxMutation.isPending ? t('loading') : t('update')}
-                    </Button>
-                    <span className="text-sm text-muted-foreground">
-                      Actuel: {dashboardData.taxRate}%
-                    </span>
+                    <label className="text-sm font-medium">System Settings</label>
+                    <p className="text-xs text-muted-foreground">
+                      Wallet configuration and system settings can be managed below
+                    </p>
                   </div>
                 </CardContent>
               </Card>

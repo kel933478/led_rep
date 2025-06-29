@@ -17,8 +17,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       return saved;
     }
     
-    // Auto-detect from browser
-    return navigator.language.startsWith('fr') ? 'fr' : 'en';
+    // Default to English
+    return 'en';
   });
 
   useEffect(() => {
