@@ -50,7 +50,7 @@ app.get('/debug', (req, res) => {
     serveStatic(app);
   }
 
-  const port = 5000;
+  const port = 3000;
   server.listen(port, '0.0.0.0', () => {
     console.log(`🚀 Simple server running on http://0.0.0.0:${port}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);
