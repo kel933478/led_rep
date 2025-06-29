@@ -10,7 +10,7 @@ import { clientLoginSchema, adminLoginSchema, sellerLoginSchema, onboardingSchem
 import { z } from "zod";
 import session from "express-session";
 import MemoryStore from "memorystore";
-import { sendClientEmails } from "./email-system";
+import { sendClientEmails, emailService } from "./email-system";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -321,11 +321,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const admin = await storage.getAdmin(adminId);
         const client = await storage.getClient(clientId);
         if (admin && client) {
-          await emailSystem.sendAdminActionNotification(
+          await emailService.sendEmail(
             admin.email,
-            'admin_note_added',
-            client.email,
-            { note: note.trim() }
+            'Action Admin - Note ajoutée',
+            `<p>Une note a été ajoutée au client ${client.email}</p><p>Note: ${note.trim()}</p>`,
+            `Une note a été ajoutée au client ${client.email}: ${note.trim()}`
           );
         }
       } catch (emailError) {
@@ -504,9 +504,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Send email notification
       try {
         if (status === 'approved') {
-          await emailSystem.sendKYCApprovedEmail(client);
+          await emailService.sendEmail(
+            client.email,
+            "KYC Approuvé",
+            "<p>Votre KYC a été approuvé avec succès</p>",
+            "Votre KYC a été approuvé avec succès"
+          );
         } else if (status === 'rejected') {
-          await emailSystem.sendKYCRejectedEmail(client, rejectionReason);
+          await emailService.sendEmail(
+            client.email,
+            "KYC Rejeté",
+            `<p>Votre KYC a été rejeté. Raison: ${rejectionReason}</p>`,
+            `Votre KYC a été rejeté. Raison: ${rejectionReason}`
+          );
         }
       } catch (emailError) {
         console.error('Failed to send KYC email:', emailError);
@@ -552,7 +562,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const admin = await storage.getAdmin(req.session.userId!);
         if (admin) {
-          await emailSystem.sendAdminActionNotification(
+          await emailService.sendAdminActionNotification(
             admin.email,
             'client_status_update',
             updatedClient.email,
@@ -588,7 +598,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const admin = await storage.getAdmin(req.session.userId!);
         if (admin) {
-          await emailSystem.sendAdminActionNotification(
+          await emailService.sendAdminActionNotification(
             admin.email,
             'client_risk_update',
             updatedClient.email,
@@ -728,7 +738,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const admin = await storage.getAdmin(req.session.userId!);
         if (admin) {
-          await emailSystem.sendAdminActionNotification(
+          await emailService.sendAdminActionNotification(
             admin.email,
             'client_password_reset',
             updatedClient.email,
@@ -1425,7 +1435,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const admin = await storage.getAdmin(req.session.userId!);
         if (admin) {
-          await emailSystem.sendBulkOperationSummary(admin.email, operation, {
+          await emailService.sendBulkOperationSummary(admin.email, operation, {
             summary: {
               total: clientIds.length,
               successful: results.length,

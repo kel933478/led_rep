@@ -44,14 +44,24 @@ SESSION_SECRET=your_super_secure_session_secret_here
 DOMAIN=rec-ledger.com
 ```
 
+### Configuration Email Hostinger (CONFIGURÉ)
+```bash
+# Serveur Email Production - Hostinger
+SMTP_HOST=smtp.hostinger.com
+SMTP_PORT=465
+SMTP_SECURE=true
+EMAIL_USER=cs@os-report.com
+EMAIL_PASS=Alpha9779@
+EMAIL_FROM_NAME=Support Ledger
+
+# Configuration serveurs (référence)
+# IMAP: imap.hostinger.com:993 (SSL)
+# POP: pop.hostinger.com:995 (SSL)
+# SMTP: smtp.hostinger.com:465 (SSL)
+```
+
 ### Variables Optionnelles
 ```bash
-# Email (recommandé pour production)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-password
-
 # Cache Redis (optionnel)
 REDIS_URL=redis://user:password@host:port
 

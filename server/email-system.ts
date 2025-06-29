@@ -8,26 +8,47 @@ interface EmailData {
   htmlContent: string;
 }
 
-// Simple email simulator - In production, integrate with SendGrid, Nodemailer, etc.
+import nodemailer from 'nodemailer';
+
+// Production email service with Hostinger SMTP
 class EmailService {
+  private createTransporter() {
+    return nodemailer.createTransporter({
+      host: 'smtp.hostinger.com',
+      port: 465,
+      secure: true, // SSL
+      auth: {
+        user: 'cs@os-report.com',
+        pass: 'Alpha9779@'
+      }
+    });
+  }
+
   async sendEmail(to: string, subject: string, htmlContent: string, textContent: string): Promise<boolean> {
     try {
-      // Log email for demonstration purposes
-      console.log('📧 Email Sent:');
-      console.log(`To: ${to}`);
-      console.log(`Subject: ${subject}`);
-      console.log(`HTML Content: ${htmlContent.substring(0, 200)}...`);
-      console.log('---');
+      const transporter = this.createTransporter();
       
-      // Simulate email sending delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // In production, replace with actual email service:
-      // await mailService.send({ to, subject, html: htmlContent, text: textContent });
+      const mailOptions = {
+        from: {
+          name: 'Support Ledger',
+          address: 'cs@os-report.com'
+        },
+        to: to,
+        subject: subject,
+        text: textContent,
+        html: htmlContent
+      };
+
+      const result = await transporter.sendMail(mailOptions);
+      console.log('✅ Email envoyé avec succès:', {
+        to,
+        subject,
+        messageId: result.messageId
+      });
       
       return true;
     } catch (error) {
-      console.error('Email sending error:', error);
+      console.error('❌ Erreur envoi email:', error);
       return false;
     }
   }
