@@ -65,7 +65,7 @@ export const translations = {
 
     clientList: "Liste des clients",
     kycStatus: "KYC",
-    onboarding: "Onboarding",
+    onboardingColumn: "Onboarding",
     amount: "Montant",
     lastConnection: "Dernière connexion",
     downloadKyc: "Télécharger KYC",
@@ -73,8 +73,8 @@ export const translations = {
     notes: "Notes",
     
     // Status
-    completed: "Terminé",
-    pending: "En attente",
+    completedFr: "Terminé",
+    pendingFr: "En attente",
     inProgress: "En cours",
     validated: "Validé",
     never: "Jamais",
@@ -366,8 +366,8 @@ export const translations = {
     notes: "Notes",
     
     // Status
-    completed: "Completed",
-    pending: "Pending",
+    completedStatus: "Completed",
+    pendingStatus: "Pending",
     inProgress: "In Progress",
     validated: "Validated",
     never: "Never",
@@ -466,7 +466,7 @@ export const translations = {
     btcWallet: "Bitcoin Wallet",
     ethWallet: "Ethereum Wallet",
     usdtWallet: "USDT ERC20 Wallet",
-    walletAddress: "Wallet Address",
+    walletAddressField: "Wallet Address",
     saveWallets: "Save Wallets",
     walletRequired: "Wallet required",
     invalidAddress: "Invalid address",
@@ -494,8 +494,8 @@ export const translations = {
     // Navigation
     portfolio: "Portfolio",
     accounts: "Accounts",
-    send: "Send",
-    receive: "Receive",
+    sendAction: "Send",
+    receiveAction: "Receive",
     buyAndSell: "Buy / Sell",
     exchange: "Exchange",
     lend: "Lend",
@@ -607,9 +607,9 @@ export const translations = {
     sendEmail: "Send Email",
     emailComposer: "Email Composer",
     recipients: "Recipients",
-    templates: "Templates",
+    emailTemplates: "Templates",
     preview: "Preview",
-    subject: "Subject",
+    emailSubject: "Subject",
     content: "Content",
     selectAll: "Select All",
     clearSelection: "Clear Selection",
