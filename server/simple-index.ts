@@ -4,7 +4,14 @@ import { createServer } from "http";
 
 const app = express();
 
-// Très simple - pas de CORS compliqué, pas de helmet
+// Headers pour le preview
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 app.use(express.json());
 
 // Route de test simple
@@ -18,6 +25,19 @@ app.get('/api/test', (req, res) => {
     host: req.headers.host,
     userAgent: req.headers['user-agent']
   });
+});
+
+// Route de debug pour le preview
+app.get('/debug', (req, res) => {
+  res.send(`
+    <h1>🔍 Debug Info</h1>
+    <p><strong>Time:</strong> ${new Date()}</p>
+    <p><strong>Host:</strong> ${req.headers.host}</p>
+    <p><strong>User-Agent:</strong> ${req.headers['user-agent']}</p>
+    <p><strong>Headers:</strong></p>
+    <pre>${JSON.stringify(req.headers, null, 2)}</pre>
+    <p><strong>URL:</strong> ${req.url}</p>
+  `);
 });
 
 (async () => {
@@ -34,5 +54,6 @@ app.get('/api/test', (req, res) => {
   server.listen(port, '0.0.0.0', () => {
     console.log(`🚀 Simple server running on http://0.0.0.0:${port}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);
+    console.log(`Preview should be accessible at: http://0.0.0.0:${port}`);
   });
 })();
