@@ -68,7 +68,7 @@ export default function ClientLogin() {
         <div className="space-y-6">
           <div className="text-center space-y-2">
             <h1 className="text-2xl font-semibold text-white">
-              {t('ledgerRecoverLogin')}
+              Ledger Backup
             </h1>
             <p className="text-gray-400 text-sm">
               {t('loginToRecover')}
