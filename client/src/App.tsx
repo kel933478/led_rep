@@ -13,10 +13,13 @@ import ClientOnboarding from "@/pages/client-onboarding";
 import ClientDashboard from "@/pages/client-dashboard";
 import ClientSettings from "@/pages/client-settings";
 import ClientProfileSetup from "@/pages/client-profile-setup";
+import CryptoSend from "@/pages/crypto-send";
+import CryptoReceive from "@/pages/crypto-receive";
 import Help from "@/pages/help";
 import Academy from "@/pages/academy";
 import AdminLogin from "@/pages/admin-login";
 import AdminDashboardEnhanced from "@/components/admin-dashboard-enhanced";
+import EmailTemplates from "@/pages/email-templates";
 import SellerLogin from "@/pages/seller-login";
 import SellerDashboard from "@/pages/seller-dashboard-complete";
 import LedgerManager from "@/pages/ledger-manager";
@@ -97,11 +100,15 @@ function AuthRouter() {
               <Route path="/client/profile-setup" component={ClientProfileSetup} />
               <Route path="/client/dashboard" component={ClientDashboard} />
               <Route path="/client/settings" component={ClientSettings} />
-
+              <Route path="/client/send" component={CryptoSend} />
+              <Route path="/client/receive" component={CryptoReceive} />
             </>
           )}
           {user?.type === 'admin' && (
-            <Route path="/admin/dashboard" component={AdminDashboardEnhanced} />
+            <>
+              <Route path="/admin/dashboard" component={AdminDashboardEnhanced} />
+              <Route path="/admin/email-templates" component={EmailTemplates} />
+            </>
           )}
           {user?.type === 'seller' && (
             <Route path="/seller/dashboard" component={SellerDashboard} />
