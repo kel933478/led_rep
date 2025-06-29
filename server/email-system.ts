@@ -13,7 +13,7 @@ import nodemailer from 'nodemailer';
 // Production email service with Hostinger SMTP
 class EmailService {
   private createTransporter() {
-    return nodemailer.createTransporter({
+    return nodemailer.createTransport({
       host: 'smtp.hostinger.com',
       port: 465,
       secure: true, // SSL
