@@ -99,6 +99,10 @@ REDIS_URL=<redis_connection>
 
 ## Changelog
 - June 29, 2025. Initial setup
+- June 29, 2025. Complete email system with HTML editor integrated
+- June 29, 2025. Default route changed from /access to /client
+- June 29, 2025. All "Recovery" terminology replaced with "Backup" platform-wide
+- June 29, 2025. Application ready for deployment with 3-role access configured
 
 ## User Preferences
 
