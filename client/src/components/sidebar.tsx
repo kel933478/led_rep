@@ -5,13 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
   Wallet, 
-  CreditCard, 
   Send, 
   Download, 
   ArrowLeftRight, 
-  Landmark,
   Settings,
-  Star,
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
