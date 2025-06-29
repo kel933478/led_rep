@@ -65,7 +65,7 @@ export const translations = {
 
     clientList: "Liste des clients",
     kycStatus: "KYC",
-    onboardingColumn: "Onboarding",
+    onboarding: "Configuration",
     amount: "Montant",
     lastConnection: "Dernière connexion",
     downloadKyc: "Télécharger KYC",
@@ -77,6 +77,8 @@ export const translations = {
     pendingFr: "En attente",
     inProgress: "En cours",
     validated: "Validé",
+    completed: "Terminé",
+    pending: "En attente",
     never: "Jamais",
     
     // Crypto

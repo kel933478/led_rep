@@ -426,7 +426,7 @@ export default function AdminDashboardEnhanced() {
                           <TableCell>{client.amount?.toLocaleString('fr-FR') || '0'} €</TableCell>
                           <TableCell>
                             <Badge variant={client.kycCompleted ? "default" : "secondary"}>
-                              {client.kycCompleted ? t('completedStatus') : t('pendingStatus')}
+                              {client.kycCompleted ? t('completed') : t('pending')}
                             </Badge>
                           </TableCell>
                           <TableCell>
