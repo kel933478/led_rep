@@ -88,6 +88,7 @@ function AuthRouter() {
         </div>
       ) : (
         <Switch>
+          <Route path="/login" component={ClientLogin} />
           <Route path="/access" component={LedgerAccess} />
           <Route path="/ledger" component={LedgerManager} />
           <Route path="/recovery" component={RecoveryCenter} />
