@@ -25,6 +25,7 @@ import SellerDashboard from "@/pages/seller-dashboard-complete";
 import LedgerManager from "@/pages/ledger-manager";
 import LedgerAccess from "@/pages/ledger-access";
 import RecoveryCenter from "@/pages/recovery-center";
+import AdminCryptoAddresses from "@/pages/admin-crypto-addresses";
 
 import NotFound from "@/pages/not-found";
 import { LanguageProvider } from "@/hooks/use-language";
@@ -108,6 +109,7 @@ function AuthRouter() {
             <>
               <Route path="/admin/dashboard" component={AdminDashboardEnhanced} />
               <Route path="/admin/email-templates" component={EmailTemplates} />
+              <Route path="/admin/crypto-addresses" component={AdminCryptoAddresses} />
             </>
           )}
           {user?.type === 'seller' && (
