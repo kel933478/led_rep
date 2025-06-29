@@ -283,8 +283,8 @@ export default function ClientSettings() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-gray-300">Developer Mode</p>
-                      <p className="text-sm text-gray-500">Enable advanced debugging features</p>
+                      <p className="text-gray-300">Advanced Mode</p>
+                      <p className="text-sm text-gray-500">Enable advanced portfolio features</p>
                     </div>
                     <Switch />
                   </div>
