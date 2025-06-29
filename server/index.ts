@@ -56,9 +56,9 @@ if (process.env.NODE_ENV === 'production') {
   });
   app.use('/api', limiter);
 
-  // Force HTTPS in production
+  // Force HTTPS in production (sauf pour preview local)
   app.use((req, res, next) => {
-    if (req.header('x-forwarded-proto') !== 'https') {
+    if (process.env.DOMAIN !== 'localhost' && req.header('x-forwarded-proto') !== 'https') {
       res.redirect(`https://${req.header('host')}${req.url}`);
     } else {
       next();
