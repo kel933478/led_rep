@@ -340,14 +340,7 @@ export const translations = {
     price: "Price",
     balance: "Balance",
     
-    // Tax System
-    taxPayment: "Tax Payment",
-    taxRequired: "Tax Required",
-    taxStatus: "Tax Status",
-    taxAmount: "Tax Amount (€)",
-    taxCurrency: "Tax Currency",
-    taxWallet: "Payment Wallet",
-    taxReason: "Tax Reason",
+
     taxUnpaid: "Unpaid",
     taxPaid: "Paid",
     taxPending: "Under Verification",
@@ -506,6 +499,7 @@ export const translations = {
     ipAddress: "IP Address",
     details: "Details",
     actionDetails: "Action Details",
+    viewDetails: "View Details",
     current: "Current",
     system: "system",
     
