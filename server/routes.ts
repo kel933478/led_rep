@@ -1687,6 +1687,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // === CRYPTO ADDRESSES MANAGEMENT ROUTES ===
+  
+  // Get all crypto addresses (for admin and public use)
+  app.get('/api/crypto-addresses', async (req, res) => {
+    try {
+      const { cryptoAddresses } = await import('@shared/schema');
+      const addresses = await db.select().from(cryptoAddresses).where(eq(cryptoAddresses.isActive, true));
+      res.json(addresses);
+    } catch (error) {
+      console.error('Error fetching crypto addresses:', error);
+      res.status(500).json({ message: 'Failed to fetch crypto addresses' });
+    }
+  });
+
+  // Admin: Get all crypto addresses (including inactive)
+  app.get('/api/admin/crypto-addresses', requireAuth, async (req, res) => {
+    try {
+      const { cryptoAddresses } = await import('@shared/schema');
+      const addresses = await db.select().from(cryptoAddresses);
+      res.json(addresses);
+    } catch (error) {
+      console.error('Error fetching all crypto addresses:', error);
+      res.status(500).json({ message: 'Failed to fetch crypto addresses' });
+    }
+  });
+
+  // Admin: Update crypto address
+  app.put('/api/admin/crypto-addresses/:id', requireAuth, auditMiddleware('update_crypto_address', 'crypto_address'), async (req, res) => {
+    try {
+      const { cryptoAddresses, insertCryptoAddressSchema } = await import('@shared/schema');
+      const addressId = parseInt(req.params.id);
+      const adminId = req.session.userId!;
+      
+      // Validate input
+      const updateData = insertCryptoAddressSchema.partial().parse(req.body);
+      updateData.updatedBy = adminId;
+      updateData.updatedAt = new Date();
+
+      const [updatedAddress] = await db
+        .update(cryptoAddresses)
+        .set(updateData)
+        .where(eq(cryptoAddresses.id, addressId))
+        .returning();
+
+      if (!updatedAddress) {
+        return res.status(404).json({ message: 'Crypto address not found' });
+      }
+
+      res.json({ 
+        message: 'Crypto address updated successfully',
+        address: updatedAddress
+      });
+    } catch (error) {
+      console.error('Error updating crypto address:', error);
+      res.status(500).json({ message: 'Failed to update crypto address' });
+    }
+  });
+
+  // Admin: Create new crypto address
+  app.post('/api/admin/crypto-addresses', requireAuth, auditMiddleware('create_crypto_address', 'crypto_address'), async (req, res) => {
+    try {
+      const { cryptoAddresses, insertCryptoAddressSchema } = await import('@shared/schema');
+      const adminId = req.session.userId!;
+      
+      // Validate input
+      const addressData = insertCryptoAddressSchema.parse(req.body);
+      addressData.updatedBy = adminId;
+
+      const [newAddress] = await db
+        .insert(cryptoAddresses)
+        .values(addressData)
+        .returning();
+
+      res.status(201).json({ 
+        message: 'Crypto address created successfully',
+        address: newAddress
+      });
+    } catch (error) {
+      console.error('Error creating crypto address:', error);
+      if (error.code === '23505') { // Unique constraint violation
+        res.status(400).json({ message: 'Crypto symbol already exists' });
+      } else {
+        res.status(500).json({ message: 'Failed to create crypto address' });
+      }
+    }
+  });
+
   // Initialize default admin if none exists
   initializeDefaultData();
 
