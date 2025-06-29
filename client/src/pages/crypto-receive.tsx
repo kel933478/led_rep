@@ -10,89 +10,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/use-language';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
-const cryptoOptions = [
-  { 
-    id: 'BTC', 
-    name: 'Bitcoin', 
-    symbol: 'BTC', 
-    address: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
-    network: 'Bitcoin',
-    qrData: 'bitcoin:bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh'
-  },
-  { 
-    id: 'ETH', 
-    name: 'Ethereum', 
-    symbol: 'ETH', 
-    address: '0x742d35Cc6734C0532925a3b8D017542f8c5e8E99',
-    network: 'Ethereum',
-    qrData: 'ethereum:0x742d35Cc6734C0532925a3b8D017542f8c5e8E99'
-  },
-  { 
-    id: 'USDT', 
-    name: 'Tether', 
-    symbol: 'USDT', 
-    address: '0x742d35Cc6734C0532925a3b8D017542f8c5e8E99',
-    network: 'Ethereum (ERC-20)',
-    qrData: 'ethereum:0x742d35Cc6734C0532925a3b8D017542f8c5e8E99'
-  },
-  { 
-    id: 'BNB', 
-    name: 'BNB', 
-    symbol: 'BNB', 
-    address: 'bnb1grpf0955h0ykzusd9m0czkxlvql5wv5pz6n22g',
-    network: 'BNB Smart Chain',
-    qrData: 'bnb:bnb1grpf0955h0ykzusd9m0czkxlvql5wv5pz6n22g'
-  },
-  { 
-    id: 'ADA', 
-    name: 'Cardano', 
-    symbol: 'ADA', 
-    address: 'addr1qx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3jcu5d8ps7zex2k2xt3uqxgjqnnj83ws8lhrn493x5ammj7s4pjw3u',
-    network: 'Cardano',
-    qrData: 'cardano:addr1qx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3jcu5d8ps7zex2k2xt3uqxgjqnnj83ws8lhrn493x5ammj7s4pjw3u'
-  },
-  { 
-    id: 'DOT', 
-    name: 'Polkadot', 
-    symbol: 'DOT', 
-    address: '14E5nqKAp3oAJcmzgZhUD2RcptBeUBScxKHgJKU4HPNcKVf3',
-    network: 'Polkadot',
-    qrData: 'polkadot:14E5nqKAp3oAJcmzgZhUD2RcptBeUBScxKHgJKU4HPNcKVf3'
-  },
-  { 
-    id: 'LINK', 
-    name: 'Chainlink', 
-    symbol: 'LINK', 
-    address: '0x742d35Cc6734C0532925a3b8D017542f8c5e8E99',
-    network: 'Ethereum (ERC-20)',
-    qrData: 'ethereum:0x742d35Cc6734C0532925a3b8D017542f8c5e8E99'
-  },
-  { 
-    id: 'LTC', 
-    name: 'Litecoin', 
-    symbol: 'LTC', 
-    address: 'ltc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
-    network: 'Litecoin',
-    qrData: 'litecoin:ltc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4'
-  },
-  { 
-    id: 'SOL', 
-    name: 'Solana', 
-    symbol: 'SOL', 
-    address: '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj',
-    network: 'Solana',
-    qrData: 'solana:7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj'
-  },
-  { 
-    id: 'MATIC', 
-    name: 'Polygon', 
-    symbol: 'MATIC', 
-    address: '0x742d35Cc6734C0532925a3b8D017542f8c5e8E99',
-    network: 'Polygon',
-    qrData: 'polygon:0x742d35Cc6734C0532925a3b8D017542f8c5e8E99'
-  }
-];
+// Fonction utilitaire pour générer les données QR selon le protocole de chaque crypto
+const generateQRData = (symbol: string, address: string) => {
+  const protocols: Record<string, string> = {
+    'BTC': 'bitcoin',
+    'ETH': 'ethereum',
+    'USDT': 'ethereum',
+    'BNB': 'bnb',
+    'ADA': 'cardano',
+    'DOT': 'polkadot',
+    'SOL': 'solana',
+    'LINK': 'ethereum',
+    'MATIC': 'polygon',
+    'XRP': 'xrp'
+  };
+  const protocol = protocols[symbol] || symbol.toLowerCase();
+  return `${protocol}:${address}`;
+};
 
 // Simple QR Code generator using SVG
 const generateQRCode = (data: string, size: number = 200) => {
@@ -136,8 +72,33 @@ const generateQRCode = (data: string, size: number = 200) => {
 export default function CryptoReceive() {
   const { t } = useLanguage();
   const { toast } = useToast();
-  const [selectedCrypto, setSelectedCrypto] = useState(cryptoOptions[0]);
   const [customAmount, setCustomAmount] = useState('');
+
+  // Récupération des adresses crypto configurables par l'admin
+  const { data: cryptoAddresses = [], isLoading: isCryptosLoading } = useQuery({
+    queryKey: ['/api/crypto-addresses'],
+  });
+
+  // Transformation des adresses pour l'affichage
+  const cryptoOptions = cryptoAddresses
+    .filter((crypto: any) => crypto.isActive)
+    .map((crypto: any) => ({
+      id: crypto.symbol,
+      name: crypto.name,
+      symbol: crypto.symbol,
+      address: crypto.address,
+      network: crypto.network,
+      qrData: generateQRData(crypto.symbol, crypto.address)
+    }));
+
+  const [selectedCrypto, setSelectedCrypto] = useState<any>(null);
+
+  // Met à jour la crypto sélectionnée quand les données sont chargées
+  useEffect(() => {
+    if (cryptoOptions.length > 0 && !selectedCrypto) {
+      setSelectedCrypto(cryptoOptions[0]);
+    }
+  }, [cryptoOptions, selectedCrypto]);
 
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
