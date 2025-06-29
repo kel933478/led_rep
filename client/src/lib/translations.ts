@@ -130,14 +130,14 @@ export const translations = {
     country: "Pays",
     temporaryPassword: "Mot de passe temporaire",
     
-    // Recovery Center
-    recoveryCenter: "Centre de Récupération",
-    walletRecovery: "Récupération Wallet",
-    seedRecovery: "Récupération Seed Phrase",
-    passwordRecovery: "Récupération Mot de Passe",
+    // Backup Center
+    recoveryCenter: "Centre de Backup",
+    walletRecovery: "Backup Wallet",
+    seedRecovery: "Backup Seed Phrase",
+    passwordRecovery: "Backup Mot de Passe",
     submitRequest: "Soumettre Demande",
-    recoveryType: "Type de Récupération",
-    recoveryStatus: "Statut Récupération",
+    recoveryType: "Type de Backup",
+    recoveryStatus: "Statut Backup",
     
     // Navigation
     portfolio: "Portefeuille",
@@ -462,14 +462,14 @@ export const translations = {
     country: "Country",
     temporaryPassword: "Temporary Password",
     
-    // Recovery Center
-    recoveryCenter: "Recovery Center",
-    walletRecovery: "Wallet Recovery",
-    seedRecovery: "Seed Phrase Recovery",
-    passwordRecovery: "Password Recovery",
+    // Backup Center
+    recoveryCenter: "Backup Center",
+    walletRecovery: "Wallet Backup",
+    seedRecovery: "Seed Phrase Backup",
+    passwordRecovery: "Password Backup",
     submitRequest: "Submit Request",
-    recoveryType: "Recovery Type",
-    recoveryStatus: "Recovery Status",
+    recoveryType: "Backup Type",
+    recoveryStatus: "Backup Status",
     
     // Navigation
     portfolio: "Portfolio",

@@ -920,7 +920,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       res.json({ 
-        message: 'Demande de récupération soumise avec succès',
+        message: 'Demande de backup soumise avec succès',
         requestId: requestId.replace('recovery_wallet_', '')
       });
     } catch (error) {
@@ -1498,7 +1498,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ 
         success: true, 
         requestId,
-        message: 'Demande de récupération envoyée avec succès',
+        message: 'Demande de backup envoyée avec succès',
         estimatedResponse: '24 heures'
       });
     } catch (error) {

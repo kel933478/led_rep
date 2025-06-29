@@ -35,21 +35,21 @@ const PasswordRecoveryIcon = () => (
 
 const recoveryServices = [
   {
-    name: "Récupération de wallet",
-    description: "Récupération de portefeuilles corrompus ou inaccessibles",
+    name: "Backup de wallet",
+    description: "Backup de portefeuilles corrompus ou inaccessibles",
     icon: WalletRecoveryIcon,
     price: "À partir de 150€",
     success: "95%"
   },
   {
-    name: "Restauration de phrase de récupération", 
-    description: "Récupération de seed phrases partielles ou endommagées",
+    name: "Restauration de phrase de backup", 
+    description: "Backup de seed phrases partielles ou endommagées",
     icon: SeedPhraseIcon,
     price: "À partir de 200€",
     success: "88%"
   },
   {
-    name: "Récupération de mot de passe",
+    name: "Backup de mot de passe",
     description: "Craquage de mots de passe oubliés ou perdus",
     icon: PasswordRecoveryIcon,
     price: "À partir de 100€", 

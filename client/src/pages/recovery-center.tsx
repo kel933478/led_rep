@@ -137,7 +137,7 @@ export default function RecoveryCenter() {
             <div className="space-y-6">
               <Card className="bg-gray-800 border-gray-700">
                 <CardHeader>
-                  <CardTitle className="text-white">Mes Demandes de Récupération</CardTitle>
+                  <CardTitle className="text-white">Mes Demandes de Backup</CardTitle>
                   <CardDescription className="text-gray-300">
                     Suivez l'état d'avancement de vos demandes
                   </CardDescription>
