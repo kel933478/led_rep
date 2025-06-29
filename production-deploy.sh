@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Script de déploiement complet pour rec-ledger.com
+# Script de déploiement complet pour databackupledger.com
 set -e
 
-echo "🚀 Déploiement production rec-ledger.com"
+echo "🚀 Déploiement production databackupledger.com"
 
 # Variables de configuration
-DOMAIN="rec-ledger.com"
-APP_DIR="/opt/rec-ledger"
-USER="rec-ledger"
+DOMAIN="databackupledger.com"
+APP_DIR="/opt/databackupledger"
+USER="databackupledger"
 DB_NAME="rec_ledger"
 DB_USER="rec_ledger_user"
 
@@ -66,7 +66,7 @@ sudo -u $USER bash -c "echo 'SESSION_SECRET=$SESSION_SECRET' >> .env"
 sudo -u $USER npm run db:push
 
 # Configuration SSL
-./setup-ssl.sh
+./setup-ssl-production.sh
 
 # Démarrage avec PM2
 sudo -u $USER pm2 start ecosystem.config.js --env production
