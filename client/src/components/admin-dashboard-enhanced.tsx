@@ -211,6 +211,12 @@ export default function AdminDashboardEnhanced() {
               <BarChart3 className="h-4 w-4 mr-2" />
               {showMetrics ? "Masquer" : "Afficher"} Métriques
             </Button>
+            <Button asChild variant="outline" size="sm">
+              <a href="/admin/crypto-addresses">
+                <Settings className="h-4 w-4 mr-2" />
+                Gérer Adresses Crypto
+              </a>
+            </Button>
           </div>
         </div>
 

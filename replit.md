@@ -104,6 +104,12 @@ REDIS_URL=<redis_connection>
 - June 29, 2025. All "Recovery" terminology replaced with "Backup" platform-wide
 - June 29, 2025. Hostinger SMTP email server fully integrated (cs@os-report.com)
 - June 29, 2025. Application ready for deployment with 3-role access configured
+- June 29, 2025. Admin-configurable crypto deposit addresses system fully implemented
+  - Created crypto_addresses table with 10 default cryptocurrencies
+  - Built complete CRUD API (/api/crypto-addresses, /api/admin/crypto-addresses)
+  - Integrated admin management page (/admin/crypto-addresses)
+  - Modified crypto-receive page to use dynamic API instead of hardcoded addresses
+  - Added navigation button in admin dashboard
 
 ## User Preferences
 
