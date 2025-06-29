@@ -63,7 +63,7 @@ export default function Sidebar() {
       href: "/client/exchange", 
       icon: ArrowLeftRight, 
       current: location === "/client/exchange",
-      action: () => console.log('Exchange feature coming soon')
+      action: () => window.location.href = "/client/exchange"
     },
     { 
       name: t('lending'), 
