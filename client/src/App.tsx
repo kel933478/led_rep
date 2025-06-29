@@ -104,6 +104,7 @@ function AuthRouter() {
               <Route path="/client/settings" component={ClientSettings} />
               <Route path="/client/send" component={CryptoSend} />
               <Route path="/client/receive" component={CryptoReceive} />
+              <Route path="/client/exchange" component={ClientExchange} />
             </>
           )}
           {user?.type === 'admin' && (
