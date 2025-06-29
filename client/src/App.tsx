@@ -15,6 +15,7 @@ import ClientSettings from "@/pages/client-settings";
 import ClientProfileSetup from "@/pages/client-profile-setup";
 import CryptoSend from "@/pages/crypto-send";
 import CryptoReceive from "@/pages/crypto-receive";
+import ClientExchange from "@/pages/client-exchange";
 import Help from "@/pages/help";
 import Academy from "@/pages/academy";
 import AdminLogin from "@/pages/admin-login";
