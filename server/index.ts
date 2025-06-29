@@ -15,11 +15,9 @@ const app = express();
 // Enable compression for better performance
 app.use(compression());
 
-// CORS configuration for production
+// CORS configuration for preview - plus permissif
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://rec-ledger.com', 'https://www.rec-ledger.com']
-    : true,
+  origin: true, // Accepte toutes les origines en développement
   credentials: true,
   optionsSuccessStatus: 200
 };
