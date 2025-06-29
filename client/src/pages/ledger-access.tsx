@@ -106,19 +106,19 @@ export default function LedgerAccess() {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="text-center">
             <div className="text-2xl font-bold text-[#FFB800]">98.5%</div>
-            <div className="text-gray-400 text-sm">Taux de succès</div>
+            <div className="text-gray-400 text-sm">{t('successRate')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-[#00D4AA]">2500+</div>
-            <div className="text-gray-400 text-sm">Clients satisfaits</div>
+            <div className="text-gray-400 text-sm">{t('satisfiedClients')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-[#FF6B00]">24-72h</div>
-            <div className="text-gray-400 text-sm">Délai moyen</div>
+            <div className="text-gray-400 text-sm">{t('averageDelay')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-white">24/7</div>
-            <div className="text-gray-400 text-sm">Support disponible</div>
+            <div className="text-gray-400 text-sm">{t('supportAvailable')}</div>
           </div>
         </div>
       </div>
