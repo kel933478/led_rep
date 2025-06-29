@@ -53,108 +53,110 @@ export default function ClientLogin() {
   };
 
   return (
-    <div className="w-full max-w-md space-y-8">
-      {/* Logo */}
-      <div className="text-center">
-        <img 
-          src={ledgerLogoPath} 
-          alt="Ledger" 
-          className="h-12 mx-auto mb-8 filter invert"
-        />
-      </div>
-
-      {/* Main Content */}
-      <div className="space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-semibold text-white">
-            Ledger Backup
-          </h1>
-          <p className="text-gray-400 text-sm">
-            {t('loginToRecover')}
-          </p>
+    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <div className="w-full max-w-md space-y-8">
+        {/* Logo */}
+        <div className="text-center">
+          <img 
+            src={ledgerLogoPath} 
+            alt="Ledger" 
+            className="h-12 mx-auto mb-8 filter invert"
+          />
         </div>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="email"
-                      placeholder={t('email')}
-                      className="h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 rounded-lg focus:border-gray-600 focus:ring-0"
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
-              )}
-            />
+        {/* Main Content */}
+        <div className="space-y-6">
+          <div className="text-center space-y-2">
+            <h1 className="text-2xl font-semibold text-white">
+              Ledger Backup
+            </h1>
+            <p className="text-gray-400 text-sm">
+              {t('loginToRecover')}
+            </p>
+          </div>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <div className="relative">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
                       <Input
                         {...field}
-                        type={showPassword ? "text" : "password"}
-                        placeholder={t('password')}
-                        className="h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 rounded-lg focus:border-gray-600 focus:ring-0 pr-10"
+                        type="email"
+                        placeholder={t('email')}
+                        className="h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 rounded-lg focus:border-gray-600 focus:ring-0"
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-400"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
-              )}
-            />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
 
-            <div className="text-left">
-              <Link href="/recovery-center">
-                <button
-                  type="button"
-                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
-                >
-                  {t('forgotPassword')}
-                </button>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          placeholder={t('password')}
+                          className="h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 rounded-lg focus:border-gray-600 focus:ring-0 pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-400"
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+
+              <div className="text-left">
+                <Link href="/recovery-center">
+                  <button
+                    type="button"
+                    className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                  >
+                    {t('forgotPassword')}
+                  </button>
+                </Link>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={loginMutation.isPending}
+                className="w-full h-12 bg-white text-black hover:bg-gray-100 font-medium rounded-lg transition-colors"
+              >
+                {loginMutation.isPending ? t('loading') : t('login')}
+              </Button>
+            </form>
+          </Form>
+
+          <div className="text-center pt-4">
+            <p className="text-sm text-gray-500">
+              {t('adminAccess')}? {' '}
+              <Link href="/admin-login">
+                <span className="text-blue-400 hover:text-blue-300 cursor-pointer transition-colors">
+                  {t('connectHere')}
+                </span>
               </Link>
-            </div>
-
-            <Button
-              type="submit"
-              disabled={loginMutation.isPending}
-              className="w-full h-12 bg-white text-black hover:bg-gray-100 font-medium rounded-lg transition-colors"
-            >
-              {loginMutation.isPending ? t('loading') : t('login')}
-            </Button>
-          </form>
-        </Form>
-
-        <div className="text-center pt-4">
-          <p className="text-sm text-gray-500">
-            {t('adminAccess')}? {' '}
-            <Link href="/admin-login">
-              <span className="text-blue-400 hover:text-blue-300 cursor-pointer transition-colors">
-                {t('connectHere')}
-              </span>
-            </Link>
-          </p>
+            </p>
+          </div>
         </div>
       </div>
     </div>
