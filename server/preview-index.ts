@@ -23,6 +23,15 @@ app.get('/api/auth/me', (req, res) => {
   res.json({ message: 'Not authenticated' });
 });
 
+// Redirection de la racine vers /login
+app.get('/', (req, res, next) => {
+  if (req.path === '/' && !req.query.redirect) {
+    res.redirect('/login');
+  } else {
+    next();
+  }
+});
+
 app.post('/api/client/login', (req, res) => {
   const { email, password } = req.body;
   if (email === 'client@demo.com' && password === 'demo123') {
