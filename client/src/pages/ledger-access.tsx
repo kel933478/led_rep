@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/hooks/use-language";
 import { 
   Shield, 
   Users, 
@@ -14,6 +15,7 @@ import {
 
 export default function LedgerAccess() {
   const [_, setLocation] = useLocation();
+  const { t } = useLanguage();
 
   const handleRecoveryDemo = () => {
     setLocation('/recovery');
@@ -88,7 +90,7 @@ export default function LedgerAccess() {
             className="border-[#00D4AA] text-[#00D4AA] hover:bg-[#00D4AA] hover:text-white"
           >
             <Users size={16} className="mr-2" />
-            Accès Client
+{t('clientAccess')}
           </Button>
           <Button 
             variant="outline" 
@@ -96,7 +98,7 @@ export default function LedgerAccess() {
             className="border-[#FFB800] text-[#FFB800] hover:bg-[#FFB800] hover:text-[#17181C]"
           >
             <Settings size={16} className="mr-2" />
-            Administration
+{t('administration')}
           </Button>
         </div>
 
