@@ -250,6 +250,25 @@ export const translations = {
     change24h: "Variation 24h",
     quantity: "Quantité",
     value: "Valeur",
+    
+    // Email System
+    sendEmail: "Envoyer Email",
+    emailComposer: "Compositeur Email",
+    recipients: "Destinataires",
+    templates: "Modèles",
+    preview: "Aperçu",
+    subject: "Sujet",
+    content: "Contenu",
+    selectAll: "Tout sélectionner",
+    clearSelection: "Effacer sélection",
+    emailSent: "Email envoyé",
+    emailsFailed: "Échec emails",
+    useTemplate: "Utiliser modèle",
+    emailPreview: "Aperçu email",
+    welcomeTemplate: "Bienvenue",
+    kycApprovalTemplate: "Approbation KYC",
+    reminderTemplate: "Rappel",
+    customTemplate: "Personnalisé",
   },
   en: {
     // Common
@@ -563,6 +582,25 @@ export const translations = {
     change24h: "24h Change",
     quantity: "Quantity",
     value: "Value",
+    
+    // Email System
+    sendEmail: "Send Email",
+    emailComposer: "Email Composer",
+    recipients: "Recipients",
+    templates: "Templates",
+    preview: "Preview",
+    subject: "Subject",
+    content: "Content",
+    selectAll: "Select All",
+    clearSelection: "Clear Selection",
+    emailSent: "Email sent",
+    emailsFailed: "Failed emails",
+    useTemplate: "Use Template",
+    emailPreview: "Email Preview",
+    welcomeTemplate: "Welcome",
+    kycApprovalTemplate: "KYC Approval",
+    reminderTemplate: "Reminder",
+    customTemplate: "Custom",
   },
 };
 

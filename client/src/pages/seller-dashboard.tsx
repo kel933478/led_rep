@@ -14,9 +14,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { 
   Users, Edit, Wallet, CreditCard, MessageSquare, Eye, Settings,
-  DollarSign, CheckCircle, XCircle, Clock, User
+  DollarSign, CheckCircle, XCircle, Clock, User, Mail
 } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
+import EmailComposer from "@/components/email-composer";
 
 // Types pour les données vendeur
 interface SellerClient {
@@ -223,6 +224,16 @@ export default function SellerDashboard() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <EmailComposer 
+              clients={clients}
+              userType="seller"
+              trigger={
+                <Button className="bg-green-600 hover:bg-green-700" size="sm">
+                  <Mail className="w-4 h-4 mr-2" />
+                  {language === 'fr' ? 'Envoyer Email' : 'Send Email'}
+                </Button>
+              }
+            />
             <Badge variant="outline" className="text-green-600">
               <Users className="h-4 w-4 mr-1" />
               {clients.length} {language === 'fr' ? 'Clients' : 'Clients'}

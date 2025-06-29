@@ -16,7 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { 
   Download, FileText, MessageSquare, Eye, Activity, UserPlus, Search, 
   Filter, TrendingUp, Users, DollarSign, AlertTriangle, RefreshCw,
-  MoreVertical, Edit, Trash, Settings, BarChart3
+  MoreVertical, Edit, Trash, Settings, BarChart3, Mail
 } from "lucide-react";
 import BulkClientOperations from "@/components/bulk-client-operations";
 import KYCVerificationSystem from "@/components/kyc-verification-system";
@@ -193,6 +193,16 @@ export default function AdminDashboardEnhanced() {
             <p className="text-muted-foreground">Gestion avancée des clients et des opérations</p>
           </div>
           <div className="flex items-center gap-2">
+            <EmailComposer 
+              clients={filteredAndSortedClients}
+              userType="admin"
+              trigger={
+                <Button className="bg-green-600 hover:bg-green-700" size="sm">
+                  <Mail className="w-4 h-4 mr-2" />
+                  Send Email
+                </Button>
+              }
+            />
             <Button onClick={refreshData} variant="outline" size="sm">
               <RefreshCw className="h-4 w-4 mr-2" />
               Actualiser
