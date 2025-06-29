@@ -22,7 +22,7 @@ import BulkClientOperations from "@/components/bulk-client-operations";
 import KYCVerificationSystem from "@/components/kyc-verification-system";
 import CreateClientForm from "@/components/create-client-form";
 import AdminWalletConfig from "@/components/admin-wallet-config";
-import ClientTaxPercentage from "@/components/client-tax-percentage";
+
 import ClientDetailModal from "@/components/client-detail-modal";
 
 export default function AdminDashboardEnhanced() {
@@ -517,24 +517,7 @@ export default function AdminDashboardEnhanced() {
             </Card>
           </TabsContent>
 
-          {/* Other tabs remain the same but enhanced */}
-          <TabsContent value="taxes" className="space-y-6">
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle>Gestion des Taxes par Pourcentage</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Configurez les taxes de récupération individuelles pour chaque client
-                </p>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {filteredAndSortedClients.map((client: any) => (
-                    <ClientTaxPercentage key={client.id} client={client} />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+
 
           <TabsContent value="kyc" className="space-y-6">
             <KYCVerificationSystem />

@@ -85,69 +85,7 @@ export const translations = {
     price: "Prix",
     balance: "Solde",
     
-    // Tax System
-    taxPayment: "Paiement de Taxe",
-    taxRequired: "Taxe Requise",
-    taxStatus: "Statut de Taxe",
-    taxAmount: "Montant de la Taxe (€)",
-    taxCurrency: "Devise de Taxe",
-    taxWallet: "Wallet de Paiement",
-    taxReason: "Motif de la Taxe",
-    taxUnpaid: "Impayé",
-    taxPaid: "Payé",
-    taxPending: "En vérification",
-    taxExempt: "Exempté",
-    paymentProof: "Preuve de Paiement",
-    transactionHash: "Hash de Transaction",
-    submitPayment: "Soumettre le Paiement",
-    configureTax: "Configurer Taxe",
-    exemptTax: "Exempter de la Taxe",
-    balanceEuro: "Solde (€)",
-    euroSymbol: "€",
-    
-    // Tax Payment Instructions
-    taxRecoveryTitle: "Taxe de Récupération",
-    taxRecoverySubtitle: "Paiement obligatoire pour accéder à vos fonds récupérés",
-    taxImportantAlert: "Cette taxe doit être payée avant toute récupération de fonds. Aucun retrait ne sera possible tant que le paiement n'est pas vérifié et validé.",
-    taxPaymentInstructions: "Instructions de Paiement",
-    taxStep1: "Copiez l'adresse de paiement",
-    taxStep1Detail: "ci-dessus",
-    taxStep2: "Envoyez exactement",
-    taxStep2Detail: "à cette adresse",
-    taxStep3: "Copiez le hash de transaction et soumettez-le comme preuve",
-    taxStep4: "Attendez la validation (1-3 heures) pour accéder à vos fonds",
-    
-    // QR Code and Payment Details
-    qrCodeScanToPay: "Scanner pour payer",
-    qrCodeScanWith: "Scannez avec votre wallet",
-    paymentAddress: "Adresse de paiement",
-    exactAmountToSend: "Montant exact à envoyer",
-    paymentCurrency: "Devise de paiement",
-    copyAddress: "Copier l'adresse",
-    copyFullAddress: "Copier l'adresse complète",
-    copyAmount: "Copier le montant",
-    addressCopied: "Adresse copiée dans le presse-papiers",
-    amountCopied: "Montant copié dans le presse-papiers",
-    
-    // Payment Status Messages
-    taxExemptionTitle: "Exemption de Taxe",
-    taxExemptionMessage: "Vous êtes exempté de la taxe de récupération. Vos fonds sont disponibles sans frais supplémentaires.",
-    taxPaidTitle: "Taxe Payée",
-    taxPaidMessage: "Votre taxe de récupération a été vérifiée et validée. Vos fonds sont maintenant disponibles.",
-    taxVerificationTitle: "Vérification en cours",
-    taxVerificationMessage: "Votre preuve de paiement est en cours de vérification. Vous recevrez une notification une fois validée.",
-    taxVerificationDelay: "Délai habituel : 1-3 heures",
-    viewTransaction: "Voir la transaction",
-    
-    // Payment Proof Form Extensions
-    submitPaymentProofDescription: "Soumettez votre preuve de paiement pour validation",
-    transactionHashOptional: "Hash de Transaction (optionnel)",
-    transactionHashPlaceholder: "0x... ou hash de transaction Bitcoin",
-    transactionHashHelp: "Copiez le hash de votre transaction depuis votre wallet",
-    paymentScreenshot: "Capture d'écran de paiement",
-    paymentProofFile: "Preuve de Paiement (Screenshot/PDF)",
-    acceptedFormats: "Formats acceptés: PNG, JPG, PDF (max 5MB)",
-    submitProof: "Soumettre la preuve",
+
     sendingInProgress: "Envoi en cours...",
     proofSubmitted: "Preuve envoyée",
     proofSubmittedMessage: "Votre preuve de paiement a été soumise pour vérification",
@@ -169,10 +107,7 @@ export const translations = {
     liveChatButton: "Chat en direct",
     emailContactButton: "Contacter par email",
     
-    // Recovery Tax Alert
-    taxRecoveryAlert: "Taxe obligatoire de récupération :",
-    taxRecoveryAlertMessage: "Vous devez payer cette taxe avant de pouvoir accéder à vos fonds récupérés.",
-    recoveryTaxReason: "Frais de récupération et traitement administratif",
+
     
     // Wallet Management
     walletConfig: "Configuration Wallets",

@@ -141,16 +141,16 @@ export default function AssetAllocationTable({ assets, totalValue }: AssetAlloca
                     <Button 
                       size="sm" 
                       variant="ghost" 
-                      className="text-orange-500 hover:text-orange-400 hover:bg-orange-900/20 px-2"
-                      onClick={() => setLocation('/client/tax-payment')}
+                      className="text-black hover:text-gray-600 hover:bg-gray-200 px-2"
+                      onClick={() => setLocation('/client/dashboard')}
                     >
                       Acheter
                     </Button>
                     <Button 
                       size="sm" 
                       variant="ghost" 
-                      className="text-orange-500 hover:text-orange-400 hover:bg-orange-900/20 px-2"
-                      onClick={() => setLocation('/client/tax-payment')}
+                      className="text-black hover:text-gray-600 hover:bg-gray-200 px-2"
+                      onClick={() => setLocation('/client/dashboard')}
                     >
                       Vendre
                     </Button>
