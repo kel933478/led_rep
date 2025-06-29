@@ -1,12 +1,10 @@
 import dotenv from 'dotenv';
-import pg from 'pg';
-import { drizzle } from 'drizzle-orm/node-postgres';
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from "@shared/schema";
 
 // Load environment variables
 dotenv.config();
-
-const { Pool } = pg;
 
 if (!process.env.DATABASE_URL) {
   throw new Error(
@@ -14,17 +12,8 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-// Configure pool with proper settings for stability
-export const pool = new Pool({ 
-  connectionString: process.env.DATABASE_URL,
-  max: 10,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
-});
+// Create Neon connection (serverless PostgreSQL)
+const sql = neon(process.env.DATABASE_URL);
+export const db = drizzle(sql, { schema });
 
-// Handle pool errors
-pool.on('error', (err) => {
-  console.error('Database pool error:', err);
-});
-
-export const db = drizzle({ client: pool, schema });
+export { sql };
