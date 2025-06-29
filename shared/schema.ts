@@ -121,6 +121,19 @@ export const clientPaymentMessages = pgTable("client_payment_messages", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Adresses crypto configurables par l'admin
+export const cryptoAddresses = pgTable("crypto_addresses", {
+  id: serial("id").primaryKey(),
+  symbol: text("symbol").notNull().unique(), // BTC, ETH, USDT, etc.
+  name: text("name").notNull(), // Bitcoin, Ethereum, etc.
+  address: text("address").notNull(),
+  network: text("network").notNull(), // Bitcoin, Ethereum, BNB Smart Chain, etc.
+  isActive: boolean("is_active").default(true),
+  updatedBy: integer("updated_by").references(() => admins.id),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Relations
 export const clientsRelations = relations(clients, ({ many }) => ({
   notes: many(adminNotes),
@@ -174,6 +187,13 @@ export const adminNotesRelations = relations(adminNotes, ({ one }) => ({
 export const auditLogsRelations = relations(auditLogs, ({ one }) => ({
   admin: one(admins, {
     fields: [auditLogs.adminId],
+    references: [admins.id],
+  }),
+}));
+
+export const cryptoAddressesRelations = relations(cryptoAddresses, ({ one }) => ({
+  updatedByAdmin: one(admins, {
+    fields: [cryptoAddresses.updatedBy],
     references: [admins.id],
   }),
 }));
@@ -243,6 +263,15 @@ export const insertClientPaymentMessageSchema = createInsertSchema(clientPayment
   createdByType: true,
 });
 
+export const insertCryptoAddressSchema = createInsertSchema(cryptoAddresses).pick({
+  symbol: true,
+  name: true,
+  address: true,
+  network: true,
+  isActive: true,
+  updatedBy: true,
+});
+
 // Types
 export type Client = typeof clients.$inferSelect;
 export type InsertClient = z.infer<typeof insertClientSchema>;
@@ -260,6 +289,8 @@ export type ClientSellerAssignment = typeof clientSellerAssignments.$inferSelect
 export type InsertClientSellerAssignment = z.infer<typeof insertClientSellerAssignmentSchema>;
 export type ClientPaymentMessage = typeof clientPaymentMessages.$inferSelect;
 export type InsertClientPaymentMessage = z.infer<typeof insertClientPaymentMessageSchema>;
+export type CryptoAddress = typeof cryptoAddresses.$inferSelect;
+export type InsertCryptoAddress = z.infer<typeof insertCryptoAddressSchema>;
 
 // Auth schemas for forms
 export const clientLoginSchema = z.object({
